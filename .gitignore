@@ -48,7 +48,11 @@ po/*~
 # RStudio Connect folder
 rsconnect/
 
+# ------------------------
 # Additions to template
 .DS_Store
-communication/
-resources/
+_communication/
+_resources/
+_archive/
+data/phenotype/raw
+data/neuroimaging/derivatives
