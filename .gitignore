@@ -51,6 +51,8 @@ rsconnect/
 # ------------------------
 # Additions to template
 .DS_Store
+/.quarto/
+**/*.quarto_ipynb
 _communication/
 _resources/
 _archive/
