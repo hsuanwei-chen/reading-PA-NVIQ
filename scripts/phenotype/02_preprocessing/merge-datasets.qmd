@@ -1,0 +1,775 @@
+---
+title: "Create merged dataset"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+author: "Isaac Chen"
+
+format: 
+    html:
+      toc: true
+      embed-resources: true
+---
+
+## About
+
+The goal of this script is to merge the four datasets into one big dataset.
+Exclusionary criteria was first applied to each dataset before merging
+
+Exclusionary criteria for each category:
+
+**Demographics**
+
+1. Significant hearing impairment
+2. Neurological disease or epilepsy
+3. Uncorrected visual impairments
+4. Contraindications for MRI (e.g. braces)
+5. Non-native English speaker
+6. Medications affecting CNS
+7. Left-handedness
+8. Psychiatric disorder or ADHD
+
+**Standardized testing**
+
+1. Complete data for WJ word-identification subtest & nonverbal IQ
+2. nonverbal IQ < 70
+
+**In-scanner task**
+
+1. Complete data for each run of in-scanner task
+2. Accuracy < 50% for both O+P+ and O-P- across runs
+3. Response bias (accuracy difference between O+P+ and O-P- cannot be >= 50%)
+
+**In-scanner motion**
+
+1. More than 15% motion contaminated volumes in each run
+2. At least 1 motion contaminated chunk (6 consecutive motion contaminated volumes)
+
+## Note
+
+For datasets `ds001486`, `ds001894`, and `ds002236`, criteria 1 to 6 for 
+demographics was assumed to be true.
+
+Handedness was determined by the following method for `ds006239`:
+
+- `write_handedness` = 1 (right) or 3 (ambidextrous) AND
+- 2 out of 3 variables (`ball_handedness`, `brush_handedness`, `jar_handedness`) 
+= 1 (right) or 3 (ambidextrous)
+
+## Set up
+
+```{r}
+#| warning: false
+#| message: false
+# Clear all variables from environment
+rm(list = ls())
+
+# Load library
+library(here)
+library(tidyverse)
+library(glue)
+library(knitr)
+
+# Set the directory and files
+proc_dir <- here("data", "phenotype", "processed")
+merg_dir <- here("data", "phenotype", "merged")
+
+# Set output files
+output_participants_rds <- here(merg_dir, "merged_participants.rds")
+output_participants_csv <- here(merg_dir, "merged_participants.csv")
+output_rhyming_events   <- here(merg_dir, "merged_task-VisualWordRhyming_events.csv")
+```
+
+## Apply Exlusionary Criteria
+
+:::{.panel-tabset}
+
+### ds001486
+
+```{r}
+#| warning: false
+#| message: false
+
+# Set input files
+ds001486_participants_csv <- here(proc_dir, "ds001486", "ds001486_participants.csv") 
+ds001486_events_csv       <- here(proc_dir, "ds001486", "ds001486_task-VisualWordRhyming_events.csv") 
+
+# Read in csv data
+ds001486_participants_df <- read_csv(ds001486_participants_csv)
+ds001486_events_df       <- read_csv(ds001486_events_csv)
+```
+
+```{r}
+#| warning: false
+#| message: false
+
+# Exclude based on demographics and standardized testing criteria
+# Convert matrix reasoning scores from t-scores to standard scores
+ds001486_participants_df <- ds001486_participants_df |> 
+  select(
+    unique_id:participant_id, sex, handedness, 
+    age        = `age_ses-T1`,
+    wordid_sts = `WJ-III_WordID_StS`,
+    el_scs     = CTOPP_EL_StS,
+    mr_tscore  = `WASI_MR_T-Score`,
+  ) |> 
+  mutate(
+    mr_sts  = if_else(!is.na(mr_tscore), floor((mr_tscore - 50)/10*15 + 100), NA),
+    exclude = if_else(handedness == "left", "left-handedness", "")
+  )
+
+# Filter for excluded participants
+ds001486_exclude <- ds001486_participants_df |> 
+  filter(exclude != "") |> 
+  select(unique_id, exclude)
+```
+
+```{r}
+#| warning: false
+#| message: false
+
+# Exclude if missing standardized testing data
+ds001486_exclude <- ds001486_participants_df |> 
+  filter(!unique_id %in% ds001486_exclude$unique_id) |> 
+  mutate(
+    exclude = case_when(
+      is.na(wordid_sts)    ~ "missing Word ID",
+      is.na(el_scs)        ~ "missing elision", 
+      is.na(mr_sts)        ~ "missing nonverbal IQ",
+    )
+  ) |>
+  filter(exclude != "") |> 
+  select(unique_id, exclude) |> 
+  bind_rows(ds001486_exclude)
+
+# Exclude if missing events file
+ds001486_exclude <- ds001486_participants_df |> 
+  filter(exclude == "") |> 
+  anti_join(ds001486_events_df, by = "unique_id") |>
+  select(unique_id) |>
+  mutate(exclude = "missing events file for both runs") |>
+  bind_rows(ds001486_exclude)
+
+```
+
+```{r}
+#| warning: false
+#| message: false
+
+# Exclude based on nonverbal IQ
+ds001486_exclude <- ds001486_participants_df |> 
+  filter(!unique_id %in% ds001486_exclude$unique_id) |> 
+  mutate(exclude = if_else(mr_sts < 70, "nonverbal IQ < 70", "")) |>
+  filter(exclude != "") |> 
+  select(unique_id, exclude) |> 
+  bind_rows(ds001486_exclude)
+
+# Calculate accuracy for O+P+ and O-P-
+mean_acc_condition <- ds001486_events_df |>
+  filter(
+    !unique_id %in% ds001486_exclude$unique_id,
+    condition %in% c("O+P+", "O-P-")
+  ) |> 
+  group_by(unique_id, condition) |>
+  summarise(
+    n_correct = sum(accuracy),
+    n_trial = n(),
+    mean_acc = round(mean(accuracy), 3)
+  ) |> 
+  pivot_wider(
+    names_from = condition, 
+    values_from = c(n_correct, n_trial, mean_acc)
+  )
+
+# Calculate accuracy for non-conflicting items
+mean_acc_nci <- ds001486_events_df |>
+  filter(
+    !unique_id %in% ds001486_exclude$unique_id,
+    condition %in% c("O+P+", "O-P-")
+  ) |> 
+  group_by(unique_id) |>
+  summarise(
+    n_correct_nci = sum(accuracy),
+    n_trial_nci = n(),
+    mean_acc_nci = round(mean(accuracy), 3)
+  )
+
+# Exclude based on in-scanner task
+ds001486_accuracy_df <- mean_acc_condition |>
+  filter(!unique_id %in% ds001486_exclude$unique_id) |> 
+  inner_join(mean_acc_nci, by = "unique_id") |> 
+  select(
+    unique_id, starts_with("n_correct"), 
+    starts_with("n_trial"), starts_with("mean_")
+  ) |> 
+  mutate(
+    response_bias = abs(`mean_acc_O+P+` - `mean_acc_O-P-` ),
+    exclude = case_when(
+      mean_acc_nci  <  0.5 ~ "accuracy < 0.5 for O+P+ & O-P- across runs",
+      response_bias >= 0.5 ~ "response bias between O+P+ & O-P-",
+    )
+  )
+```
+
+```{r}
+# Count and show all excluded participants
+ds001486_exclude <- ds001486_accuracy_df |> 
+  filter(exclude != "") |> 
+  select(unique_id, exclude) |> 
+  bind_rows(ds001486_exclude) |> 
+  arrange(unique_id)
+
+glimpse(ds001486_exclude)
+kable(ds001486_exclude)
+```
+
+### ds001894
+
+```{r}
+#| warning: false
+#| message: false
+
+# Set input files
+ds001894_participants_csv <- here(proc_dir, "ds001894", "ds001894_participants.csv") 
+ds001894_events_csv       <- here(proc_dir, "ds001894", "ds001894_task-VisualWordRhyming_events.csv") 
+
+# Read in csv data
+ds001894_participants_df <- read_csv(ds001894_participants_csv)
+ds001894_events_df       <- read_csv(ds001894_events_csv)
+```
+
+```{r}
+#| warning: false
+#| message: false
+
+# Exclude based on demographics and standardized testing criteria
+# Convert matrix reasoning scores from t-scores to standard scores
+ds001894_participants_df <- ds001894_participants_df |>
+  select(
+    unique_id:participant_id, sex, handedness, 
+    age        = `age_ses-T1_phenotype`,
+    wordid_sts = `WJ-III_WordID_StS`,
+    el_scs     = CTOPP_EL_StS,
+    mr_tscore  = `WASI_MR_T-Score`,
+  ) |> 
+  mutate(
+    across(age:mr_tscore, as.numeric),
+    mr_sts  = if_else(!is.na(mr_tscore), floor((mr_tscore - 50)/10*15 + 100), NA),
+    exclude = if_else(handedness == "left", "left-handedness", "")
+  )
+
+# Filter for excluded participants
+ds001894_exclude <- ds001894_participants_df |> 
+  filter(exclude != "") |> 
+  select(unique_id, exclude)
+```
+
+```{r}
+#| warning: false
+#| message: false
+
+# Exclude if missing standardized testing data
+ds001894_exclude <- ds001894_participants_df |> 
+  filter(!unique_id %in% ds001486_exclude$unique_id) |> 
+  mutate(
+    exclude = case_when(
+      is.na(wordid_sts)    ~ "missing Word ID",
+      is.na(el_scs)        ~ "missing elision", 
+      is.na(mr_sts)        ~ "missing nonverbal IQ",
+    )
+  ) |>
+  filter(exclude != "") |> 
+  select(unique_id, exclude) |> 
+  bind_rows(ds001894_exclude)
+
+# Exclude if missing events file across both runs
+ds001894_exclude <- ds001894_participants_df |> 
+  filter(exclude == "") |> 
+  anti_join(ds001894_events_df, by = "unique_id") |>
+  select(unique_id) |>
+  mutate(exclude = "missing events file for both runs") |> 
+  bind_rows(ds001894_exclude)
+
+# Exclude if missing events file for one run
+ds001894_exclude <- ds001894_events_df |> 
+  filter(!unique_id %in% ds001894_exclude$unique_id) |> 
+  group_by(unique_id, run) |> 
+  summarize(n_trial = n()) |> 
+  pivot_wider(names_from = run, values_from = n_trial) |>
+  filter(if_any(everything(), is.na)) |> 
+  select(unique_id) |> 
+  mutate(exclude = "missing events file for one run") |> 
+  bind_rows(ds001894_exclude)
+
+```
+
+```{r}
+#| warning: false
+#| message: false
+
+# Exclude based on nonverbal IQ
+ds001894_exclude <- ds001894_participants_df |> 
+  filter(!unique_id %in% ds001894_exclude$unique_id) |> 
+  mutate(exclude = if_else(mr_sts < 70, "nonverbal IQ < 70", "")) |>
+  filter(exclude != "") |> 
+  select(unique_id, exclude) |> 
+  bind_rows(ds001894_exclude)
+
+# Calculate accuracy for O+P+ and O-P-
+mean_acc_condition <- ds001894_events_df |>
+  filter(
+    !unique_id %in% ds001894_exclude$unique_id,
+    condition %in% c("O+P+", "O-P-")
+  ) |> 
+  group_by(unique_id, condition) |>
+  summarise(
+    n_correct = sum(accuracy),
+    n_trial = n(),
+    mean_acc = round(mean(accuracy), 3)
+  ) |> 
+  pivot_wider(
+    names_from = condition, 
+    values_from = c(n_correct, n_trial, mean_acc)
+  )
+
+# Calculate accuracy for non-conflicting items
+mean_acc_nci <- ds001894_events_df |>
+  filter(
+    !unique_id %in% ds001894_exclude$unique_id,
+    condition %in% c("O+P+", "O-P-") 
+  ) |> 
+  group_by(unique_id) |>
+  summarise(
+    n_correct_nci = sum(accuracy),
+    n_trial_nci = n(),
+    mean_acc_nci = round(mean(accuracy), 3)
+  )
+
+# Exclude based on in-scanner task
+ds001894_accuracy_df <- mean_acc_condition |>
+  filter(!unique_id %in% ds001894_exclude$unique_id) |> 
+  inner_join(mean_acc_nci, by = "unique_id") |> 
+  select(
+    unique_id, starts_with("n_correct"), 
+    starts_with("n_trial"), starts_with("mean_")
+  ) |> 
+  mutate(
+    response_bias = abs(`mean_acc_O+P+` - `mean_acc_O-P-` ),
+    exclude = case_when(
+      mean_acc_nci  <  0.5 ~ "accuracy < 0.5 for O+P+ & O-P- across runs",
+      response_bias >= 0.5 ~ "response bias between O+P+ & O-P-",
+    )
+  )
+```
+
+```{r}
+# Count and show all excluded participants
+ds001894_exclude <- ds001894_accuracy_df |> 
+  filter(exclude != "") |> 
+  select(unique_id, exclude) |> 
+  bind_rows(ds001894_exclude) |> 
+  arrange(unique_id)
+
+glimpse(ds001894_exclude)
+kable(ds001894_exclude)
+```
+
+### ds002236
+
+```{r}
+#| warning: false
+#| message: false
+
+# Set input files
+ds002236_participants_csv <- here(proc_dir, "ds002236", "ds002236_participants.csv") 
+ds002236_events_csv       <- here(proc_dir, "ds002236", "ds002236_task-VisualWordRhyming_events.csv") 
+
+# Read in csv data
+ds002236_participants_df <- read_csv(ds002236_participants_csv)
+ds002236_events_df       <- read_csv(ds002236_events_csv)
+```
+
+```{r}
+#| warning: false
+#| message: false
+
+# Select for variables of interest
+# Convert matrix reasoning scaled scores to t-scores
+# Convert matrix reasoning scores from t-scores to standard scores
+ds002236_participants_df <- ds002236_participants_df |>
+  select(
+    unique_id:participant_id, sex, handedness, age,
+    wordid_sts = `WJ-III_WordID_StS`,
+    el_scs     = CTOPP_EL_StS,
+    mr_scs     = WASI_MR_ScS,
+  ) |> 
+  mutate(
+    mr_tscore  = if_else(!is.na(mr_scs), floor((mr_scs - 10)/3*10 + 50), NA),
+    mr_sts     = if_else(!is.na(mr_tscore), floor((mr_tscore - 50)/10*15 + 100), NA),
+    exclude = if_else(handedness == "left", "left-handedness", "")
+  )
+
+ds002236_exclude <- ds002236_participants_df |> 
+  filter(exclude != "") |> 
+  select(unique_id, exclude)
+```
+
+```{r}
+# Exclude if missing standardized testing data
+ds002236_exclude <- ds002236_participants_df |> 
+  filter(!unique_id %in% ds002236_exclude$unique_id) |> 
+  mutate(
+    exclude = case_when(
+      is.na(wordid_sts)    ~ "missing Word ID",
+      is.na(el_scs)        ~ "missing elision", 
+      is.na(mr_sts)        ~ "missing nonverbal IQ",
+    )
+  ) |>
+  filter(exclude != "") |> 
+  select(unique_id, exclude) |> 
+  bind_rows(ds002236_exclude)
+
+# Exclude if missing events file across both runs
+ds002236_exclude <- ds002236_participants_df |> 
+  filter(exclude == "") |> 
+  anti_join(ds002236_events_df, by = "unique_id") |>
+  select(unique_id) |>
+  mutate(exclude = "missing events file for both runs") |> 
+  bind_rows(ds002236_exclude)
+
+# Exclude if missing events file for one run
+ds002236_exclude <- ds002236_events_df |> 
+  filter(!unique_id %in% ds002236_exclude$unique_id) |> 
+  group_by(unique_id, run) |> 
+  summarize(n_trial = n()) |> 
+  pivot_wider(names_from = run, values_from = n_trial) |>
+  filter(if_any(everything(), is.na)) |> 
+  select(unique_id) |> 
+  mutate(exclude = "missing events file for one run") |> 
+  bind_rows(ds002236_exclude)
+```
+
+```{r}
+#| warning: false
+#| message: false
+
+# Exclude based on nonverbal IQ
+ds002236_exclude <- ds002236_participants_df |> 
+  filter(!unique_id %in% ds002236_exclude$unique_id) |> 
+  mutate(exclude = if_else(mr_sts < 70, "nonverbal IQ < 70", "")) |>
+  filter(exclude != "") |> 
+  select(unique_id, exclude) |> 
+  bind_rows(ds002236_exclude)
+
+# Calculate accuracy for O+P+ and O-P-
+mean_acc_condition <- ds002236_events_df |>
+  filter(
+    !unique_id %in% ds002236_exclude$unique_id,
+    condition %in% c("O+P+", "O-P-")
+  ) |> 
+  group_by(unique_id, condition) |>
+  summarise(
+    n_correct = sum(accuracy),
+    n_trial = n(),
+    mean_acc = round(mean(accuracy), 3)
+  ) |> 
+  pivot_wider(
+    names_from = condition, 
+    values_from = c(n_correct, n_trial, mean_acc)
+  )
+
+# Calculate accuracy for non-conflicting items
+mean_acc_nci <- ds002236_events_df |>
+  filter(
+    !unique_id %in% ds002236_exclude$unique_id,
+    condition %in% c("O+P+", "O-P-") 
+  ) |> 
+  group_by(unique_id) |>
+  summarise(
+    n_correct_nci = sum(accuracy),
+    n_trial_nci = n(),
+    mean_acc_nci = round(mean(accuracy), 3)
+  )
+
+# Exclude based on in-scanner task
+ds002236_accuracy_df <- mean_acc_condition |>
+  filter(!unique_id %in% ds002236_exclude$unique_id) |> 
+  inner_join(mean_acc_nci, by = "unique_id") |> 
+  select(
+    unique_id, starts_with("n_correct"), 
+    starts_with("n_trial"), starts_with("mean_")
+  ) |> 
+  mutate(
+    response_bias = abs(`mean_acc_O+P+` - `mean_acc_O-P-` ),
+    exclude = case_when(
+      mean_acc_nci  <  0.5 ~ "accuracy < 0.5 for O+P+ & O-P- across runs",
+      response_bias >= 0.5 ~ "response bias between O+P+ & O-P-",
+    )
+  )
+```
+
+```{r}
+# Count and show all excluded participants
+ds002236_exclude <- ds002236_accuracy_df |> 
+  filter(exclude != "") |> 
+  select(unique_id, exclude) |> 
+  bind_rows(ds002236_exclude) |> 
+  arrange(unique_id)
+
+glimpse(ds002236_exclude)
+kable(ds002236_exclude)
+```
+
+### ds006239
+
+```{r}
+#| warning: false
+#| message: false
+
+# Set input files
+ds006239_participants_csv <- here(proc_dir, "ds006239", "ds006239_participants.csv") 
+ds006239_events_csv       <- here(proc_dir, "ds006239", "ds006239_task-VisualWordRhyming_events.csv") 
+
+# Read in csv data
+ds006239_participants_df <- read_csv(ds006239_participants_csv)
+ds006239_events_df       <- read_csv(ds006239_events_csv)
+```
+
+```{r}
+#| warning: false
+#| message: false
+
+# Select for variables of interest
+# Convert matrix reasoning scores from t-scores to standard scores
+ds006239_participants_df <- ds006239_participants_df |>
+  mutate(
+    handedness = if_else(
+      (write_handedness %in% c(1,3)) & 
+      (rowSums(across(ball_handedness:jar_handedness, ~ . %in% c(1,3))) >= 1),
+      "right",
+      "left"
+    )
+  ) |> 
+  select(
+    unique_id:participant_id, sex, 
+    age        = age_st,
+    ends_with("ness"),
+    child_vision,
+    yes_child_meds,
+    yes_premature,
+    ADHD,
+    wordid_sts = `WJ-III_WordID_StS`,
+    el_scs     = `CTOPP-2_EL_ScS`,
+    bw_scs     = `CTOPP-2_BW_ScS`,
+    mr_sts     = KBIT_Nonverbal_StS,
+  ) |> 
+  mutate(
+    exclude = case_when(
+      handedness == "left"         ~ "left-handedness",
+      ADHD == 1                    ~ "ADHD",
+      participant_id == "sub-1091" ~ "medication affecting CNS",
+    )
+  )
+
+ds006239_exclude <- ds006239_participants_df |> 
+  filter(exclude != "") |> 
+  select(unique_id, exclude)
+```
+
+```{r}
+# Exclude if missing standardized testing data
+ds006239_exclude <- ds006239_participants_df |> 
+  filter(!unique_id %in% ds006239_exclude$unique_id) |> 
+  mutate(
+    exclude = case_when(
+      is.na(wordid_sts)    ~ "missing Word ID",
+      is.na(el_scs)        ~ "missing elision", 
+      is.na(mr_sts)        ~ "missing nonverbal IQ",
+    )
+  ) |>
+  filter(exclude != "") |> 
+  select(unique_id, exclude) |> 
+  bind_rows(ds006239_exclude)
+
+# Exclude if missing events file across both runs
+ds006239_exclude <- ds006239_participants_df |> 
+  filter(exclude == "") |> 
+  anti_join(ds006239_events_df, by = "unique_id") |>
+  select(unique_id) |>
+  mutate(exclude = "missing events file for both runs") |> 
+  bind_rows(ds006239_exclude)
+
+# Exclude if missing events file for one run
+ds006239_exclude <- ds006239_events_df |> 
+  filter(!unique_id %in% ds006239_exclude$unique_id) |> 
+  group_by(unique_id, run) |> 
+  summarize(n_trial = n()) |> 
+  pivot_wider(names_from = run, values_from = n_trial) |>
+  filter(if_any(everything(), is.na)) |> 
+  select(unique_id) |> 
+  mutate(exclude = "missing events file for one run") |> 
+  bind_rows(ds006239_exclude)
+```
+
+```{r}
+#| warning: false
+#| message: false
+
+# Exclude based on nonverbal IQ
+ds006239_exclude <- ds006239_participants_df |> 
+  filter(!unique_id %in% ds006239_exclude$unique_id) |> 
+  mutate(exclude = if_else(mr_sts < 70, "nonverbal IQ < 70", "")) |>
+  filter(exclude != "") |> 
+  select(unique_id, exclude) |> 
+  bind_rows(ds006239_exclude)
+
+# Keep track of those with multiple runs
+ds006239_multiple <- ds006239_events_df |> 
+  filter(!unique_id %in% ds006239_exclude$unique_id) |> 
+  group_by(unique_id, run) |> 
+  summarize(n_trial = n()) |> 
+  pivot_wider(names_from = run, values_from = n_trial) |> 
+  filter(if_any(everything(), ~ .x > 72)) 
+
+# Calculate accuracy separate for participants with multiple runs
+# Results were copied to excel (ds006239_multiple.csv) for calculation of different combinations
+ds006239_multiple <- ds006239_events_df |>
+  filter(
+    unique_id %in% ds006239_multiple$unique_id,
+    condition %in% c("O+P+", "O-P-")
+  ) |> 
+  group_by(unique_id, acquisition, run, condition) |> 
+  summarise(
+    n_correct = sum(accuracy),
+    n_trial = n(),
+    mean_acc = round(mean(accuracy), 3)
+  ) |> 
+  pivot_wider(
+    names_from = condition, 
+    values_from = c(n_correct, n_trial, mean_acc)
+  )
+
+# Calculate accuracy for O+P+ and O-P-
+mean_acc_condition <- ds006239_events_df |>
+  filter(
+    !unique_id %in% ds006239_exclude$unique_id,
+    !unique_id %in% ds006239_multiple$unique_id,
+    condition %in% c("O+P+", "O-P-")
+  ) |> 
+  group_by(unique_id, condition) |>
+  summarise(
+    n_correct = sum(accuracy),
+    n_trial = n(),
+    mean_acc = round(mean(accuracy), 3)
+  ) |> 
+  pivot_wider(
+    names_from = condition, 
+    values_from = c(n_correct, n_trial, mean_acc)
+  )
+
+# Calculate accuracy for non-conflicting items
+mean_acc_nci <- ds006239_events_df |>
+  filter(
+    !unique_id %in% ds006239_exclude$unique_id,
+    !unique_id %in% ds006239_multiple$unique_id,
+    condition %in% c("O+P+", "O-P-") 
+  ) |> 
+  group_by(unique_id) |>
+  summarise(
+    n_correct_nci = sum(accuracy),
+    n_trial_nci = n(),
+    mean_acc_nci = round(mean(accuracy), 3)
+  )
+
+# Exclude based on in-scanner task
+ds006239_accuracy_df <- mean_acc_condition |>
+  filter(
+    !unique_id %in% ds006239_exclude$unique_id,
+    !unique_id %in% ds006239_multiple$unique_id,
+  ) |> 
+  inner_join(mean_acc_nci, by = "unique_id") |> 
+  select(
+    unique_id, starts_with("n_correct"), 
+    starts_with("n_trial"), starts_with("mean_")
+  ) |> 
+  mutate(
+    response_bias = abs(`mean_acc_O+P+` - `mean_acc_O-P-` ),
+    exclude = case_when(
+      mean_acc_nci  <  0.5 ~ "accuracy < 0.5 for O+P+ & O-P- across runs",
+      response_bias >= 0.5 ~ "response bias between O+P+ & O-P-",
+    )
+  )
+```
+
+```{r}
+# Count and show all excluded participants
+ds006239_exclude <- ds006239_accuracy_df |> 
+  filter(exclude != "") |> 
+  select(unique_id, exclude) |> 
+  bind_rows(ds006239_exclude) |> 
+  arrange(unique_id)
+
+glimpse(ds006239_exclude)
+kable(ds006239_exclude)
+```
+
+:::
+
+## Merge datasets
+
+```{r}
+# Combine excluded participants 
+merge_exclude <- ds001486_exclude |> 
+  bind_rows(ds001894_exclude, ds002236_exclude, ds006239_exclude)
+
+# Create merged dataset
+merge_participants_df <- ds001486_participants_df |> 
+  bind_rows(
+    ds001894_participants_df, ds002236_participants_df, ds006239_participants_df
+  ) |> 
+  select(
+    unique_id:participant_id, sex, handedness, age, 
+    wordid_sts, el_scs, mr_sts 
+  ) |> 
+  left_join(merge_exclude, by = "unique_id")
+
+# Save merged dataset as rds file
+saveRDS(merge_participants_df, file = output_participants_rds)
+
+# Save merged dataset as csv file
+write_csv(merge_participants_df, file = output_participants_csv)
+```
+
+## Exclusion summary
+
+:::{.panel-tabset}
+
+### By criteria
+
+```{r}
+#| warning: false
+#| message: false
+
+# Summary of excluded participants
+exclude_table <- merge_participants_df |> 
+  filter(exclude != "") |> 
+  group_by(exclude) |> 
+  summarize(n = n())
+
+kable(exclude_table)
+```
+
+### By dataset & criteria
+
+```{r}
+#| warning: false
+#| message: false
+
+# Summary of excluded participants
+exclude_table <- merge_participants_df |> 
+  filter(exclude != "") |> 
+  group_by(dataset, exclude) |> 
+  summarize(n = n())
+
+kable(exclude_table)
+```
+
+:::
