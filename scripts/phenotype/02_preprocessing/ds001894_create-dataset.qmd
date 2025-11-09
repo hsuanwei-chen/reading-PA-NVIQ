@@ -46,7 +46,7 @@ dataset = "ds001894"
 
 # Set the directory and files
 raw_dir  <- here("data", "phenotype", "raw", dataset)
-proc_dir <- here("data", "phenotype", "processed", dataset)
+proc_dir <- here("data", "phenotype", "preprocessed", dataset)
 phen_dir <- here(raw_dir, "phenotype", "ses-T1")
 
 # Set input files
