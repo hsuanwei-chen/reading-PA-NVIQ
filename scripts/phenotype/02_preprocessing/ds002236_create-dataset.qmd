@@ -1,0 +1,324 @@
+---
+title: "Create ds002236 Dataset"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+author: "Isaac Chen"
+
+format: 
+    html:
+      embed-resources: true
+---
+
+### About
+This dataset was created using `ds002236` `version 1.1.1` ([Link to OpenNeuro](https://openneuro.org/datasets/ds002236/versions/1.1.1)).
+
+This script aims to create the following two files:
+
+- `{dataset}_participants.csv`
+  - Provides information such as age, sex, handedness, and assessment outcomes
+- `{dataset}_task-WordRhyming_events.csv`
+  - Provides information about item-level performance on in-scanner task across
+  all participant scans
+
+### Known Issues
+
+- BIDS validator warns that some stimuli files are not included in events.tsv. This is due to listing stimuli as stim1_file and stim2_file in events.tsv files as each trial contained two stimuli. All stimuli were confirmed to exist in stimuli/ directory and be used in events.tsv files
+- Slices were acquired interleaved from bottom to top, odd first.
+- Age at phenotype / standardized testing and shifted(deidentified) date of birth is provided in participant.tsv. Shifted(deidentified) acquisition date of each imagining file is provided in sidecar json file for each image. Date of standardized testing is not available.
+
+### Change Log:
+- 2024-09-23: Isaac updated file path to work on his local computer
+- 2024-10-14: Isaac updated to check if data matches `Lytle et al. 2020`
+- 2025-10-10: Isaac added documentation and streamlined script
+
+### Set up
+
+```{r}
+#| warning: false
+#| message: false
+# Clear all variables from environment
+rm(list = ls())
+
+# Load library
+library(here)
+library(tidyverse)
+library(glue)
+
+# Name dataset of interest
+dataset = "ds002236"
+
+# Set the directory and files
+raw_dir  <- here("data", "phenotype", "raw", dataset)
+proc_dir <- here("data", "phenotype", "processed", dataset)
+phen_dir <- here(raw_dir, "phenotype")
+
+# Set input files
+participants_tsv <- here(raw_dir , "participants.tsv") 
+wj3_tsv          <- here(phen_dir, "wj-III.tsv")
+ctopp_tsv        <- here(phen_dir, "ctopp.tsv")
+wasi_tsv         <- here(phen_dir, "wasi.tsv")
+
+# Set output files
+output_participants   <- here(proc_dir, glue("{dataset}_participants.csv"))
+output_rhyming_events <- here(proc_dir, glue("{dataset}_task-VisualWordRhyming_events.csv"))
+```
+
+### Process participant summary and assessment data
+
+```{r}
+#| warning: false
+#| message: false
+# Read in participant summary data
+participants_df <- read_tsv(participants_tsv)
+
+# Combine two datasets into one
+# Rename sex and code handedness
+participants_df <- participants_df |> 
+  select(participant_id, age, sex, handedness) |> 
+  mutate(
+    sex = case_when(
+      sex == 1 ~ "male",
+      sex == 2 ~ "female",
+      .default = NA_character_
+    ),
+    handedness = case_when(
+      handedness == 1 ~ "left",
+      handedness == 2 ~ "right",
+      .default = NA_character_
+    )
+  )
+```
+
+```{r}
+#| warning: false
+#| message: false
+# Read in assessment data
+wj3_df      <- read_tsv(wj3_tsv) 
+ctopp_df    <- read_tsv(ctopp_tsv) 
+wasi_df     <- read_tsv(wasi_tsv)
+
+# Convert columns to numeric
+wj3_df  <- wj3_df |> mutate(across(-participant_id, as.numeric))
+wasi_df <- wasi_df |> mutate(across(-participant_id, as.numeric)) 
+
+# Append assessment data
+participants_df <- participants_df |> 
+  right_join(wj3_df,   by = "participant_id") |> 
+  right_join(ctopp_df, by = "participant_id") |> 
+  right_join(wasi_df,  by = "participant_id")
+```
+
+```{r}
+# Process record IDs to include unique ID and dataset
+participants_df <- participants_df |>
+  mutate(
+    id        = as.numeric(stringr::str_remove_all(participant_id, "sub-")),
+    unique_id = glue("{dataset}_sub-{formatC(id, width = 4, flag = 0)}"),
+    dataset   = dataset,
+    .before   = participant_id
+  ) |> 
+  select(-id)
+```
+
+### Search for word rhyming task events file
+
+```{r}
+# Define the regular expression pattern for word rhyming task
+pattern <- ".*task-VisRhyme.*tsv"
+
+# Use list.files with pattern argument to list files matching the regex
+rhyming_events_files <- 
+  list.files(
+    path = raw_dir, 
+    pattern = pattern, 
+    full.names = TRUE, 
+    recursive = TRUE
+  )
+
+# List number of files found
+glue("Found {length(rhyming_events_files)} word rhyming task events files")
+```
+
+### Description of trial
+
+| Name            | Number  | Description                                                   | 
+|-----------------|---------|---------------------------------------------------------------|
+|0. Null          | 36/36   | Respond with index finger when black fixation cross turns red |
+|1. O+P+          | 13/11   | Matching words, shared phonology, shared orthography          |
+|2. O+P-          | 10/14   | Matching words, shared phonology, no shared orthography       |
+|3. O-P+          | 11/13   | Mismatching words, no shared phonology, shared orthography    |
+|4. O-P-          | 14/10   | Mismatching words, no shared phonology, no shared orthography |
+|5. Single symbol | 12/12   | Matching judgment of single non-alphabetic characters         |
+|6. Triple symbol | 12/12   | Matching judgment of triple non-alphabetic characters         |
+|**Total:**       | **108** |                                                               |
+: {tbl-colwidths="[20, 10, 70]" .striped}
+
+Source: `task-VisRhyme_events.json`
+
+### Function to extract data from events file
+
+This function will create a events database with the following columns:
+
+1. `unique_id`: 
+2. `dataset`
+3. `participant_id`
+4. `session`
+5. `task`
+6. `acquisition`
+7. `run`
+8. `onset`
+9. `duration`
+10. `trial_type`
+11. `trial_name`
+12. `condition`
+13. `stim1`
+14. `stim2`
+15. `response`
+16. `accuracy`
+
+```{r}
+# Define function for extracting events data
+extract_events_data <- function(events_file, dataset, events_num) {
+  # For troubleshooting purposes
+  #events_file = rhyming_events_files[1]
+  
+  # Extract file name and break it up into parts
+  file_name       <- str_remove_all(events_file, "^.*/")
+  file_name_parts <- str_split_1(file_name, "_")
+  
+  # Extract subject ID, session, run
+  current_subject     <- file_name_parts[1]
+  current_id          <- file_name_parts[1] |> stringr::str_remove_all("sub-")
+  #current_session     <- file_name_parts[2]
+  current_task        <- file_name_parts[2]
+  #current_acquisition <- file_name_parts[4]
+  current_run         <- file_name_parts[3]
+  
+  # Read in events TSV file
+  # Make sure datatype is consistent
+  # Remove Red box row
+  events <- 
+    read_tsv(events_file, show_col_types = FALSE) |> 
+    rename(
+      stim1 = stim1_file,
+      stim2 = stim2_file
+    ) |> 
+    mutate(
+      onset         = as.character(onset),      # as.character to avoid warnings
+      duration      = as.character(duration),
+      trial_type    = as.character(trial_type),
+      #trial_name    = as.character(trial_name) ,
+      stim1         = as.character(stim1),
+      stim2         = as.character(stim2),
+      response_time = as.character(response_time),
+      accuracy      = as.character(accuracy)
+    )
+  
+  # Check number of rows in events file
+  if (nrow(events) != events_num) {
+    stop(glue("Error: expected {events_num} rows, but found {nrow(events)}"))
+  }
+  
+  # Add metadata to events file information
+  subject_data <- events |> 
+    mutate(
+      # Metadata
+      unique_id      = glue("{dataset}_sub-{formatC(as.numeric(current_id), width = 4, flag = 0)}"),
+      dataset        = dataset,
+      participant_id = current_subject,
+      session        = "",
+      task           = current_task,
+      acquisition    = "",
+      run            = current_run,
+      
+      # Categorize trials 
+      condition = case_when(
+        trial_type == "0"  ~ "control",
+        trial_type == "1"  ~ "O+P+",
+        trial_type == "2"  ~ "O+P-",       
+        trial_type == "3"  ~ "O-P+",
+        trial_type == "4"  ~ "O-P-",
+        trial_type == "5"  ~ "perceptual",
+        trial_type == "6"  ~ "perceptual_complex",
+      ),
+    )
+  
+  return(subject_data)
+}
+```
+
+### Create word rhyming task events dataset
+
+```{r}
+#| eval: false
+# Previous method wtih purr::map_dfr
+#rhyming.df <- map_dfr(.x = rhyming_events_files, .f = ~ clean_subj_data(.x))
+
+# Print warnings immediately
+options(warn = 1)
+#options(warn = 0) # return to default
+
+# Set parameters  
+rhyming_events_df <- tibble()
+dataset = "ds002236"
+events_num = 108
+
+# Create word rhyming in-scanner task dataset
+for (idx in seq_along(rhyming_events_files)) {
+  # Extract file name
+  file_name <- str_remove_all(rhyming_events_files[idx], "^.*/")
+  cat(glue("{idx}. Cleaning {file_name}..."))
+  cat(glue("done"), sep = "\n")
+  
+  # Extract single scan events data
+  subject_events <- extract_events_data(
+    events_file = rhyming_events_files[idx], 
+    dataset = dataset,
+    events_num = events_num
+  )
+  
+  # Append single scan events data to dataset
+  rhyming_events_df <- bind_rows(rhyming_events_df, subject_events)
+}
+
+# Reorder columns for clarity
+# Convert columns to numeric
+# If resp is missing (NA), then make acc = 0 (incorrect)
+rhyming_events_df <- rhyming_events_df |>
+  select(
+    unique_id:run, onset:trial_type, condition, response_time, accuracy,
+    stim1, stim2
+  ) |> 
+  mutate(
+    onset         = as.numeric(onset),
+    duration      = round(as.numeric(duration), 3),
+    trial_type    = as.numeric(trial_type),
+    response_time = as.numeric(response_time),
+    accuracy      = as.numeric(accuracy)
+  )
+```
+
+### Quality Check
+
+```{r}
+#| eval: false
+# Inspect any rows that have NAs for accuracy
+qc <- rhyming_events_df |>filter(is.na(accuracy))
+glimpse(qc)
+
+# Change accuracy to 0 (incorrect)
+rhyming_events_df <- rhyming_events_df |> 
+  mutate(accuracy = ifelse(is.na(accuracy), 0, accuracy))
+
+# Count number of NAs across all columns
+qc <- rhyming_events_df |>filter(if_any(everything(), is.na))
+glimpse(qc)
+```
+
+### Save outputs
+
+```{r}
+#| eval: false
+# Write outputs to csv files
+write_csv(participants_df,   file = output_participants)
+write_csv(rhyming_events_df, file = output_rhyming_events)
+```
