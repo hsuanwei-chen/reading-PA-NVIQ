@@ -113,12 +113,12 @@ ds001486_participants_df <- ds001486_participants_df |>
   ) |> 
   mutate(
     mr_sts  = if_else(!is.na(mr_tscore), floor((mr_tscore - 50)/10*15 + 100), NA),
-    exclude = if_else(handedness == "left", "left-handedness", "")
+    exclude = if_else(handedness == "left", "left-handedness", NA)
   )
 
 # Filter for excluded participants
 ds001486_exclude <- ds001486_participants_df |> 
-  filter(exclude != "") |> 
+  filter(!is.na(exclude)) |> 
   select(unique_id, exclude)
 ```
 
@@ -133,16 +133,16 @@ ds001486_exclude <- ds001486_participants_df |>
     exclude = case_when(
       is.na(wordid_sts)    ~ "missing Word ID",
       is.na(el_scs)        ~ "missing elision", 
-      is.na(mr_sts)        ~ "missing nonverbal IQ",
+      is.na(mr_sts)        ~ "missing nonverbal IQ"
     )
   ) |>
-  filter(exclude != "") |> 
+  filter(!is.na(exclude)) |> 
   select(unique_id, exclude) |> 
   bind_rows(ds001486_exclude)
 
 # Exclude if missing events file
 ds001486_exclude <- ds001486_participants_df |> 
-  filter(exclude == "") |> 
+  filter(!unique_id %in% ds001486_exclude$unique_id) |> 
   anti_join(ds001486_events_df, by = "unique_id") |>
   select(unique_id) |>
   mutate(exclude = "missing events file for both runs") |>
@@ -157,8 +157,8 @@ ds001486_exclude <- ds001486_participants_df |>
 # Exclude based on nonverbal IQ
 ds001486_exclude <- ds001486_participants_df |> 
   filter(!unique_id %in% ds001486_exclude$unique_id) |> 
-  mutate(exclude = if_else(mr_sts < 70, "nonverbal IQ < 70", "")) |>
-  filter(exclude != "") |> 
+  mutate(exclude = if_else(mr_sts < 70, "nonverbal IQ < 70", NA)) |>
+  filter(!is.na(exclude)) |> 
   select(unique_id, exclude) |> 
   bind_rows(ds001486_exclude)
 
@@ -204,7 +204,7 @@ ds001486_accuracy_df <- mean_acc_condition |>
     response_bias = abs(`mean_acc_O+P+` - `mean_acc_O-P-` ),
     exclude = case_when(
       mean_acc_nci  <  0.5 ~ "accuracy < 0.5 for O+P+ & O-P- across runs",
-      response_bias >= 0.5 ~ "response bias between O+P+ & O-P-",
+      response_bias >= 0.5 ~ "response bias between O+P+ & O-P-"
     )
   )
 ```
@@ -212,7 +212,7 @@ ds001486_accuracy_df <- mean_acc_condition |>
 ```{r}
 # Count and show all excluded participants
 ds001486_exclude <- ds001486_accuracy_df |> 
-  filter(exclude != "") |> 
+  filter(!is.na(exclude)) |> 
   select(unique_id, exclude) |> 
   bind_rows(ds001486_exclude) |> 
   arrange(unique_id)
@@ -253,12 +253,12 @@ ds001894_participants_df <- ds001894_participants_df |>
   mutate(
     across(age:mr_tscore, as.numeric),
     mr_sts  = if_else(!is.na(mr_tscore), floor((mr_tscore - 50)/10*15 + 100), NA),
-    exclude = if_else(handedness == "left", "left-handedness", "")
+    exclude = if_else(handedness == "left", "left-handedness", NA)
   )
 
 # Filter for excluded participants
 ds001894_exclude <- ds001894_participants_df |> 
-  filter(exclude != "") |> 
+  filter(!is.na(exclude)) |> 
   select(unique_id, exclude)
 ```
 
@@ -276,13 +276,13 @@ ds001894_exclude <- ds001894_participants_df |>
       is.na(mr_sts)        ~ "missing nonverbal IQ",
     )
   ) |>
-  filter(exclude != "") |> 
+  filter(!is.na(exclude)) |> 
   select(unique_id, exclude) |> 
   bind_rows(ds001894_exclude)
 
 # Exclude if missing events file across both runs
 ds001894_exclude <- ds001894_participants_df |> 
-  filter(exclude == "") |> 
+  filter(!unique_id %in% ds001486_exclude$unique_id) |> 
   anti_join(ds001894_events_df, by = "unique_id") |>
   select(unique_id) |>
   mutate(exclude = "missing events file for both runs") |> 
@@ -308,8 +308,8 @@ ds001894_exclude <- ds001894_events_df |>
 # Exclude based on nonverbal IQ
 ds001894_exclude <- ds001894_participants_df |> 
   filter(!unique_id %in% ds001894_exclude$unique_id) |> 
-  mutate(exclude = if_else(mr_sts < 70, "nonverbal IQ < 70", "")) |>
-  filter(exclude != "") |> 
+  mutate(exclude = if_else(mr_sts < 70, "nonverbal IQ < 70", NA)) |>
+  filter(!is.na(exclude)) |> 
   select(unique_id, exclude) |> 
   bind_rows(ds001894_exclude)
 
@@ -355,7 +355,7 @@ ds001894_accuracy_df <- mean_acc_condition |>
     response_bias = abs(`mean_acc_O+P+` - `mean_acc_O-P-` ),
     exclude = case_when(
       mean_acc_nci  <  0.5 ~ "accuracy < 0.5 for O+P+ & O-P- across runs",
-      response_bias >= 0.5 ~ "response bias between O+P+ & O-P-",
+      response_bias >= 0.5 ~ "response bias between O+P+ & O-P-"
     )
   )
 ```
@@ -363,7 +363,7 @@ ds001894_accuracy_df <- mean_acc_condition |>
 ```{r}
 # Count and show all excluded participants
 ds001894_exclude <- ds001894_accuracy_df |> 
-  filter(exclude != "") |> 
+  filter(!is.na(exclude)) |> 
   select(unique_id, exclude) |> 
   bind_rows(ds001894_exclude) |> 
   arrange(unique_id)
@@ -404,11 +404,11 @@ ds002236_participants_df <- ds002236_participants_df |>
   mutate(
     mr_tscore  = if_else(!is.na(mr_scs), floor((mr_scs - 10)/3*10 + 50), NA),
     mr_sts     = if_else(!is.na(mr_tscore), floor((mr_tscore - 50)/10*15 + 100), NA),
-    exclude = if_else(handedness == "left", "left-handedness", "")
+    exclude = if_else(handedness == "left", "left-handedness", NA)
   )
 
 ds002236_exclude <- ds002236_participants_df |> 
-  filter(exclude != "") |> 
+  filter(!is.na(exclude)) |> 
   select(unique_id, exclude)
 ```
 
@@ -423,13 +423,13 @@ ds002236_exclude <- ds002236_participants_df |>
       is.na(mr_sts)        ~ "missing nonverbal IQ",
     )
   ) |>
-  filter(exclude != "") |> 
+  filter(!is.na(exclude)) |> 
   select(unique_id, exclude) |> 
   bind_rows(ds002236_exclude)
 
 # Exclude if missing events file across both runs
 ds002236_exclude <- ds002236_participants_df |> 
-  filter(exclude == "") |> 
+  filter(!unique_id %in% ds002236_exclude$unique_id) |> 
   anti_join(ds002236_events_df, by = "unique_id") |>
   select(unique_id) |>
   mutate(exclude = "missing events file for both runs") |> 
@@ -454,8 +454,8 @@ ds002236_exclude <- ds002236_events_df |>
 # Exclude based on nonverbal IQ
 ds002236_exclude <- ds002236_participants_df |> 
   filter(!unique_id %in% ds002236_exclude$unique_id) |> 
-  mutate(exclude = if_else(mr_sts < 70, "nonverbal IQ < 70", "")) |>
-  filter(exclude != "") |> 
+  mutate(exclude = if_else(mr_sts < 70, "nonverbal IQ < 70", NA)) |>
+  filter(!is.na(exclude)) |> 
   select(unique_id, exclude) |> 
   bind_rows(ds002236_exclude)
 
@@ -501,7 +501,7 @@ ds002236_accuracy_df <- mean_acc_condition |>
     response_bias = abs(`mean_acc_O+P+` - `mean_acc_O-P-` ),
     exclude = case_when(
       mean_acc_nci  <  0.5 ~ "accuracy < 0.5 for O+P+ & O-P- across runs",
-      response_bias >= 0.5 ~ "response bias between O+P+ & O-P-",
+      response_bias >= 0.5 ~ "response bias between O+P+ & O-P-"
     )
   )
 ```
@@ -509,7 +509,7 @@ ds002236_accuracy_df <- mean_acc_condition |>
 ```{r}
 # Count and show all excluded participants
 ds002236_exclude <- ds002236_accuracy_df |> 
-  filter(exclude != "") |> 
+  filter(!is.na(exclude)) |> 
   select(unique_id, exclude) |> 
   bind_rows(ds002236_exclude) |> 
   arrange(unique_id)
@@ -565,12 +565,12 @@ ds006239_participants_df <- ds006239_participants_df |>
     exclude = case_when(
       handedness == "left"         ~ "left-handedness",
       ADHD == 1                    ~ "ADHD",
-      participant_id == "sub-1091" ~ "medication affecting CNS",
+      participant_id == "sub-1091" ~ "medication affecting CNS"
     )
   )
 
 ds006239_exclude <- ds006239_participants_df |> 
-  filter(exclude != "") |> 
+  filter(!is.na(exclude)) |> 
   select(unique_id, exclude)
 ```
 
@@ -585,13 +585,13 @@ ds006239_exclude <- ds006239_participants_df |>
       is.na(mr_sts)        ~ "missing nonverbal IQ",
     )
   ) |>
-  filter(exclude != "") |> 
+  filter(!is.na(exclude)) |> 
   select(unique_id, exclude) |> 
   bind_rows(ds006239_exclude)
 
 # Exclude if missing events file across both runs
 ds006239_exclude <- ds006239_participants_df |> 
-  filter(exclude == "") |> 
+  filter(!unique_id %in% ds006239_exclude$unique_id) |> 
   anti_join(ds006239_events_df, by = "unique_id") |>
   select(unique_id) |>
   mutate(exclude = "missing events file for both runs") |> 
@@ -616,8 +616,8 @@ ds006239_exclude <- ds006239_events_df |>
 # Exclude based on nonverbal IQ
 ds006239_exclude <- ds006239_participants_df |> 
   filter(!unique_id %in% ds006239_exclude$unique_id) |> 
-  mutate(exclude = if_else(mr_sts < 70, "nonverbal IQ < 70", "")) |>
-  filter(exclude != "") |> 
+  mutate(exclude = if_else(mr_sts < 70, "nonverbal IQ < 70", NA)) |>
+  filter(!is.na(exclude)) |> 
   select(unique_id, exclude) |> 
   bind_rows(ds006239_exclude)
 
@@ -694,7 +694,7 @@ ds006239_accuracy_df <- mean_acc_condition |>
     response_bias = abs(`mean_acc_O+P+` - `mean_acc_O-P-` ),
     exclude = case_when(
       mean_acc_nci  <  0.5 ~ "accuracy < 0.5 for O+P+ & O-P- across runs",
-      response_bias >= 0.5 ~ "response bias between O+P+ & O-P-",
+      response_bias >= 0.5 ~ "response bias between O+P+ & O-P-"
     )
   )
 ```
@@ -702,7 +702,7 @@ ds006239_accuracy_df <- mean_acc_condition |>
 ```{r}
 # Count and show all excluded participants
 ds006239_exclude <- ds006239_accuracy_df |> 
-  filter(exclude != "") |> 
+  filter(!is.na(exclude)) |> 
   select(unique_id, exclude) |> 
   bind_rows(ds006239_exclude) |> 
   arrange(unique_id)
@@ -723,7 +723,9 @@ merge_exclude <- ds001486_exclude |>
 # Create merged dataset
 merge_participants_df <- ds001486_participants_df |> 
   bind_rows(
-    ds001894_participants_df, ds002236_participants_df, ds006239_participants_df
+    ds001894_participants_df, 
+    ds002236_participants_df, 
+    ds006239_participants_df
   ) |> 
   select(
     unique_id:participant_id, sex, handedness, age, 
@@ -750,7 +752,7 @@ write_csv(merge_participants_df, file = output_participants_csv)
 
 # Summary of excluded participants
 exclude_table <- merge_participants_df |> 
-  filter(exclude != "") |> 
+  filter(!is.na(exclude)) |> 
   group_by(exclude) |> 
   summarize(n = n())
 
@@ -765,7 +767,7 @@ kable(exclude_table)
 
 # Summary of excluded participants
 exclude_table <- merge_participants_df |> 
-  filter(exclude != "") |> 
+  filter(!is.na(exclude)) |> 
   group_by(dataset, exclude) |> 
   summarize(n = n())
 

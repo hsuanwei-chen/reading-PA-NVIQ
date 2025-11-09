@@ -481,7 +481,7 @@ ds006239_sub-1246,ds006239,sub-1246,female,right,10.3,94,9,102,NA
 ds006239_sub-1247,ds006239,sub-1247,male,right,10.3,123,14,117,NA
 ds006239_sub-1248,ds006239,sub-1248,female,right,12.3,115,10,121,NA
 ds006239_sub-1250,ds006239,sub-1250,female,right,16.5,91,10,90,NA
-ds006239_sub-1251,ds006239,sub-1251,female,right,15.6,96,4,111,NA
+ds006239_sub-1251,ds006239,sub-1251,female,right,15.6,96,4,111,missing events file for both runs
 ds006239_sub-1252,ds006239,sub-1252,female,right,15.61,84,8,76,NA
 ds006239_sub-1255,ds006239,sub-1255,male,right,10.36,92,5,98,NA
 ds006239_sub-1257,ds006239,sub-1257,male,left,12.38,92,5,99,left-handedness
@@ -494,7 +494,7 @@ ds006239_sub-1278,ds006239,sub-1278,male,right,10.95,127,12,83,NA
 ds006239_sub-1283,ds006239,sub-1283,female,right,16.66,89,9,83,NA
 ds006239_sub-1284,ds006239,sub-1284,female,right,12.84,105,9,122,NA
 ds006239_sub-1285,ds006239,sub-1285,male,right,10.82,125,13,129,ADHD
-ds006239_sub-1287,ds006239,sub-1287,male,right,16.43,92,8,100,NA
+ds006239_sub-1287,ds006239,sub-1287,male,right,16.43,92,8,100,missing events file for both runs
 ds006239_sub-1288,ds006239,sub-1288,female,right,14.67,114,11,108,NA
 ds006239_sub-1289,ds006239,sub-1289,female,right,13.21,118,12,134,NA
 ds006239_sub-1290,ds006239,sub-1290,female,right,11.37,76,5,60,ADHD
