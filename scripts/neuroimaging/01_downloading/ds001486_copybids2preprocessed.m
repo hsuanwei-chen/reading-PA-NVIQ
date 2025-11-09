@@ -18,7 +18,7 @@ root_dir = '/panfs/accrepfs.vampire/data/booth_lab';
 % Define project directory
 proj_dir = fullfile(root_dir, 'Isaac', '01_project', 'reading-PA-NVIQ');
 
-% Define directory with utility
+% Define directory with utility functions
 util_dir = fullfile(proj_dir, 'scripts', 'neuroimaging', 'utils');  
 addpath(genpath(util_dir));
 
