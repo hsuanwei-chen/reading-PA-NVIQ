@@ -26,7 +26,8 @@ addpath(genpath(util_dir));
 raw_dir = fullfile(root_dir, 'datasets', '3_ds002236', 'bids');
 
 % Define preprocessing directory, where you want to copy your data to
-proc_dir = fullfile(proj_dir, 'data', 'neuroimaging', 'preprocessed', 'ds002236');
+dataset = 'ds002236';
+proc_dir = fullfile(proj_dir, 'data', 'neuroimaging', 'preprocessed', dataset);
 
 % Define merged_participants.csv
 subj_csv = fullfile(proj_dir, 'data', 'phenotype', 'merged', 'merged_participants.csv');
@@ -36,7 +37,7 @@ subj_csv = fullfile(proj_dir, 'data', 'phenotype', 'merged', 'merged_participant
 subj_tbl = readtable(subj_csv);
 
 % Filter by dataset and non-excluded
-idx = strcmp(subj_tbl.dataset, 'ds002236') & strcmp(subj_tbl.exclude, 'NA');
+idx = strcmp(subj_tbl.dataset, dataset) & strcmp(subj_tbl.exclude, 'NA');
 subjects = subj_tbl(idx, :);
 
 % Extract participant IDs

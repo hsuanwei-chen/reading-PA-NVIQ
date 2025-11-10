@@ -26,7 +26,8 @@ addpath(genpath(util_dir));
 raw_dir = fullfile(root_dir, 'DHH', 'bids_1000s_ses-1');
 
 % Define preprocessing directory, where you want to copy your data to
-proc_dir = fullfile(proj_dir, 'data', 'neuroimaging', 'preprocessed', 'ds006239');
+dataset = 'ds006239';
+proc_dir = fullfile(proj_dir, 'data', 'neuroimaging', 'preprocessed', dataset);
 
 % Define merged_participants.csv
 subj_csv = fullfile(proj_dir, 'data', 'phenotype', 'merged', 'merged_participants.csv');
