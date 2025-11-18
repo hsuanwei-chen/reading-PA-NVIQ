@@ -1,0 +1,10 @@
+{
+    "t1w": {
+        "datatype": "anat",
+        "suffix": "T1w"
+    },
+    "bold": {
+        "datatype": "func",
+        "suffix": "bold"
+    }
+}
