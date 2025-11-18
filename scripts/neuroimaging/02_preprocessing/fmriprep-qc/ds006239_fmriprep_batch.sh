@@ -39,6 +39,7 @@ fmriprep "${BIDS_DIR}" "${OUTPUT_DIR}" \
   --task-id "${TASK_ID}" \
   --bids-filter-file "${BIDS_FILTER}" \
   --nprocs 8 \
+  --ignore slicetiming \
   --output-spaces MNI152NLin2009cAsym:res-2 \
   --fs-license-file "${FS_LICENSE}" \
   --fs-no-reconall \
