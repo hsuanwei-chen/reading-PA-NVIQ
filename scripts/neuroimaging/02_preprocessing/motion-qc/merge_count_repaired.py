@@ -15,9 +15,11 @@ count_repaired_csv = [
 output_csv = data_dir / "merged_count_repaired.csv"
 
 # Read and concatenate
-df = pd.concat([pd.read_csv(f) for f in count_repaired_csv], ignore_index = True)
+df = pd.concat(
+    [pd.read_csv(f) for f in count_repaired_csv], 
+    ignore_index = True
+)
 
 # Save merged result
 df.to_csv(output_csv, index = False)
-
 print("Count repaired files merged successfully.")
