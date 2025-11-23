@@ -50,4 +50,5 @@ spm_orthviews('Reposition',[0 0 0]);
 title([n ' GM over subj mean func'])
 
 % Print
-print(gcf,'-dpng',fullfile(out_path,'coreg_check.png'))
+[func_p,func_n,func_e] = fileparts(bkgnd_file);
+print(gcf,'-dpng',fullfile(out_path, strcat(func_n, '_coreg_check.png')))
