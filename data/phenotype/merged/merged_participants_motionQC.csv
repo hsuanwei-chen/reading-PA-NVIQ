@@ -163,7 +163,7 @@ ds001894_sub-0029,ds001894,sub-029,male,right,9.09,112,13,115,NA
 ds001894_sub-0030,ds001894,sub-030,male,right,10.87,113,11,110,NA
 ds001894_sub-0031,ds001894,sub-031,male,right,7.68,104,10,104,response bias between O+P+ & O-P-
 ds001894_sub-0032,ds001894,sub-032,male,right,9.14,113,12,109,NA
-ds001894_sub-0033,ds001894,sub-033,male,right,11.52,110,12,101,NA
+ds001894_sub-0033,ds001894,sub-033,male,right,11.52,110,12,101,corrupted events file for one run
 ds001894_sub-0034,ds001894,sub-034,female,right,9.14,101,13,104,accuracy < 0.5 for O+P+ & O-P- across runs
 ds001894_sub-0035,ds001894,sub-035,female,right,8.93,94,10,110,NA
 ds001894_sub-0036,ds001894,sub-036,female,right,10.19,124,14,119,NA
