@@ -135,7 +135,7 @@ ds001894_sub-0001,ds001894,sub-001,female,right,10.24,110,12,125,NA
 ds001894_sub-0002,ds001894,sub-002,male,right,9.51,130,13,106,NA
 ds001894_sub-0003,ds001894,sub-003,male,right,8.73,102,13,113,NA
 ds001894_sub-0004,ds001894,sub-004,female,right,11.12,128,13,122,NA
-ds001894_sub-0005,ds001894,sub-005,female,right,10.16,118,12,103,excluded for >0 chunk of motion outliers
+ds001894_sub-0005,ds001894,sub-005,female,right,10.16,118,12,103,>0 chunk of motion outliers
 ds001894_sub-0006,ds001894,sub-006,female,right,7.96,129,9,128,NA
 ds001894_sub-0007,ds001894,sub-007,male,right,9.29,105,14,127,NA
 ds001894_sub-0008,ds001894,sub-008,male,right,11.23,120,13,97,NA
@@ -154,11 +154,11 @@ ds001894_sub-0020,ds001894,sub-020,male,right,11.92,100,8,97,NA
 ds001894_sub-0021,ds001894,sub-021,male,right,10.21,124,14,119,NA
 ds001894_sub-0022,ds001894,sub-022,female,right,10.65,116,12,103,NA
 ds001894_sub-0023,ds001894,sub-023,female,right,10.64,96,10,100,NA
-ds001894_sub-0024,ds001894,sub-024,male,right,7.5,122,12,127,excluded for >15% of volumes marked as motion outliers
+ds001894_sub-0024,ds001894,sub-024,male,right,7.5,122,12,127,>15% of volumes marked as motion outliers
 ds001894_sub-0025,ds001894,sub-025,female,right,12.33,105,8,112,NA
 ds001894_sub-0026,ds001894,sub-026,female,right,10.79,103,9,113,NA
 ds001894_sub-0027,ds001894,sub-027,female,right,10.8,143,14,107,NA
-ds001894_sub-0028,ds001894,sub-028,female,right,9.09,112,13,124,excluded for >0 chunk of motion outliers
+ds001894_sub-0028,ds001894,sub-028,female,right,9.09,112,13,124,>0 chunk of motion outliers
 ds001894_sub-0029,ds001894,sub-029,male,right,9.09,112,13,115,NA
 ds001894_sub-0030,ds001894,sub-030,male,right,10.87,113,11,110,NA
 ds001894_sub-0031,ds001894,sub-031,male,right,7.68,104,10,104,response bias between O+P+ & O-P-
@@ -179,7 +179,7 @@ ds001894_sub-0045,ds001894,sub-045,female,right,12.12,98,7,107,NA
 ds001894_sub-0046,ds001894,sub-046,male,right,10.48,109,11,115,NA
 ds001894_sub-0047,ds001894,sub-047,male,right,9.72,107,9,119,missing events file for one run
 ds001894_sub-0048,ds001894,sub-048,female,right,8.16,119,13,119,NA
-ds001894_sub-0049,ds001894,sub-049,female,right,8.96,95,13,115,excluded for >0 chunk of motion outliers
+ds001894_sub-0049,ds001894,sub-049,female,right,8.96,95,13,115,>0 chunk of motion outliers
 ds001894_sub-0050,ds001894,sub-050,male,right,12.43,98,11,106,NA
 ds001894_sub-0051,ds001894,sub-051,male,right,11.04,102,10,107,NA
 ds001894_sub-0052,ds001894,sub-052,female,right,10.12,100,12,97,NA
@@ -199,7 +199,7 @@ ds001894_sub-0065,ds001894,sub-065,female,right,8.5,74,7,91,accuracy < 0.5 for O
 ds001894_sub-0066,ds001894,sub-066,female,right,9.87,86,6,103,NA
 ds001894_sub-0067,ds001894,sub-067,female,right,9.39,80,6,106,NA
 ds001894_sub-0068,ds001894,sub-068,male,right,10.84,85,5,107,NA
-ds001894_sub-0069,ds001894,sub-069,female,right,9.96,88,10,107,excluded for >0 chunk of motion outliers
+ds001894_sub-0069,ds001894,sub-069,female,right,9.96,88,10,107,>0 chunk of motion outliers
 ds001894_sub-0070,ds001894,sub-070,male,right,10.74,91,13,107,NA
 ds001894_sub-0071,ds001894,sub-071,male,right,10.91,83,12,104,NA
 ds001894_sub-0072,ds001894,sub-072,male,right,12.16,106,9,NA,missing nonverbal IQ
@@ -208,7 +208,7 @@ ds001894_sub-0074,ds001894,sub-074,male,right,9.8,90,7,116,NA
 ds001894_sub-0075,ds001894,sub-075,male,right,10.25,79,11,110,NA
 ds001894_sub-0076,ds001894,sub-076,male,right,12.66,101,12,106,NA
 ds001894_sub-0077,ds001894,sub-077,female,right,8.59,94,14,118,NA
-ds001894_sub-0078,ds001894,sub-078,male,right,10.72,86,8,94,excluded for >0 chunk of motion outliers
+ds001894_sub-0078,ds001894,sub-078,male,right,10.72,86,8,94,>0 chunk of motion outliers
 ds001894_sub-0079,ds001894,sub-079,male,right,9.19,87,10,124,missing events file for both runs
 ds001894_sub-0080,ds001894,sub-080,male,right,9.83,90,13,68,nonverbal IQ < 70
 ds001894_sub-0081,ds001894,sub-081,male,right,10.91,91,9,92,NA
@@ -222,7 +222,7 @@ ds001894_sub-0088,ds001894,sub-088,male,right,10.54,89,5,83,response bias betwee
 ds001894_sub-0089,ds001894,sub-089,female,right,9.79,93,14,104,NA
 ds001894_sub-0090,ds001894,sub-090,male,right,9.08,86,11,130,NA
 ds001894_sub-0091,ds001894,sub-091,male,right,11.05,62,10,110,NA
-ds001894_sub-0092,ds001894,sub-092,female,right,10.73,90,12,97,excluded for >0 chunk of motion outliers
+ds001894_sub-0092,ds001894,sub-092,female,right,10.73,90,12,97,>0 chunk of motion outliers
 ds001894_sub-0093,ds001894,sub-093,female,right,11.51,93,10,118,NA
 ds001894_sub-0094,ds001894,sub-094,male,right,9.39,91,10,80,NA
 ds001894_sub-0095,ds001894,sub-095,female,right,8.33,94,7,80,accuracy < 0.5 for O+P+ & O-P- across runs
@@ -235,15 +235,15 @@ ds001894_sub-0101,ds001894,sub-101,male,right,9.89,101,12,128,NA
 ds001894_sub-0102,ds001894,sub-102,male,right,11.48,101,11,106,NA
 ds001894_sub-0103,ds001894,sub-103,female,right,9.54,84,14,109,missing events file for both runs
 ds001894_sub-0104,ds001894,sub-104,male,right,9.79,78,14,116,NA
-ds001894_sub-0105,ds001894,sub-105,male,right,13.39,89,4,104,excluded for >0 chunk of motion outliers
+ds001894_sub-0105,ds001894,sub-105,male,right,13.39,89,4,104,>0 chunk of motion outliers
 ds001894_sub-0106,ds001894,sub-106,male,right,7.76,95,7,88,accuracy < 0.5 for O+P+ & O-P- across runs
 ds001894_sub-0107,ds001894,sub-107,female,right,9.56,93,7,95,missing events file for both runs
 ds001894_sub-0108,ds001894,sub-108,male,right,9.85,91,10,98,NA
-ds001894_sub-0109,ds001894,sub-109,male,right,9.68,96,12,100,excluded for >0 chunk of motion outliers
+ds001894_sub-0109,ds001894,sub-109,male,right,9.68,96,12,100,>0 chunk of motion outliers
 ds001894_sub-0110,ds001894,sub-110,female,right,9.91,89,9,116,NA
 ds001894_sub-0111,ds001894,sub-111,male,right,10.35,80,9,71,NA
 ds001894_sub-0112,ds001894,sub-112,male,right,13.72,82,6,71,NA
-ds001894_sub-0113,ds001894,sub-113,male,right,11.33,72,4,94,excluded for >15% of volumes marked as motion outliers
+ds001894_sub-0113,ds001894,sub-113,male,right,11.33,72,4,94,>15% of volumes marked as motion outliers
 ds001894_sub-0114,ds001894,sub-114,male,right,8.24,97,7,107,missing events file for both runs
 ds001894_sub-0115,ds001894,sub-115,male,right,11.83,86,5,107,NA
 ds001894_sub-0116,ds001894,sub-116,female,right,10.9,86,12,116,NA
@@ -267,12 +267,12 @@ ds001894_sub-0133,ds001894,sub-133,male,right,13.7,100,10,113,NA
 ds001894_sub-0134,ds001894,sub-134,female,right,11.12,101,9,100,NA
 ds001894_sub-0135,ds001894,sub-135,male,right,9.32,125,7,133,NA
 ds001894_sub-0136,ds001894,sub-136,male,right,11.59,93,11,115,NA
-ds001894_sub-0137,ds001894,sub-137,male,right,10.03,115,11,104,excluded for >0 chunk of motion outliers
+ds001894_sub-0137,ds001894,sub-137,male,right,10.03,115,11,104,>0 chunk of motion outliers
 ds001894_sub-0138,ds001894,sub-138,male,right,12.27,125,12,119,NA
 ds001894_sub-0139,ds001894,sub-139,female,right,9.02,108,14,124,NA
 ds001894_sub-0140,ds001894,sub-140,male,right,11.85,98,12,101,NA
 ds001894_sub-0141,ds001894,sub-141,male,right,8.7,109,10,110,NA
-ds001894_sub-0142,ds001894,sub-142,male,right,11.12,87,11,100,excluded for >0 chunk of motion outliers
+ds001894_sub-0142,ds001894,sub-142,male,right,11.12,87,11,100,>0 chunk of motion outliers
 ds001894_sub-0143,ds001894,sub-143,female,right,9.46,102,7,121,NA
 ds001894_sub-0144,ds001894,sub-144,female,right,9.04,116,12,128,NA
 ds001894_sub-0145,ds001894,sub-145,male,right,11.37,84,8,95,response bias between O+P+ & O-P-
@@ -305,7 +305,7 @@ ds001894_sub-0171,ds001894,sub-171,male,right,8.08,82,5,103,missing events file 
 ds001894_sub-0172,ds001894,sub-172,male,right,13.18,108,12,118,NA
 ds001894_sub-0173,ds001894,sub-173,female,right,8.83,85,8,107,missing events file for both runs
 ds001894_sub-0174,ds001894,sub-174,female,right,9.2,101,6,97,NA
-ds001894_sub-0175,ds001894,sub-175,female,right,9.43,93,6,97,excluded for >0 chunk of motion outliers
+ds001894_sub-0175,ds001894,sub-175,female,right,9.43,93,6,97,>0 chunk of motion outliers
 ds001894_sub-0176,ds001894,sub-176,female,right,8.21,96,8,77,NA
 ds001894_sub-0177,ds001894,sub-177,male,right,13.53,73,4,110,NA
 ds001894_sub-0178,ds001894,sub-178,female,right,8.71,80,8,121,accuracy < 0.5 for O+P+ & O-P- across runs
@@ -317,7 +317,7 @@ ds001894_sub-0183,ds001894,sub-183,female,right,8.9,127,16,124,missing events fi
 ds001894_sub-0184,ds001894,sub-184,female,right,8.95,93,8,85,NA
 ds001894_sub-0185,ds001894,sub-185,male,right,12.8,97,12,104,NA
 ds001894_sub-0186,ds001894,sub-186,male,right,12.75,88,9,113,NA
-ds001894_sub-0187,ds001894,sub-187,male,right,9.39,103,11,109,excluded for >0 chunk of motion outliers
+ds001894_sub-0187,ds001894,sub-187,male,right,9.39,103,11,109,>0 chunk of motion outliers
 ds001894_sub-0188,ds001894,sub-188,female,right,7.95,124,16,115,NA
 ds002236_sub-0001,ds002236,sub-01,female,right,8.92,107,12,130,NA
 ds002236_sub-0002,ds002236,sub-02,male,right,8.92,115,15,109,NA
@@ -329,11 +329,11 @@ ds002236_sub-0007,ds002236,sub-07,male,right,13.33,111,12,104,NA
 ds002236_sub-0008,ds002236,sub-08,female,right,10.83,118,8,109,NA
 ds002236_sub-0009,ds002236,sub-09,female,right,12.67,107,9,94,NA
 ds002236_sub-0010,ds002236,sub-10,female,right,14.5,104,12,79,NA
-ds002236_sub-0011,ds002236,sub-11,male,right,12.75,99,10,74,excluded for >0 chunk of motion outliers
+ds002236_sub-0011,ds002236,sub-11,male,right,12.75,99,10,74,>0 chunk of motion outliers
 ds002236_sub-0012,ds002236,sub-12,male,right,9.17,110,11,109,NA
 ds002236_sub-0013,ds002236,sub-13,male,right,12.83,106,9,79,NA
 ds002236_sub-0014,ds002236,sub-14,female,right,10.5,115,11,124,NA
-ds002236_sub-0015,ds002236,sub-15,male,right,8.83,124,16,109,excluded for >0 chunk of motion outliers
+ds002236_sub-0015,ds002236,sub-15,male,right,8.83,124,16,109,>0 chunk of motion outliers
 ds002236_sub-0016,ds002236,sub-16,male,right,9.17,117,7,94,NA
 ds002236_sub-0017,ds002236,sub-17,female,right,13.17,104,10,100,NA
 ds002236_sub-0018,ds002236,sub-18,male,right,8.75,111,7,109,NA
@@ -355,9 +355,9 @@ ds002236_sub-0033,ds002236,sub-33,female,right,12.67,117,8,115,NA
 ds002236_sub-0034,ds002236,sub-34,male,left,14.92,99,10,100,left-handedness
 ds002236_sub-0035,ds002236,sub-35,male,right,10.67,123,11,89,NA
 ds002236_sub-0036,ds002236,sub-36,male,right,14.92,96,11,100,NA
-ds002236_sub-0037,ds002236,sub-37,male,right,10.75,85,5,89,excluded for >0 chunk of motion outliers
+ds002236_sub-0037,ds002236,sub-37,male,right,10.75,85,5,89,>0 chunk of motion outliers
 ds002236_sub-0038,ds002236,sub-38,male,right,12.67,115,9,104,NA
-ds002236_sub-0039,ds002236,sub-39,male,right,8.75,97,8,104,excluded for >0 chunk of motion outliers
+ds002236_sub-0039,ds002236,sub-39,male,right,8.75,97,8,104,>0 chunk of motion outliers
 ds002236_sub-0040,ds002236,sub-40,male,right,10.67,106,11,109,missing events file for one run
 ds002236_sub-0041,ds002236,sub-41,female,right,12.83,114,11,104,NA
 ds002236_sub-0042,ds002236,sub-42,female,right,8.67,117,15,109,NA
@@ -492,7 +492,7 @@ ds006239_sub-1276,ds006239,sub-1276,male,right,12.86,38,4,105,accuracy < 0.5 for
 ds006239_sub-1277,ds006239,sub-1277,male,right,12.86,103,12,119,NA
 ds006239_sub-1278,ds006239,sub-1278,male,right,10.95,127,12,83,NA
 ds006239_sub-1283,ds006239,sub-1283,female,right,16.66,89,9,83,NA
-ds006239_sub-1284,ds006239,sub-1284,female,right,12.84,105,9,122,excluded for >0 chunk of motion outliers
+ds006239_sub-1284,ds006239,sub-1284,female,right,12.84,105,9,122,>0 chunk of motion outliers
 ds006239_sub-1285,ds006239,sub-1285,male,right,10.82,125,13,129,ADHD
 ds006239_sub-1287,ds006239,sub-1287,male,right,16.43,92,8,100,missing events file for both runs
 ds006239_sub-1288,ds006239,sub-1288,female,right,14.67,114,11,108,NA
