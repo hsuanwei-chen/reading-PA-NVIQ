@@ -186,7 +186,7 @@ try
         
         % Make sure datatypes are consistent
         if iscell(event_data.onset) || ischar(event_data.onset) || isstring(event_data.onset)
-            event_data.onset = str2double(event_data.onset);
+            event_data.onset = str2double(cellstr(event_data.onset));
         end
 
         % Create a cell array with onsets for each condition
