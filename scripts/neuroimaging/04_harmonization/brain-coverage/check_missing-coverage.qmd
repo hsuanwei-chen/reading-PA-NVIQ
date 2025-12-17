@@ -1,0 +1,271 @@
+---
+title: "Check Missing Coverage of the Brain"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+author: "Isaac Chen"
+
+format: 
+    html:
+      embed-resources: true
+---
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+# Clear all variables from environment
+rm(list = ls())
+
+# Load library
+library(here)
+library(glue)
+library(tidyverse)
+library(knitr)
+
+# Set directories
+output_dir = here("results", "check_missing-coverage")
+if (!dir.exists(output_dir)) {
+  dir.create(output_dir, recursive = TRUE)
+}
+
+# Set output files
+output_leftIFG_coverage <- here(output_dir, "leftIFG_coverage.csv")
+output_leftTP_coverage  <- here(output_dir, "leftTP_coverage.csv")
+output_leftvOT_coverage <- here(output_dir, "leftvOT_coverage.csv")
+output_coverage_exclude <- here(output_dir, "froi_coverage_exclude.csv")
+```
+
+```{r}
+# Calculate percentage of missing coverage per participant
+missing_coverage <- function(df, roi, threshold){
+  
+  # Transform data into long format
+  unique_id <- colnames(df)
+  df <- df |> 
+    t() |> 
+    as_tibble() |> 
+    cbind(unique_id) |> 
+    relocate(unique_id, .before = V1)
+  
+  # Calculate missing coverage
+  df <- df |> 
+    group_by(unique_id) |> 
+    summarise(
+      roi       = roi,
+      num_nan   = rowSums(across(everything(), ~ is.nan(.x))),
+      num_voxel = ncol(df) - 1,  # Account for unique_id column
+      pct_nan   = round(num_nan/num_voxel*100, 2),
+      exclude   = pct_nan >= threshold 
+    )
+  
+  # Return outputs
+  return(df)
+}
+```
+
+## ROIs
+
+```{r}
+# List files with extracted values
+beta_files = list(
+  "betas_con-NCFix_leftIFG_top1000_union-mask.csv",
+  "betas_con-NCFix_leftTP_top1000_union-mask.csv",
+  "betas_con-NCFix_leftvOT_top1000_union-mask.csv"
+)
+```
+
+:::{.panel-tabset}
+
+## Left IFG 
+
+```{r}
+#| warning: false
+
+# Read in CSV file
+beta_csv <- here("results", "harmonization", "top1000", beta_files[1])
+beta <- read_csv(beta_csv) |> select(4:last_col())
+
+# Calculate missing coverage
+threshold = 20
+roi = "Left IFG"
+leftIFG_coverage <- missing_coverage(beta, roi, threshold)
+
+# Save results
+write_csv(leftIFG_coverage, file = output_leftIFG_coverage)
+```
+
+```{r}
+# Print participants to exclude
+leftIFG_coverage_exclude <- leftIFG_coverage |> 
+  filter(exclude == TRUE)
+
+glimpse(leftIFG_coverage_exclude)
+kable(leftIFG_coverage_exclude)
+```
+
+```{r}
+# Visualize missing coverage
+fig_stem_leftIFG <- leftIFG_coverage |>
+  ggplot(aes(x = unique_id, y = pct_nan)) +
+  geom_point(aes(color = exclude)) +
+  geom_segment(aes(y = 0, yend = pct_nan)) +
+  geom_vline(xintercept = 120, linetype = "dashed", color = "grey") + 
+  geom_vline(xintercept = 251, linetype = "dashed", color = "grey") +
+  geom_vline(xintercept = 323, linetype = "dashed", color = "grey") +
+  geom_hline(yintercept = 20 , linetype = "dashed", color = "orange") + 
+  annotate("text", x = 60 , y = 80, label = "ds001486", fontface = "bold") +
+  annotate("text", x = 185, y = 80, label = "ds001894", fontface = "bold") +
+  annotate("text", x = 285, y = 80, label = "ds002236", fontface = "bold") +
+  annotate("text", x = 355, y = 80, label = "ds006239", fontface = "bold") +
+  scale_y_continuous(limits = c(0, 80), breaks = seq(0, 80, 10)) +
+  scale_color_manual(values = c("TRUE" = "red")) +
+  labs(
+    title = glue("Left IFG ({nrow(beta)} voxels)"),
+    x = "Participant",
+    y = "% Missing Coverage"
+  ) + 
+  theme_bw() + 
+  theme(
+    legend.position = "none",
+    axis.text.x = element_blank(),
+    axis.line.x = element_blank(),
+    axis.ticks.x = element_blank()
+  )
+
+print(fig_stem_leftIFG)
+```
+
+## Left TP
+
+```{r}
+#| warning: false
+
+# Read in CSV file
+beta_csv <- here("results", "harmonization", "top1000", beta_files[2])
+beta <- read_csv(beta_csv) |> select(4:last_col())
+
+# Calculate missing coverage
+threshold = 20
+roi = "Left TP"
+leftTP_coverage <- missing_coverage(beta, roi, threshold)
+
+# Save results
+write_csv(leftTP_coverage, file = output_leftTP_coverage)
+```
+
+```{r}
+# Print participants to exclude
+leftTP_coverage_exclude <- leftTP_coverage |> 
+  filter(exclude == TRUE)
+
+glimpse(leftTP_coverage_exclude)
+kable(leftTP_coverage_exclude)
+```
+
+```{r}
+# Visualize missing coverage
+fig_stem_leftTP <- leftTP_coverage |>
+  ggplot(aes(x = unique_id, y = pct_nan)) +
+  geom_point(aes(color = exclude)) +
+  geom_segment(aes(y = 0, yend = pct_nan)) +
+  geom_vline(xintercept = 120, linetype = "dashed", color = "grey") + 
+  geom_vline(xintercept = 251, linetype = "dashed", color = "grey") +
+  geom_vline(xintercept = 323, linetype = "dashed", color = "grey") +
+  geom_hline(yintercept = 20 , linetype = "dashed", color = "orange") + 
+  annotate("text", x = 60 , y = 80, label = "ds001486", fontface = "bold") +
+  annotate("text", x = 185, y = 80, label = "ds001894", fontface = "bold") +
+  annotate("text", x = 285, y = 80, label = "ds002236", fontface = "bold") +
+  annotate("text", x = 355, y = 80, label = "ds006239", fontface = "bold") +
+  scale_y_continuous(limits = c(0, 80), breaks = seq(0, 80, 10)) +
+  scale_color_manual(values = c("TRUE" = "red")) +
+  labs(
+    title = glue("Left TP ({nrow(beta)} voxels)"),
+    x = "Participant",
+    y = "% Missing Coverage"
+  ) + 
+  theme_bw() + 
+  theme(
+    legend.position = "none",
+    axis.text.x = element_blank(),
+    axis.line.x = element_blank(),
+    axis.ticks.x = element_blank()
+  )
+
+print(fig_stem_leftTP)
+```
+
+## Left vOT
+
+```{r}
+#| warning: false
+
+# Read in CSV file
+beta_csv <- here("results", "harmonization", "top1000", beta_files[3])
+beta <- read_csv(beta_csv) |> select(4:last_col())
+
+# Calculate missing coverage
+roi = "Left vOT"
+threshold = 20
+leftvOT_coverage <- missing_coverage(beta, roi, threshold)
+
+# Save results
+write_csv(leftvOT_coverage, file = output_leftvOT_coverage)
+```
+
+```{r}
+# Print participants to exclude
+leftvOT_coverage_exclude <- leftvOT_coverage |> 
+  filter(exclude == TRUE)
+
+glimpse(leftvOT_coverage_exclude)
+kable(leftvOT_coverage_exclude)
+```
+
+```{r}
+# Visualize missing coverage
+fig_stem_leftvOT <- leftvOT_coverage |>
+  ggplot(aes(x = unique_id, y = pct_nan)) +
+  geom_point(aes(color = exclude)) +
+  geom_segment(aes(y = 0, yend = pct_nan)) +
+  geom_vline(xintercept = 120, linetype = "dashed", color = "grey") + 
+  geom_vline(xintercept = 251, linetype = "dashed", color = "grey") +
+  geom_vline(xintercept = 323, linetype = "dashed", color = "grey") +
+  geom_hline(yintercept = 20 , linetype = "dashed", color = "orange") + 
+  annotate("text", x = 60 , y = 80, label = "ds001486", fontface = "bold") +
+  annotate("text", x = 185, y = 80, label = "ds001894", fontface = "bold") +
+  annotate("text", x = 285, y = 80, label = "ds002236", fontface = "bold") +
+  annotate("text", x = 355, y = 80, label = "ds006239", fontface = "bold") +
+  scale_y_continuous(limits = c(0, 80), breaks = seq(0, 80, 10)) +
+  scale_color_manual(values = c("TRUE" = "red")) +
+  labs(
+    title = glue("Left vOT ({nrow(beta)} voxels)"),
+    x = "Participant",
+    y = "% Missing Coverage"
+  ) + 
+  theme_bw() + 
+  theme(
+    legend.position = "none",
+    axis.text.x = element_blank(),
+    axis.line.x = element_blank(),
+    axis.ticks.x = element_blank()
+  )
+
+print(fig_stem_leftvOT)
+```
+
+:::
+
+## Overview 
+
+```{r}
+# Combine excluded participants 
+coverage_exclude <- leftIFG_coverage_exclude |> 
+  bind_rows(leftTP_coverage_exclude, leftvOT_coverage_exclude)
+
+glimpse(coverage_exclude)
+kable(coverage_exclude)
+
+# Save results
+write_csv(coverage_exclude, file = output_coverage_exclude)
+```
+
