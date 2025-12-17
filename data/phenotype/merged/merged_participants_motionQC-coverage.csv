@@ -1,0 +1,501 @@
+unique_id,dataset,participant_id,sex,handedness,age,wordid_sts,el_scs,mr_sts,exclude
+ds001486_sub-0001,ds001486,sub-001,male,left,8.36,123,12,122,left-handedness
+ds001486_sub-0002,ds001486,sub-002,female,right,9.23,110,11,121,accuracy < 0.5 for O+P+ & O-P- across runs
+ds001486_sub-0003,ds001486,sub-003,female,right,10.68,119,11,109,accuracy < 0.5 for O+P+ & O-P- across runs
+ds001486_sub-0004,ds001486,sub-004,female,right,9.93,117,15,119,NA
+ds001486_sub-0005,ds001486,sub-005,male,right,11.98,113,11,113,NA
+ds001486_sub-0006,ds001486,sub-006,female,right,8.9,114,13,127,NA
+ds001486_sub-0007,ds001486,sub-007,female,right,10.32,117,14,116,NA
+ds001486_sub-0008,ds001486,sub-008,female,right,13.14,109,12,122,NA
+ds001486_sub-0009,ds001486,sub-009,female,right,8.47,119,14,128,NA
+ds001486_sub-0010,ds001486,sub-010,male,right,10.62,123,12,124,NA
+ds001486_sub-0011,ds001486,sub-011,female,right,9.45,118,14,121,accuracy < 0.5 for O+P+ & O-P- across runs
+ds001486_sub-0012,ds001486,sub-012,male,right,12.68,118,12,118,NA
+ds001486_sub-0013,ds001486,sub-013,female,right,13.65,108,11,119,NA
+ds001486_sub-0014,ds001486,sub-014,male,right,12.18,105,10,125,NA
+ds001486_sub-0015,ds001486,sub-015,male,right,11.98,105,5,110,NA
+ds001486_sub-0016,ds001486,sub-016,female,right,12.82,112,12,98,NA
+ds001486_sub-0017,ds001486,sub-017,female,right,9.45,117,11,121,NA
+ds001486_sub-0018,ds001486,sub-018,female,right,12.18,117,10,101,NA
+ds001486_sub-0019,ds001486,sub-019,male,right,11.3,123,14,122,NA
+ds001486_sub-0020,ds001486,sub-020,male,right,10.98,106,9,116,missing >20% coverage for fROI
+ds001486_sub-0021,ds001486,sub-021,female,right,10.08,125,13,109,NA
+ds001486_sub-0022,ds001486,sub-022,male,right,12.59,97,12,122,NA
+ds001486_sub-0023,ds001486,sub-023,male,right,11.38,114,11,101,NA
+ds001486_sub-0024,ds001486,sub-024,female,right,9.96,113,12,116,NA
+ds001486_sub-0025,ds001486,sub-025,male,right,11.99,112,12,119,NA
+ds001486_sub-0026,ds001486,sub-026,female,right,10.92,125,13,109,NA
+ds001486_sub-0027,ds001486,sub-027,female,right,10.09,126,14,130,NA
+ds001486_sub-0028,ds001486,sub-028,female,right,11.64,109,10,83,NA
+ds001486_sub-0029,ds001486,sub-029,male,right,9.89,101,9,104,NA
+ds001486_sub-0030,ds001486,sub-030,female,right,11.39,107,10,107,NA
+ds001486_sub-0031,ds001486,sub-031,female,right,11.52,113,10,113,NA
+ds001486_sub-0032,ds001486,sub-032,male,right,9.22,112,14,121,NA
+ds001486_sub-0033,ds001486,sub-033,female,right,11.77,123,12,119,NA
+ds001486_sub-0034,ds001486,sub-034,female,right,9.97,119,14,109,NA
+ds001486_sub-0035,ds001486,sub-035,male,right,10.94,111,6,113,NA
+ds001486_sub-0036,ds001486,sub-036,male,right,10.12,108,12,103,NA
+ds001486_sub-0037,ds001486,sub-037,male,right,12.51,66,5,110,missing >20% coverage for fROI
+ds001486_sub-0038,ds001486,sub-038,male,right,13.88,130,12,113,NA
+ds001486_sub-0039,ds001486,sub-039,female,right,13.4,95,4,88,NA
+ds001486_sub-0040,ds001486,sub-040,male,right,12.73,116,12,106,NA
+ds001486_sub-0041,ds001486,sub-041,female,right,9.23,98,13,107,NA
+ds001486_sub-0042,ds001486,sub-042,female,right,10.41,100,6,104,NA
+ds001486_sub-0043,ds001486,sub-043,male,right,13.56,102,11,115,NA
+ds001486_sub-0044,ds001486,sub-044,female,right,11.49,130,11,112,NA
+ds001486_sub-0045,ds001486,sub-045,female,right,9.78,95,7,113,NA
+ds001486_sub-0046,ds001486,sub-046,male,right,12.42,106,11,101,NA
+ds001486_sub-0047,ds001486,sub-047,female,right,10.44,114,10,116,NA
+ds001486_sub-0048,ds001486,sub-048,male,right,10.6,133,14,109,NA
+ds001486_sub-0049,ds001486,sub-049,female,right,10.97,129,12,104,NA
+ds001486_sub-0050,ds001486,sub-050,female,right,9.43,119,12,115,NA
+ds001486_sub-0051,ds001486,sub-051,female,right,11.97,100,5,100,accuracy < 0.5 for O+P+ & O-P- across runs
+ds001486_sub-0052,ds001486,sub-052,female,right,12.45,84,5,86,NA
+ds001486_sub-0053,ds001486,sub-053,female,right,12.66,98,12,112,NA
+ds001486_sub-0054,ds001486,sub-054,male,right,14.09,103,12,83,NA
+ds001486_sub-0055,ds001486,sub-055,male,right,11.09,106,7,97,NA
+ds001486_sub-0056,ds001486,sub-056,female,right,10.14,93,3,110,NA
+ds001486_sub-0057,ds001486,sub-057,male,right,9.54,100,10,97,NA
+ds001486_sub-0058,ds001486,sub-058,male,right,10.29,114,10,128,accuracy < 0.5 for O+P+ & O-P- across runs
+ds001486_sub-0059,ds001486,sub-059,male,right,12.91,109,11,122,NA
+ds001486_sub-0060,ds001486,sub-060,male,right,10.92,106,11,122,NA
+ds001486_sub-0061,ds001486,sub-061,male,right,11.25,98,8,122,NA
+ds001486_sub-0062,ds001486,sub-062,male,right,15,106,12,116,NA
+ds001486_sub-0063,ds001486,sub-063,male,right,11,107,13,104,NA
+ds001486_sub-0064,ds001486,sub-064,female,right,9.01,120,12,115,NA
+ds001486_sub-0065,ds001486,sub-065,male,right,10.13,120,5,107,NA
+ds001486_sub-0066,ds001486,sub-066,female,right,9.43,93,8,109,NA
+ds001486_sub-0067,ds001486,sub-067,female,right,14.04,85,4,92,NA
+ds001486_sub-0068,ds001486,sub-068,female,right,12.8,113,7,107,NA
+ds001486_sub-0069,ds001486,sub-069,female,right,13.21,98,12,73,NA
+ds001486_sub-0070,ds001486,sub-070,female,right,13.02,107,3,83,NA
+ds001486_sub-0071,ds001486,sub-071,male,right,8.64,115,11,113,NA
+ds001486_sub-0072,ds001486,sub-072,male,right,13.79,100,5,88,NA
+ds001486_sub-0073,ds001486,sub-073,female,right,9.97,112,13,73,NA
+ds001486_sub-0074,ds001486,sub-074,female,right,12.33,58,4,95,NA
+ds001486_sub-0075,ds001486,sub-075,female,right,14.06,98,5,95,NA
+ds001486_sub-0076,ds001486,sub-076,male,right,11.15,85,5,97,NA
+ds001486_sub-0077,ds001486,sub-077,female,right,9.94,90,5,77,NA
+ds001486_sub-0078,ds001486,sub-078,female,right,12.19,83,4,91,NA
+ds001486_sub-0079,ds001486,sub-079,male,right,12.59,106,8,94,NA
+ds001486_sub-0080,ds001486,sub-080,female,right,9.34,95,7,80,response bias between O+P+ & O-P-
+ds001486_sub-0081,ds001486,sub-081,male,right,11.18,85,5,107,NA
+ds001486_sub-0082,ds001486,sub-082,male,right,11.55,86,7,97,NA
+ds001486_sub-0083,ds001486,sub-083,female,right,11.58,96,6,92,NA
+ds001486_sub-0084,ds001486,sub-084,female,right,10.33,87,9,104,response bias between O+P+ & O-P-
+ds001486_sub-0085,ds001486,sub-085,female,right,9.91,103,13,104,NA
+ds001486_sub-0086,ds001486,sub-086,male,right,12.77,100,12,101,NA
+ds001486_sub-0087,ds001486,sub-087,male,right,13.43,102,5,88,NA
+ds001486_sub-0088,ds001486,sub-088,female,right,9.9,98,5,98,NA
+ds001486_sub-0089,ds001486,sub-089,female,right,10.07,114,7,107,NA
+ds001486_sub-0090,ds001486,sub-090,male,right,12.81,116,9,118,NA
+ds001486_sub-0091,ds001486,sub-091,female,right,13.25,94,6,100,NA
+ds001486_sub-0092,ds001486,sub-092,male,right,10.57,106,10,103,response bias between O+P+ & O-P-
+ds001486_sub-0093,ds001486,sub-093,male,right,9.95,123,13,122,NA
+ds001486_sub-0094,ds001486,sub-094,male,right,13.02,104,11,71,NA
+ds001486_sub-0095,ds001486,sub-095,male,right,11.33,110,9,113,NA
+ds001486_sub-0096,ds001486,sub-096,female,right,10.9,98,9,113,NA
+ds001486_sub-0097,ds001486,sub-097,male,right,10.6,91,10,124,NA
+ds001486_sub-0098,ds001486,sub-098,female,right,9.37,94,7,77,NA
+ds001486_sub-0099,ds001486,sub-099,female,right,10.18,85,5,68,nonverbal IQ < 70
+ds001486_sub-0100,ds001486,sub-100,female,right,9.96,105,6,103,NA
+ds001486_sub-0101,ds001486,sub-101,female,right,12.24,110,4,104,NA
+ds001486_sub-0102,ds001486,sub-102,female,right,10.4,90,9,110,NA
+ds001486_sub-0103,ds001486,sub-103,female,right,10.09,106,7,112,NA
+ds001486_sub-0104,ds001486,sub-104,female,right,12.16,95,5,94,NA
+ds001486_sub-0105,ds001486,sub-105,female,right,10.64,90,5,91,NA
+ds001486_sub-0106,ds001486,sub-106,male,right,12.22,95,5,107,NA
+ds001486_sub-0107,ds001486,sub-107,male,right,10.67,83,10,95,response bias between O+P+ & O-P-
+ds001486_sub-0108,ds001486,sub-108,male,right,10.39,93,5,88,NA
+ds001486_sub-0109,ds001486,sub-109,male,right,12.45,114,12,94,NA
+ds001486_sub-0110,ds001486,sub-110,male,right,10.7,97,6,73,NA
+ds001486_sub-0111,ds001486,sub-111,male,right,9.33,95,6,71,accuracy < 0.5 for O+P+ & O-P- across runs
+ds001486_sub-0112,ds001486,sub-112,male,right,11.27,98,8,86,NA
+ds001486_sub-0113,ds001486,sub-113,male,right,11.15,96,9,104,NA
+ds001486_sub-0114,ds001486,sub-114,male,right,11.75,94,8,91,missing >20% coverage for fROI
+ds001486_sub-0115,ds001486,sub-115,male,right,13.04,108,11,101,NA
+ds001486_sub-0116,ds001486,sub-116,female,right,11.54,87,12,113,NA
+ds001486_sub-0117,ds001486,sub-117,female,right,13,106,11,89,NA
+ds001486_sub-0118,ds001486,sub-118,male,right,13.34,100,12,100,NA
+ds001486_sub-0119,ds001486,sub-119,male,right,11.6,106,8,121,NA
+ds001486_sub-0120,ds001486,sub-120,female,right,12.36,104,10,113,NA
+ds001486_sub-0121,ds001486,sub-121,male,right,10.61,113,6,98,response bias between O+P+ & O-P-
+ds001486_sub-0122,ds001486,sub-122,female,right,9.1,116,12,115,NA
+ds001486_sub-0123,ds001486,sub-123,male,right,12.35,106,8,125,NA
+ds001486_sub-0124,ds001486,sub-124,female,right,9.59,104,12,133,NA
+ds001486_sub-0125,ds001486,sub-125,female,right,9.64,98,10,88,NA
+ds001486_sub-0126,ds001486,sub-126,male,right,10.73,106,7,104,NA
+ds001486_sub-0127,ds001486,sub-127,female,right,13.11,113,11,106,NA
+ds001486_sub-0128,ds001486,sub-128,male,right,8.64,119,12,118,NA
+ds001486_sub-0129,ds001486,sub-129,male,right,13.54,99,12,92,NA
+ds001486_sub-0130,ds001486,sub-130,female,right,11.35,96,9,118,NA
+ds001486_sub-0131,ds001486,sub-131,female,right,10.88,114,9,92,NA
+ds001486_sub-0132,ds001486,sub-132,female,right,12.16,96,9,98,NA
+ds001894_sub-0001,ds001894,sub-001,female,right,10.24,110,12,125,NA
+ds001894_sub-0002,ds001894,sub-002,male,right,9.51,130,13,106,NA
+ds001894_sub-0003,ds001894,sub-003,male,right,8.73,102,13,113,NA
+ds001894_sub-0004,ds001894,sub-004,female,right,11.12,128,13,122,NA
+ds001894_sub-0005,ds001894,sub-005,female,right,10.16,118,12,103,excluded for >0 chunk of motion outliers
+ds001894_sub-0006,ds001894,sub-006,female,right,7.96,129,9,128,NA
+ds001894_sub-0007,ds001894,sub-007,male,right,9.29,105,14,127,NA
+ds001894_sub-0008,ds001894,sub-008,male,right,11.23,120,13,97,NA
+ds001894_sub-0009,ds001894,sub-009,male,right,11.77,115,13,122,NA
+ds001894_sub-0010,ds001894,sub-010,male,right,12.83,99,12,103,NA
+ds001894_sub-0011,ds001894,sub-011,female,right,13.14,108,13,125,NA
+ds001894_sub-0012,ds001894,sub-012,female,right,12.33,109,10,94,NA
+ds001894_sub-0013,ds001894,sub-013,female,right,9.68,99,10,104,NA
+ds001894_sub-0014,ds001894,sub-014,female,right,10.45,113,13,118,NA
+ds001894_sub-0015,ds001894,sub-015,male,right,11.08,118,13,NA,missing nonverbal IQ
+ds001894_sub-0016,ds001894,sub-016,male,right,13.62,102,13,116,NA
+ds001894_sub-0017,ds001894,sub-017,female,right,13.64,107,11,116,NA
+ds001894_sub-0018,ds001894,sub-018,male,right,14.38,124,13,113,NA
+ds001894_sub-0019,ds001894,sub-019,female,right,10.03,110,11,118,NA
+ds001894_sub-0020,ds001894,sub-020,male,right,11.92,100,8,97,NA
+ds001894_sub-0021,ds001894,sub-021,male,right,10.21,124,14,119,NA
+ds001894_sub-0022,ds001894,sub-022,female,right,10.65,116,12,103,NA
+ds001894_sub-0023,ds001894,sub-023,female,right,10.64,96,10,100,NA
+ds001894_sub-0024,ds001894,sub-024,male,right,7.5,122,12,127,excluded for >15% of volumes marked as motion outliers
+ds001894_sub-0025,ds001894,sub-025,female,right,12.33,105,8,112,NA
+ds001894_sub-0026,ds001894,sub-026,female,right,10.79,103,9,113,NA
+ds001894_sub-0027,ds001894,sub-027,female,right,10.8,143,14,107,NA
+ds001894_sub-0028,ds001894,sub-028,female,right,9.09,112,13,124,excluded for >0 chunk of motion outliers
+ds001894_sub-0029,ds001894,sub-029,male,right,9.09,112,13,115,NA
+ds001894_sub-0030,ds001894,sub-030,male,right,10.87,113,11,110,NA
+ds001894_sub-0031,ds001894,sub-031,male,right,7.68,104,10,104,response bias between O+P+ & O-P-
+ds001894_sub-0032,ds001894,sub-032,male,right,9.14,113,12,109,NA
+ds001894_sub-0033,ds001894,sub-033,male,right,11.52,110,12,101,corrupt events file for run-01 (i.e. onsets are NAs)
+ds001894_sub-0034,ds001894,sub-034,female,right,9.14,101,13,104,accuracy < 0.5 for O+P+ & O-P- across runs
+ds001894_sub-0035,ds001894,sub-035,female,right,8.93,94,10,110,NA
+ds001894_sub-0036,ds001894,sub-036,female,right,10.19,124,14,119,NA
+ds001894_sub-0037,ds001894,sub-037,male,right,11.07,103,12,97,NA
+ds001894_sub-0038,ds001894,sub-038,male,right,11.26,113,13,119,NA
+ds001894_sub-0039,ds001894,sub-039,male,right,10.3,108,11,122,NA
+ds001894_sub-0040,ds001894,sub-040,male,right,11.48,95,9,106,NA
+ds001894_sub-0041,ds001894,sub-041,male,right,10.01,102,18,113,NA
+ds001894_sub-0042,ds001894,sub-042,male,right,8.21,111,14,116,response bias between O+P+ & O-P-
+ds001894_sub-0043,ds001894,sub-043,female,right,12.55,101,8,103,NA
+ds001894_sub-0044,ds001894,sub-044,female,right,12.46,106,11,115,NA
+ds001894_sub-0045,ds001894,sub-045,female,right,12.12,98,7,107,NA
+ds001894_sub-0046,ds001894,sub-046,male,right,10.48,109,11,115,NA
+ds001894_sub-0047,ds001894,sub-047,male,right,9.72,107,9,119,missing events file for one run
+ds001894_sub-0048,ds001894,sub-048,female,right,8.16,119,13,119,NA
+ds001894_sub-0049,ds001894,sub-049,female,right,8.96,95,13,115,excluded for >0 chunk of motion outliers
+ds001894_sub-0050,ds001894,sub-050,male,right,12.43,98,11,106,NA
+ds001894_sub-0051,ds001894,sub-051,male,right,11.04,102,10,107,missing >20% coverage for fROI
+ds001894_sub-0052,ds001894,sub-052,female,right,10.12,100,12,97,NA
+ds001894_sub-0053,ds001894,sub-053,female,right,11.48,103,11,71,NA
+ds001894_sub-0054,ds001894,sub-054,male,right,8.69,96,7,95,NA
+ds001894_sub-0055,ds001894,sub-055,male,right,11.4,114,12,121,NA
+ds001894_sub-0056,ds001894,sub-056,male,right,11.2,114,13,113,NA
+ds001894_sub-0057,ds001894,sub-057,female,right,13.53,95,11,110,NA
+ds001894_sub-0058,ds001894,sub-058,female,right,11.29,92,8,116,NA
+ds001894_sub-0059,ds001894,sub-059,female,right,8.62,127,12,121,NA
+ds001894_sub-0060,ds001894,sub-060,female,right,13.75,120,13,107,NA
+ds001894_sub-0061,ds001894,sub-061,female,right,9.69,111,15,107,NA
+ds001894_sub-0062,ds001894,sub-062,female,right,9.28,117,10,121,NA
+ds001894_sub-0063,ds001894,sub-063,male,right,10.12,117,11,107,NA
+ds001894_sub-0064,ds001894,sub-064,female,right,8.48,98,8,115,accuracy < 0.5 for O+P+ & O-P- across runs
+ds001894_sub-0065,ds001894,sub-065,female,right,8.5,74,7,91,accuracy < 0.5 for O+P+ & O-P- across runs
+ds001894_sub-0066,ds001894,sub-066,female,right,9.87,86,6,103,NA
+ds001894_sub-0067,ds001894,sub-067,female,right,9.39,80,6,106,NA
+ds001894_sub-0068,ds001894,sub-068,male,right,10.84,85,5,107,NA
+ds001894_sub-0069,ds001894,sub-069,female,right,9.96,88,10,107,excluded for >0 chunk of motion outliers
+ds001894_sub-0070,ds001894,sub-070,male,right,10.74,91,13,107,NA
+ds001894_sub-0071,ds001894,sub-071,male,right,10.91,83,12,104,NA
+ds001894_sub-0072,ds001894,sub-072,male,right,12.16,106,9,NA,missing nonverbal IQ
+ds001894_sub-0073,ds001894,sub-073,male,right,10.04,89,8,116,accuracy < 0.5 for O+P+ & O-P- across runs
+ds001894_sub-0074,ds001894,sub-074,male,right,9.8,90,7,116,NA
+ds001894_sub-0075,ds001894,sub-075,male,right,10.25,79,11,110,NA
+ds001894_sub-0076,ds001894,sub-076,male,right,12.66,101,12,106,NA
+ds001894_sub-0077,ds001894,sub-077,female,right,8.59,94,14,118,NA
+ds001894_sub-0078,ds001894,sub-078,male,right,10.72,86,8,94,excluded for >0 chunk of motion outliers
+ds001894_sub-0079,ds001894,sub-079,male,right,9.19,87,10,124,missing events file for both runs
+ds001894_sub-0080,ds001894,sub-080,male,right,9.83,90,13,68,nonverbal IQ < 70
+ds001894_sub-0081,ds001894,sub-081,male,right,10.91,91,9,92,NA
+ds001894_sub-0082,ds001894,sub-082,female,right,12.46,91,4,100,NA
+ds001894_sub-0083,ds001894,sub-083,male,right,8.56,82,7,118,response bias between O+P+ & O-P-
+ds001894_sub-0084,ds001894,sub-084,female,right,12.46,92,4,91,NA
+ds001894_sub-0085,ds001894,sub-085,female,right,13.42,95,9,110,NA
+ds001894_sub-0086,ds001894,sub-086,male,right,11.37,92,10,74,NA
+ds001894_sub-0087,ds001894,sub-087,female,right,12.18,85,8,116,NA
+ds001894_sub-0088,ds001894,sub-088,male,right,10.54,89,5,83,response bias between O+P+ & O-P-
+ds001894_sub-0089,ds001894,sub-089,female,right,9.79,93,14,104,NA
+ds001894_sub-0090,ds001894,sub-090,male,right,9.08,86,11,130,NA
+ds001894_sub-0091,ds001894,sub-091,male,right,11.05,62,10,110,NA
+ds001894_sub-0092,ds001894,sub-092,female,right,10.73,90,12,97,excluded for >0 chunk of motion outliers
+ds001894_sub-0093,ds001894,sub-093,female,right,11.51,93,10,118,NA
+ds001894_sub-0094,ds001894,sub-094,male,right,9.39,91,10,80,NA
+ds001894_sub-0095,ds001894,sub-095,female,right,8.33,94,7,80,accuracy < 0.5 for O+P+ & O-P- across runs
+ds001894_sub-0096,ds001894,sub-096,female,right,11.85,79,10,100,NA
+ds001894_sub-0097,ds001894,sub-097,female,right,9.52,89,11,112,accuracy < 0.5 for O+P+ & O-P- across runs
+ds001894_sub-0098,ds001894,sub-098,male,right,13.34,87,6,86,NA
+ds001894_sub-0099,ds001894,sub-099,male,right,10.23,92,6,113,accuracy < 0.5 for O+P+ & O-P- across runs
+ds001894_sub-0100,ds001894,sub-100,female,right,7.84,86,9,118,NA
+ds001894_sub-0101,ds001894,sub-101,male,right,9.89,101,12,128,NA
+ds001894_sub-0102,ds001894,sub-102,male,right,11.48,101,11,106,NA
+ds001894_sub-0103,ds001894,sub-103,female,right,9.54,84,14,109,missing events file for both runs
+ds001894_sub-0104,ds001894,sub-104,male,right,9.79,78,14,116,NA
+ds001894_sub-0105,ds001894,sub-105,male,right,13.39,89,4,104,excluded for >0 chunk of motion outliers
+ds001894_sub-0106,ds001894,sub-106,male,right,7.76,95,7,88,accuracy < 0.5 for O+P+ & O-P- across runs
+ds001894_sub-0107,ds001894,sub-107,female,right,9.56,93,7,95,missing events file for both runs
+ds001894_sub-0108,ds001894,sub-108,male,right,9.85,91,10,98,NA
+ds001894_sub-0109,ds001894,sub-109,male,right,9.68,96,12,100,excluded for >0 chunk of motion outliers
+ds001894_sub-0110,ds001894,sub-110,female,right,9.91,89,9,116,NA
+ds001894_sub-0111,ds001894,sub-111,male,right,10.35,80,9,71,NA
+ds001894_sub-0112,ds001894,sub-112,male,right,13.72,82,6,71,NA
+ds001894_sub-0113,ds001894,sub-113,male,right,11.33,72,4,94,excluded for >15% of volumes marked as motion outliers
+ds001894_sub-0114,ds001894,sub-114,male,right,8.24,97,7,107,missing events file for both runs
+ds001894_sub-0115,ds001894,sub-115,male,right,11.83,86,5,107,NA
+ds001894_sub-0116,ds001894,sub-116,female,right,10.9,86,12,116,NA
+ds001894_sub-0117,ds001894,sub-117,male,right,13.04,90,7,106,NA
+ds001894_sub-0118,ds001894,sub-118,male,right,8.79,70,7,98,missing events file for both runs
+ds001894_sub-0119,ds001894,sub-119,female,right,8.93,78,7,110,NA
+ds001894_sub-0120,ds001894,sub-120,female,right,9.69,81,7,100,NA
+ds001894_sub-0121,ds001894,sub-121,male,right,8.84,91,4,80,response bias between O+P+ & O-P-
+ds001894_sub-0122,ds001894,sub-122,male,right,11.16,82,10,116,accuracy < 0.5 for O+P+ & O-P- across runs
+ds001894_sub-0123,ds001894,sub-123,male,right,13.78,88,8,86,NA
+ds001894_sub-0124,ds001894,sub-124,male,right,11.48,93,5,106,response bias between O+P+ & O-P-
+ds001894_sub-0125,ds001894,sub-125,female,right,13.72,76,5,95,NA
+ds001894_sub-0126,ds001894,sub-126,male,right,10.63,59,2,91,missing events file for both runs
+ds001894_sub-0127,ds001894,sub-127,male,right,11.02,97,6,107,NA
+ds001894_sub-0128,ds001894,sub-128,female,right,11.17,118,10,107,NA
+ds001894_sub-0129,ds001894,sub-129,female,right,10.25,110,5,104,missing events file for one run
+ds001894_sub-0130,ds001894,sub-130,female,right,8.01,97,8,85,accuracy < 0.5 for O+P+ & O-P- across runs
+ds001894_sub-0131,ds001894,sub-131,female,right,8.29,104,7,77,NA
+ds001894_sub-0132,ds001894,sub-132,male,right,10.3,110,9,103,NA
+ds001894_sub-0133,ds001894,sub-133,male,right,13.7,100,10,113,NA
+ds001894_sub-0134,ds001894,sub-134,female,right,11.12,101,9,100,NA
+ds001894_sub-0135,ds001894,sub-135,male,right,9.32,125,7,133,NA
+ds001894_sub-0136,ds001894,sub-136,male,right,11.59,93,11,115,NA
+ds001894_sub-0137,ds001894,sub-137,male,right,10.03,115,11,104,excluded for >0 chunk of motion outliers
+ds001894_sub-0138,ds001894,sub-138,male,right,12.27,125,12,119,NA
+ds001894_sub-0139,ds001894,sub-139,female,right,9.02,108,14,124,NA
+ds001894_sub-0140,ds001894,sub-140,male,right,11.85,98,12,101,NA
+ds001894_sub-0141,ds001894,sub-141,male,right,8.7,109,10,110,NA
+ds001894_sub-0142,ds001894,sub-142,male,right,11.12,87,11,100,excluded for >0 chunk of motion outliers
+ds001894_sub-0143,ds001894,sub-143,female,right,9.46,102,7,121,NA
+ds001894_sub-0144,ds001894,sub-144,female,right,9.04,116,12,128,NA
+ds001894_sub-0145,ds001894,sub-145,male,right,11.37,84,8,95,response bias between O+P+ & O-P-
+ds001894_sub-0146,ds001894,sub-146,male,right,11.88,96,9,101,NA
+ds001894_sub-0147,ds001894,sub-147,female,right,11.39,87,5,68,nonverbal IQ < 70
+ds001894_sub-0148,ds001894,sub-148,female,right,9.78,115,11,110,NA
+ds001894_sub-0149,ds001894,sub-149,female,right,10.55,86,9,95,response bias between O+P+ & O-P-
+ds001894_sub-0150,ds001894,sub-150,male,right,12.55,99,8,106,NA
+ds001894_sub-0151,ds001894,sub-151,female,right,13.04,83,3,100,missing >20% coverage for fROI
+ds001894_sub-0152,ds001894,sub-152,female,right,10.42,92,8,106,NA
+ds001894_sub-0153,ds001894,sub-153,male,right,9.22,78,6,109,missing events file for both runs
+ds001894_sub-0154,ds001894,sub-154,female,right,13.09,92,10,94,accuracy < 0.5 for O+P+ & O-P- across runs
+ds001894_sub-0155,ds001894,sub-155,female,right,9.51,98,7,106,missing events file for one run
+ds001894_sub-0156,ds001894,sub-156,male,right,9,91,7,88,accuracy < 0.5 for O+P+ & O-P- across runs
+ds001894_sub-0157,ds001894,sub-157,female,right,8.99,89,7,100,NA
+ds001894_sub-0158,ds001894,sub-158,male,right,9.54,90,11,104,accuracy < 0.5 for O+P+ & O-P- across runs
+ds001894_sub-0159,ds001894,sub-159,male,right,8.47,102,10,79,NA
+ds001894_sub-0160,ds001894,sub-160,female,right,11.96,127,12,104,NA
+ds001894_sub-0161,ds001894,sub-161,female,right,11.25,98,7,100,NA
+ds001894_sub-0162,ds001894,sub-162,male,right,12.29,89,4,86,NA
+ds001894_sub-0163,ds001894,sub-163,female,right,10.24,97,8,100,NA
+ds001894_sub-0164,ds001894,sub-164,male,right,13.56,98,12,92,NA
+ds001894_sub-0165,ds001894,sub-165,female,right,8.93,113,13,100,NA
+ds001894_sub-0166,ds001894,sub-166,female,right,8.74,98,7,100,missing events file for one run
+ds001894_sub-0167,ds001894,sub-167,female,right,9.45,101,15,121,NA
+ds001894_sub-0168,ds001894,sub-168,female,right,10.82,117,12,116,NA
+ds001894_sub-0169,ds001894,sub-169,male,right,9.06,100,6,109,NA
+ds001894_sub-0170,ds001894,sub-170,male,right,10.09,89,6,97,NA
+ds001894_sub-0171,ds001894,sub-171,male,right,8.08,82,5,103,missing events file for both runs
+ds001894_sub-0172,ds001894,sub-172,male,right,13.18,108,12,118,NA
+ds001894_sub-0173,ds001894,sub-173,female,right,8.83,85,8,107,missing events file for both runs
+ds001894_sub-0174,ds001894,sub-174,female,right,9.2,101,6,97,NA
+ds001894_sub-0175,ds001894,sub-175,female,right,9.43,93,6,97,excluded for >0 chunk of motion outliers
+ds001894_sub-0176,ds001894,sub-176,female,right,8.21,96,8,77,NA
+ds001894_sub-0177,ds001894,sub-177,male,right,13.53,73,4,110,NA
+ds001894_sub-0178,ds001894,sub-178,female,right,8.71,80,8,121,accuracy < 0.5 for O+P+ & O-P- across runs
+ds001894_sub-0179,ds001894,sub-179,female,right,8.15,102,13,119,accuracy < 0.5 for O+P+ & O-P- across runs
+ds001894_sub-0180,ds001894,sub-180,male,right,8.15,73,5,80,missing events file for both runs
+ds001894_sub-0181,ds001894,sub-181,female,right,9.35,98,13,118,NA
+ds001894_sub-0182,ds001894,sub-182,male,right,8.77,82,8,110,NA
+ds001894_sub-0183,ds001894,sub-183,female,right,8.9,127,16,124,missing events file for one run
+ds001894_sub-0184,ds001894,sub-184,female,right,8.95,93,8,85,NA
+ds001894_sub-0185,ds001894,sub-185,male,right,12.8,97,12,104,NA
+ds001894_sub-0186,ds001894,sub-186,male,right,12.75,88,9,113,NA
+ds001894_sub-0187,ds001894,sub-187,male,right,9.39,103,11,109,excluded for >0 chunk of motion outliers
+ds001894_sub-0188,ds001894,sub-188,female,right,7.95,124,16,115,NA
+ds002236_sub-0001,ds002236,sub-01,female,right,8.92,107,12,130,NA
+ds002236_sub-0002,ds002236,sub-02,male,right,8.92,115,15,109,NA
+ds002236_sub-0003,ds002236,sub-03,male,right,10.67,118,14,104,NA
+ds002236_sub-0004,ds002236,sub-04,female,right,12.83,100,8,100,NA
+ds002236_sub-0005,ds002236,sub-05,female,right,10.75,97,6,85,missing >20% coverage for fROI
+ds002236_sub-0006,ds002236,sub-06,female,right,13.25,109,12,104,NA
+ds002236_sub-0007,ds002236,sub-07,male,right,13.33,111,12,104,NA
+ds002236_sub-0008,ds002236,sub-08,female,right,10.83,118,8,109,NA
+ds002236_sub-0009,ds002236,sub-09,female,right,12.67,107,9,94,NA
+ds002236_sub-0010,ds002236,sub-10,female,right,14.5,104,12,79,NA
+ds002236_sub-0011,ds002236,sub-11,male,right,12.75,99,10,74,excluded for >0 chunk of motion outliers
+ds002236_sub-0012,ds002236,sub-12,male,right,9.17,110,11,109,NA
+ds002236_sub-0013,ds002236,sub-13,male,right,12.83,106,9,79,NA
+ds002236_sub-0014,ds002236,sub-14,female,right,10.5,115,11,124,missing >20% coverage for fROI
+ds002236_sub-0015,ds002236,sub-15,male,right,8.83,124,16,109,excluded for >0 chunk of motion outliers
+ds002236_sub-0016,ds002236,sub-16,male,right,9.17,117,7,94,NA
+ds002236_sub-0017,ds002236,sub-17,female,right,13.17,104,10,100,NA
+ds002236_sub-0018,ds002236,sub-18,male,right,8.75,111,7,109,missing >20% coverage for fROI
+ds002236_sub-0019,ds002236,sub-19,male,right,11.25,130,12,119,NA
+ds002236_sub-0020,ds002236,sub-20,male,right,8.83,124,16,NA,missing nonverbal IQ
+ds002236_sub-0021,ds002236,sub-21,female,right,9.25,101,13,104,NA
+ds002236_sub-0022,ds002236,sub-22,female,right,8.92,125,15,115,NA
+ds002236_sub-0023,ds002236,sub-23,female,right,8.67,103,12,100,NA
+ds002236_sub-0024,ds002236,sub-24,female,right,15.5,97,11,94,NA
+ds002236_sub-0025,ds002236,sub-25,female,right,12.75,107,10,104,NA
+ds002236_sub-0026,ds002236,sub-26,female,right,8.75,125,12,119,NA
+ds002236_sub-0027,ds002236,sub-27,male,right,10.67,91,10,89,missing >20% coverage for fROI
+ds002236_sub-0028,ds002236,sub-28,female,right,10.67,122,13,94,missing events file for both runs
+ds002236_sub-0029,ds002236,sub-29,female,right,11,119,11,119,NA
+ds002236_sub-0030,ds002236,sub-30,female,right,13.08,107,12,115,missing >20% coverage for fROI
+ds002236_sub-0031,ds002236,sub-31,female,right,14.75,101,11,74,NA
+ds002236_sub-0032,ds002236,sub-32,male,right,12.75,119,4,104,NA
+ds002236_sub-0033,ds002236,sub-33,female,right,12.67,117,8,115,NA
+ds002236_sub-0034,ds002236,sub-34,male,left,14.92,99,10,100,left-handedness
+ds002236_sub-0035,ds002236,sub-35,male,right,10.67,123,11,89,NA
+ds002236_sub-0036,ds002236,sub-36,male,right,14.92,96,11,100,NA
+ds002236_sub-0037,ds002236,sub-37,male,right,10.75,85,5,89,excluded for >0 chunk of motion outliers
+ds002236_sub-0038,ds002236,sub-38,male,right,12.67,115,9,104,NA
+ds002236_sub-0039,ds002236,sub-39,male,right,8.75,97,8,104,excluded for >0 chunk of motion outliers
+ds002236_sub-0040,ds002236,sub-40,male,right,10.67,106,11,109,missing events file for one run
+ds002236_sub-0041,ds002236,sub-41,female,right,12.83,114,11,104,missing >20% coverage for fROI
+ds002236_sub-0042,ds002236,sub-42,female,right,8.67,117,15,109,NA
+ds002236_sub-0043,ds002236,sub-43,male,right,12.75,125,12,109,NA
+ds002236_sub-0044,ds002236,sub-44,male,right,8.75,126,15,115,NA
+ds002236_sub-0045,ds002236,sub-45,female,right,12.67,120,11,109,NA
+ds002236_sub-0046,ds002236,sub-46,male,right,14.67,110,11,104,NA
+ds002236_sub-0047,ds002236,sub-47,female,right,14.83,107,12,104,NA
+ds002236_sub-0048,ds002236,sub-48,female,right,13.42,103,11,100,NA
+ds002236_sub-0049,ds002236,sub-49,male,right,9,117,13,130,NA
+ds002236_sub-0050,ds002236,sub-50,male,right,10.75,107,13,109,NA
+ds002236_sub-0051,ds002236,sub-51,female,right,11.08,116,12,119,NA
+ds002236_sub-0052,ds002236,sub-52,female,right,14.92,106,13,94,NA
+ds002236_sub-0053,ds002236,sub-53,male,right,13,95,9,109,NA
+ds002236_sub-0054,ds002236,sub-54,male,left,10.83,105,11,104,left-handedness
+ds002236_sub-0055,ds002236,sub-55,male,right,11.17,111,11,89,NA
+ds002236_sub-0056,ds002236,sub-56,male,right,9,99,7,100,NA
+ds002236_sub-0057,ds002236,sub-57,male,right,15.33,96,4,74,NA
+ds002236_sub-0058,ds002236,sub-58,male,right,11.17,101,9,94,NA
+ds002236_sub-0059,ds002236,sub-59,female,right,10.67,108,11,89,NA
+ds002236_sub-0060,ds002236,sub-60,female,right,8.75,100,12,109,NA
+ds002236_sub-0061,ds002236,sub-61,female,right,10.75,105,12,89,NA
+ds002236_sub-0062,ds002236,sub-62,male,right,13.42,92,4,109,NA
+ds002236_sub-0063,ds002236,sub-63,female,right,11.08,87,8,109,NA
+ds002236_sub-0064,ds002236,sub-64,female,right,8.72,94,7,100,NA
+ds002236_sub-0065,ds002236,sub-65,female,right,8.83,104,14,124,NA
+ds002236_sub-0066,ds002236,sub-66,male,right,11.08,118,10,115,NA
+ds002236_sub-0067,ds002236,sub-67,male,right,9.17,101,13,115,missing events file for both runs
+ds002236_sub-0068,ds002236,sub-68,male,right,9.33,87,6,104,NA
+ds002236_sub-0069,ds002236,sub-69,male,right,10.75,93,12,109,NA
+ds002236_sub-0070,ds002236,sub-70,male,right,10.92,79,6,70,accuracy < 0.5 for O+P+ & O-P- across runs
+ds002236_sub-0071,ds002236,sub-71,male,right,13.42,85,7,89,NA
+ds002236_sub-0072,ds002236,sub-72,male,right,8.92,90,10,85,response bias between O+P+ & O-P-
+ds002236_sub-0073,ds002236,sub-73,male,right,9.33,86,7,74,NA
+ds002236_sub-0074,ds002236,sub-74,female,right,14.83,72,5,89,NA
+ds002236_sub-0075,ds002236,sub-75,female,right,10.67,95,9,85,NA
+ds002236_sub-0076,ds002236,sub-76,male,right,14.67,82,8,100,NA
+ds002236_sub-0077,ds002236,sub-77,female,right,10.67,114,11,119,NA
+ds002236_sub-0078,ds002236,sub-78,male,right,8.75,105,14,109,missing events file for one run
+ds002236_sub-0079,ds002236,sub-79,male,right,11.17,87,8,109,NA
+ds002236_sub-0080,ds002236,sub-80,male,right,11.17,84,8,115,NA
+ds002236_sub-0081,ds002236,sub-81,male,right,8.67,102,7,104,NA
+ds002236_sub-0082,ds002236,sub-82,male,right,8.83,93,12,109,NA
+ds002236_sub-0083,ds002236,sub-83,female,right,13,86,5,85,NA
+ds002236_sub-0084,ds002236,sub-84,male,right,14.75,82,4,89,NA
+ds002236_sub-0085,ds002236,sub-85,male,left,10.92,119,12,89,left-handedness
+ds002236_sub-0086,ds002236,sub-86,female,right,10.67,52,4,64,missing events file for both runs
+ds002236_sub-0087,ds002236,sub-87,male,right,13.08,45,4,100,missing events file for both runs
+ds002236_sub-0088,ds002236,sub-88,male,left,10.75,98,9,115,left-handedness
+ds002236_sub-0089,ds002236,sub-89,male,right,11.08,NA,4,79,missing Word ID
+ds002236_sub-0090,ds002236,sub-90,male,right,14.92,86,7,109,NA
+ds002236_sub-0091,ds002236,sub-91,female,right,9.17,80,6,119,accuracy < 0.5 for O+P+ & O-P- across runs
+ds006239_sub-1002,ds006239,sub-1002,female,right,15.93,122,11,130,NA
+ds006239_sub-1076,ds006239,sub-1076,male,right,12.66,94,8,110,NA
+ds006239_sub-1077,ds006239,sub-1077,male,right,13.26,108,7,121,ADHD
+ds006239_sub-1078,ds006239,sub-1078,male,right,10.81,108,9,69,nonverbal IQ < 70
+ds006239_sub-1079,ds006239,sub-1079,female,right,11.55,111,9,110,NA
+ds006239_sub-1080,ds006239,sub-1080,female,right,11.26,128,13,132,NA
+ds006239_sub-1081,ds006239,sub-1081,female,right,10.72,94,9,112,NA
+ds006239_sub-1082,ds006239,sub-1082,male,right,10.57,94,12,122,NA
+ds006239_sub-1083,ds006239,sub-1083,female,left,16.1,117,12,81,left-handedness
+ds006239_sub-1084,ds006239,sub-1084,female,left,11.41,115,11,115,left-handedness
+ds006239_sub-1086,ds006239,sub-1086,male,right,10.42,125,14,135,NA
+ds006239_sub-1089,ds006239,sub-1089,male,right,16.52,112,8,98,NA
+ds006239_sub-1090,ds006239,sub-1090,male,right,12.41,95,5,116,NA
+ds006239_sub-1091,ds006239,sub-1091,female,right,10.8,112,12,109,medication affecting CNS
+ds006239_sub-1101,ds006239,sub-1101,female,right,16.13,126,12,96,NA
+ds006239_sub-1102,ds006239,sub-1102,female,right,11.35,125,14,120,NA
+ds006239_sub-1103,ds006239,sub-1103,female,right,14.14,123,12,118,NA
+ds006239_sub-1105,ds006239,sub-1105,female,right,10.55,120,14,109,NA
+ds006239_sub-1107,ds006239,sub-1107,female,right,12.14,106,10,104,NA
+ds006239_sub-1110,ds006239,sub-1110,female,right,12.29,104,12,121,NA
+ds006239_sub-1111,ds006239,sub-1111,female,right,12.26,106,9,113,NA
+ds006239_sub-1116,ds006239,sub-1116,male,right,13.41,102,9,116,NA
+ds006239_sub-1117,ds006239,sub-1117,male,right,10.23,130,11,123,NA
+ds006239_sub-1118,ds006239,sub-1118,male,left,12.07,116,14,124,left-handedness
+ds006239_sub-1119,ds006239,sub-1119,male,right,12.78,115,9,117,NA
+ds006239_sub-1122,ds006239,sub-1122,male,right,10.59,111,10,130,NA
+ds006239_sub-1129,ds006239,sub-1129,male,right,15.02,73,8,91,NA
+ds006239_sub-1130,ds006239,sub-1130,female,right,11.45,108,13,102,NA
+ds006239_sub-1131,ds006239,sub-1131,male,left,12.13,113,9,76,left-handedness
+ds006239_sub-1148,ds006239,sub-1148,female,right,10.48,108,11,122,NA
+ds006239_sub-1156,ds006239,sub-1156,female,right,12.21,106,11,107,NA
+ds006239_sub-1160,ds006239,sub-1160,female,right,14.69,128,9,114,NA
+ds006239_sub-1161,ds006239,sub-1161,male,right,14.69,109,9,102,NA
+ds006239_sub-1169,ds006239,sub-1169,female,right,11.56,112,10,120,NA
+ds006239_sub-1178,ds006239,sub-1178,female,right,11.95,103,12,111,NA
+ds006239_sub-1180,ds006239,sub-1180,male,right,12.64,121,11,122,NA
+ds006239_sub-1181,ds006239,sub-1181,male,right,12.32,113,8,101,NA
+ds006239_sub-1184,ds006239,sub-1184,female,right,11.24,113,5,121,ADHD
+ds006239_sub-1185,ds006239,sub-1185,male,left,16.87,98,8,90,left-handedness
+ds006239_sub-1187,ds006239,sub-1187,female,right,12.8,118,9,119,NA
+ds006239_sub-1190,ds006239,sub-1190,male,right,14.01,104,9,116,NA
+ds006239_sub-1191,ds006239,sub-1191,female,right,11.91,112,10,92,NA
+ds006239_sub-1192,ds006239,sub-1192,male,right,10.71,116,11,140,NA
+ds006239_sub-1193,ds006239,sub-1193,male,right,11.09,117,5,105,NA
+ds006239_sub-1194,ds006239,sub-1194,male,right,14.33,119,10,99,NA
+ds006239_sub-1195,ds006239,sub-1195,male,right,11.41,120,14,126,NA
+ds006239_sub-1196,ds006239,sub-1196,male,right,13.65,122,10,108,NA
+ds006239_sub-1197,ds006239,sub-1197,female,right,10.44,95,8,100,NA
+ds006239_sub-1198,ds006239,sub-1198,male,right,10.96,113,11,137,NA
+ds006239_sub-1199,ds006239,sub-1199,female,right,15.42,91,9,123,NA
+ds006239_sub-1203,ds006239,sub-1203,male,left,12.39,125,12,116,left-handedness
+ds006239_sub-1204,ds006239,sub-1204,female,right,10.97,96,11,96,NA
+ds006239_sub-1205,ds006239,sub-1205,male,right,12.92,107,9,129,NA
+ds006239_sub-1206,ds006239,sub-1206,male,right,14.76,96,10,127,NA
+ds006239_sub-1208,ds006239,sub-1208,female,right,15.96,108,10,108,NA
+ds006239_sub-1209,ds006239,sub-1209,female,right,12.7,106,9,105,NA
+ds006239_sub-1210,ds006239,sub-1210,female,right,16.37,97,9,92,NA
+ds006239_sub-1211,ds006239,sub-1211,male,right,11.51,124,14,117,NA
+ds006239_sub-1213,ds006239,sub-1213,female,right,10.49,112,13,130,NA
+ds006239_sub-1219,ds006239,sub-1219,female,right,10.91,68,4,73,NA
+ds006239_sub-1220,ds006239,sub-1220,female,right,10.81,82,6,94,NA
+ds006239_sub-1223,ds006239,sub-1223,male,right,10.41,116,6,92,NA
+ds006239_sub-1225,ds006239,sub-1225,female,right,13.22,93,7,92,NA
+ds006239_sub-1228,ds006239,sub-1228,male,right,10.69,88,8,75,accuracy < 0.5 for O+P+ & O-P- across runs
+ds006239_sub-1229,ds006239,sub-1229,male,right,13.63,93,8,93,ADHD
+ds006239_sub-1231,ds006239,sub-1231,female,right,16.79,55,4,81,ADHD
+ds006239_sub-1240,ds006239,sub-1240,female,right,14.93,95,9,124,ADHD
+ds006239_sub-1246,ds006239,sub-1246,female,right,10.3,94,9,102,NA
+ds006239_sub-1247,ds006239,sub-1247,male,right,10.3,123,14,117,missing >20% coverage for fROI
+ds006239_sub-1248,ds006239,sub-1248,female,right,12.3,115,10,121,NA
+ds006239_sub-1250,ds006239,sub-1250,female,right,16.5,91,10,90,NA
+ds006239_sub-1251,ds006239,sub-1251,female,right,15.6,96,4,111,missing events file for both runs
+ds006239_sub-1252,ds006239,sub-1252,female,right,15.61,84,8,76,NA
+ds006239_sub-1255,ds006239,sub-1255,male,right,10.36,92,5,98,NA
+ds006239_sub-1257,ds006239,sub-1257,male,left,12.38,92,5,99,left-handedness
+ds006239_sub-1265,ds006239,sub-1265,male,right,10.86,112,10,99,ADHD
+ds006239_sub-1268,ds006239,sub-1268,male,right,10.95,81,5,99,response bias between O+P+ & O-P-
+ds006239_sub-1269,ds006239,sub-1269,male,right,16.78,101,10,112,ADHD
+ds006239_sub-1276,ds006239,sub-1276,male,right,12.86,38,4,105,accuracy < 0.5 for O+P+ & O-P- across runs
+ds006239_sub-1277,ds006239,sub-1277,male,right,12.86,103,12,119,NA
+ds006239_sub-1278,ds006239,sub-1278,male,right,10.95,127,12,83,NA
+ds006239_sub-1283,ds006239,sub-1283,female,right,16.66,89,9,83,NA
+ds006239_sub-1284,ds006239,sub-1284,female,right,12.84,105,9,122,excluded for >0 chunk of motion outliers
+ds006239_sub-1285,ds006239,sub-1285,male,right,10.82,125,13,129,ADHD
+ds006239_sub-1287,ds006239,sub-1287,male,right,16.43,92,8,100,missing events file for both runs
+ds006239_sub-1288,ds006239,sub-1288,female,right,14.67,114,11,108,NA
+ds006239_sub-1289,ds006239,sub-1289,female,right,13.21,118,12,134,NA
+ds006239_sub-1290,ds006239,sub-1290,female,right,11.37,76,5,60,ADHD
+ds006239_sub-1291,ds006239,sub-1291,male,right,12.24,95,11,116,NA
