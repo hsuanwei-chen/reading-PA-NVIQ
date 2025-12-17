@@ -1,0 +1,188 @@
+---
+title: "Harmonization of left IFG"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+author: "Isaac Chen"
+
+format: 
+    html:
+      embed-resources: true
+---
+
+```{r}
+#| warning: false
+#| message: false
+#| 
+# Clear all variables from environment
+rm(list = ls())
+
+library(here)
+library(tidyverse)
+library(gtsummary)
+library(neuroCombat)
+library(neuroCombatData)
+library(patchwork)
+```
+
+```{r}
+# Set the working directory to the location of your script and CSV files
+data <- here("data", "phenotype", "merged", "merged_participants_motionQC.csv")
+img <- here("results", "harmonization", "top1000", "betas_con-NCFix_leftIFG_top1000_union-mask.csv")
+
+# Read the CSV files
+data <- read_csv(data)
+img <- read_csv(img)
+
+# Create demographics and img data
+img <- img |> 
+  select(4:last_col())
+
+demographics <- data |>
+  filter(is.na(exclude)) |> 
+  select(unique_id, dataset, age, sex, wordid_sts, el_scs, mr_sts)
+```
+
+## Participant Characteristics
+
+```{r}
+#| echo: false
+# Summary table
+demographics |> 
+  select(dataset, age, sex, wordid_sts, el_scs, mr_sts) |> 
+  tbl_summary(by = dataset) |> 
+  add_overall() |> 
+  bold_labels()
+```
+
+# Run ComBat
+
+```{r}
+# Matrix into include other covariates of interest
+mod <- model.matrix(~ age + factor(sex) + wordid_sts + el_scs + mr_sts, data = demographics)
+
+# Run ComBat
+harmonized <- neuroCombat(dat = img, batch = demographics$dataset, mod = mod)
+```
+
+# Visualization of Priors
+
+```{r}
+# Set panel for side-bu-side plots
+par(mfrow = c(1, 2))
+neuroCombat::drawPriorGamma(harmonized$estimates, xlim = c(-1, 1), ylim = c(0, 10))
+neuroCombat::drawPriorDelta(harmonized$estimates, xlim = c(0, 2), ylim = c(0, 5))
+```
+
+```{r}
+#| echo: false
+# Convert harmonized data to a data frame and add subject column
+img_long <- img |> 
+  pivot_longer(
+     cols = starts_with("ds"),
+     cols_vary = "slowest",
+     names_to = "voxel",
+     values_to = "beta"
+  ) |> 
+  mutate(dataset = str_sub(voxel, 1, 8)) |> 
+  mutate(voxel = factor(voxel))
+
+harmonized_img = as.data.frame(harmonized$dat.combat)
+harmonized_img_long <- harmonized_img |> 
+  pivot_longer(
+   cols = starts_with("ds"),
+   cols_vary = "slowest",
+   names_to = "voxel",
+   values_to = "beta"
+  ) |> 
+  mutate(dataset = str_sub(voxel, 1, 8)) |> 
+  mutate(voxel = factor(voxel))
+```
+
+## ROI Analyses Pre- vs Post-ComBat
+
+## Left IFG
+
+```{r}
+#| echo: false
+fig_box_IFG_preComBat <- img_long |>  
+  ggplot(aes(x = voxel, y = beta)) +
+  geom_boxplot(aes(color = dataset)) +
+  labs(
+    title = "Pre-ComBat (Non-conflicting vs Fixation)", 
+    color = "Dataset",
+    x = "Subject", 
+    y = "Beta Values in Left IFG (Union)"
+  ) +
+  scale_y_continuous(limits = c(-15, 15), breaks = seq(-15, 15, 3)) + 
+  theme_bw() +
+  theme(
+    axis.text.x = element_blank(),
+    legend.position = "top"
+  )
+
+print(fig_box_IFG_preComBat)
+#ggsave("fig_box_leftIFG_preComBat.png", fig_box_IFG_preComBat)
+```
+
+```{r}
+#| echo: false
+fig_box_IFG_postComBat <- harmonized_img_long |>  
+  ggplot(aes(x = voxel, y = beta)) +
+  geom_boxplot(aes(color = dataset)) +
+  labs(
+    title = "Post-ComBat (Non-conflicting vs Fixation)", 
+    color = "Dataset",
+    x = "Subject", 
+    y = "Beta Values in Left IFG (Union)"
+  ) +
+  scale_y_continuous(limits = c(-15, 15), breaks = seq(-15, 15, 3)) + 
+  theme_bw() +
+  theme(
+    axis.text.x = element_blank(),
+    legend.position = "top"
+  )
+
+print(fig_box_IFG_postComBat)
+#ggsave("fig_box_leftIFG_postComBat.png", fig_box_IFG_postComBat)
+```
+
+### Histogram
+
+**PreComBat**
+```{r}
+fig_histogram_IFG_preComBat <- img_long |>  
+  ggplot(aes(x=beta, fill = dataset)) +
+  geom_density(alpha = 0.4, adjust=1.5) +
+  scale_y_continuous(limits = c(0, 0.5)) + 
+  labs(
+    title = "Pre-ComBat for Left IFG", 
+    fill = "Dataset",
+    x = "Beta Values (Non-conflicting - Fixation)", 
+    y = "Density"
+  ) +
+  theme_bw() +
+  theme(legend.position = "none")
+
+print(fig_histogram_IFG_preComBat)
+```
+
+**Post-ComBat**
+```{r}
+fig_histogram_IFG_postComBat <- harmonized_img_long |>  
+  ggplot(aes(x=beta, fill = dataset)) +
+  geom_density(alpha = 0.4, adjust=1.5) +
+  scale_y_continuous(limits = c(0, 0.5)) + 
+  labs(
+    title = "Post-ComBat for Left IFG", 
+    fill = "Dataset",
+    x = "Beta Values (Non-conflicting - Fixation)", 
+    y = "Density"
+  ) +
+  theme_bw()
+
+print(fig_histogram_IFG_postComBat)
+```
+
+```{r}
+fig_histogram_IFG_preComBat + fig_histogram_IFG_postComBat
+```
+
