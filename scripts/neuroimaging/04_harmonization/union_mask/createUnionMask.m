@@ -22,7 +22,7 @@ addpath(genpath(util_dir));
 addpath(genpath(spm_dir));
 
 % Define merged_participants.csv
-subj_csv = fullfile(proj_dir, 'data', 'phenotype', 'merged', 'merged_participants_motionQC.csv');
+subj_csv = fullfile(proj_dir, 'data', 'phenotype', 'merged', 'merged_participants_motionQC-coverage.csv');
 
 %% Set participants
 % Read in mereged_participants.csv

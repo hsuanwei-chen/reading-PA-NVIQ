@@ -30,7 +30,7 @@ addpath(genpath(util_dir));
 addpath(genpath(spm_dir));
 
 % Define merged_participants.csv
-subj_csv = fullfile(proj_dir, 'data', 'phenotype', 'merged', 'merged_participants_motionQC.csv');
+subj_csv = fullfile(proj_dir, 'data', 'phenotype', 'merged', 'merged_participants_motionQC-coverage.csv');
 
 %% Set participants
 % Read in mereged_participants.csv
@@ -102,7 +102,7 @@ for i = 1:length(rois)
     end
     
     % Save results as csv
-    output_file = fullfile(out_dir, sprintf('betas_%s_%s.csv', contrast, rois{i}(1:end-4)));
+    output_file = fullfile(out_dir, sprintf('pre-ComBat_betas_%s_%s.csv', contrast, rois{i}(1:end-4)));
     output_tbl = array2table(subj_data);
     output_tbl.Properties.VariableNames = [{'MNI_X', 'MNI_Y', 'MNI_Z'}, subjects.unique_id'];
     writetable(output_tbl, output_file);
