@@ -1,0 +1,113 @@
+---
+title: "Update Merged Dataset After MotionQC "
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+author: "Isaac Chen"
+
+format: 
+    html:
+      toc: true
+      embed-resources: true
+---
+
+### Set up
+
+```{r}
+#| warning: false
+#| message: false
+
+library(here)
+library(tidyverse)
+library(readxl)
+library(knitr)
+ 
+# Clear all variables from environment
+rm(list = ls())
+
+# Set input files
+data_dir            <- here("data", "phenotype")
+merged_dir          <- here("data", "phenotype", "merged")
+results_dir         <- here("results", "fMRI_count_repaired")
+participants_rds    <- here(data_dir, "merged", "merged_participants.rds")
+count_repaired_xlsx <- here(results_dir, "merged_count_repaired.xlsx")
+
+# Set output files
+output_participants_rds <- here(merged_dir, "merged_participants_motionQC.rds")
+output_participants_csv <- here(merged_dir, "merged_participants_motionQC.csv")
+
+# Read in data
+merged_participants_df <- readRDS(participants_rds) 
+merged_scan_df         <- read_excel(count_repaired_xlsx)
+```
+
+## Update Sample Size
+
+```{r}
+# Extract participants excluded for motion
+# Added ds001894_sub-0033 because later found their events file was corrupted 
+# when running first-level analyses
+motion_excluded <- merged_scan_df |> 
+  select(unique_id, exclude) |> 
+  filter(!is.na(exclude)) |> 
+  distinct(unique_id, exclude) |> 
+  rename(exclude_add = exclude) |> 
+  bind_rows(
+    tibble(
+      unique_id = "ds001894_sub-0033",
+      exclude_add = "corrupt events file for run-01 (i.e. onsets are NAs)"
+    )
+  )
+
+# Updated participants csv with those excluded for motion
+merged_participants_df <- merged_participants_df |> 
+  left_join(motion_excluded, by = "unique_id") |>
+  mutate(exclude = ifelse(is.na(exclude), exclude_add, exclude)) |> 
+  select(-exclude_add)
+```
+
+```{r}
+# Print updated sample size
+merged_participants_df |> 
+  filter(is.na(exclude)) |> 
+  glimpse()
+```
+
+```{r}
+# Save results
+saveRDS(merged_participants_df, file = output_participants_rds)
+write_csv(merged_participants_df, file = output_participants_csv)
+```
+
+## Exclusion summary
+
+:::{.panel-tabset}
+
+### By criteria
+
+```{r}
+#| warning: false
+#| message: false
+
+# Summary of excluded participants
+exclude_table <- merged_participants_df |> 
+  filter(!is.na(exclude)) |> 
+  group_by(exclude) |> 
+  summarize(n = n())
+
+kable(exclude_table)
+```
+
+### By dataset & criteria
+
+```{r}
+#| warning: false
+#| message: false
+
+# Summary of excluded participants
+exclude_table <- merged_participants_df |> 
+  filter(!is.na(exclude)) |> 
+  group_by(dataset, exclude) |> 
+  summarize(n = n())
+
+kable(exclude_table)
+```
+
