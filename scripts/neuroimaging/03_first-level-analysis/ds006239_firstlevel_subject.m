@@ -46,7 +46,7 @@ events_file_exist=0;
 % Define BIDS folder
 % If you assign 0 to events_file_exist, then you mask fill in this path, 
 % so it can read events.tsv file for individual onsets from bids folder
-bids_folder = fullfile(root_dir, 'DHH', 'bids_1000s_ses-1/');
+bids_folder = fullfile(root_dir, 'DHH', 'bids_1000s_ses-1');
 
 %% Define data folder and file parameters for preprocessing
 % Create structure CCN
@@ -188,7 +188,7 @@ try
         
         % Make sure datatypes are consistent
         if iscell(event_data.onset) || ischar(event_data.onset) || isstring(event_data.onset)
-            event_data.onset = str2double(event_data.onset);
+            event_data.onset = str2double(cellstr(event_data.onset));
         end
 
         % Create a cell array with onsets for each condition
