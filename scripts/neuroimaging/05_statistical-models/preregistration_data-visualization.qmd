@@ -1,0 +1,453 @@
+---
+title: "Preregistration - Data Visualization"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+author: "Isaac Chen"
+
+format: 
+    html:
+      toc: true
+      embed-resources: true
+---
+
+## Set up
+
+```{r}
+#| warning: false
+#| message: false
+
+library(here)
+library(tidyverse)
+library(gtsummary)
+library(ggridges)
+library(GGally)
+library(patchwork) 
+
+# Clear all variables from environment
+rm(list = ls())
+
+# Set input files
+merg_dir  <- here("data", "phenotype", "merged")
+participants_rds <- here(merg_dir, "preregistration_participants.rds")
+  
+# Read in data
+participants_df <- readRDS(participants_rds)
+```
+
+## Sample Characteristics
+
+```{r}
+#| echo: false
+
+# Summary table
+participants_df |> 
+  tbl_summary(
+    by = dataset, 
+    include = c(age, sex, rs, pa, fi, postC_IFG, postC_TP, postC_vOT),
+    label = list(
+      age = "Age",
+      sex = "Sex",
+      rs = "Reading Skill",
+      pa = "Phonological Awareness",
+      fi = "Fluid Intelligence",
+      postC_IFG = "IFG (ComBat)",
+      postC_TP = "TP (ComBat)",
+      postC_vOT = "vOT (ComBat)"
+    ),
+    type = all_continuous() ~ "continuous2",
+    digits = all_continuous() ~ 1,
+    statistic =
+      all_continuous() ~ c(
+        "{mean} ({sd})", "{median} ({p25}, {p75})", "{min}, {max}"
+      ),
+  ) |> 
+  add_p() |> 
+  add_overall() |> 
+  bold_labels()
+```
+
+## Data Visualization
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+# Add overall dataset factor for plotting purposes
+participants_df <- participants_df |> 
+  bind_rows(participants_df |> mutate(dataset = "Overall")) |> 
+  mutate(
+    dataset = factor(
+      dataset, levels = c("Overall", "ds001486", "ds001894", "ds002236", "ds006239")
+    ),
+  )
+```
+
+### Univariate plots
+
+```{r}
+#| echo: false
+
+# Function to make ridge plots
+plot_ridge <- function(
+    data, 
+    x = NULL,
+    y = NULL,
+    fill = NULL,
+    vlines = NULL,
+    xlim = NULL,
+    xbreaks = NULL,
+    palette = "Set1",
+    fill_labels = NULL,
+    ridge_alpha = 0.5,
+    ridge_scale = 2,
+    ridge_linewidth = 0.6, 
+    reverse_legend = TRUE
+  ) {
+  
+  # Base ggplot
+  p <- data |> 
+    ggplot(aes(x = .data[[x]], y = .data[[y]], fill = .data[[fill]])) +
+    geom_density_ridges(
+      alpha = ridge_alpha, 
+      scale = ridge_scale, 
+      linewidth = ridge_linewidth
+    )
+  
+  # Optional vertical lines
+  if (!is.null(vlines)) {
+    for (v in vlines) {
+      p <- p + geom_vline(xintercept = v, color = "grey30", linetype = "dashed")
+    }
+  }
+  
+  # Optional Scales
+  if (!is.null(xlim) & !is.null(xbreaks)) {
+    p <- p + scale_x_continuous(limits = xlim, breaks = xbreaks)
+  }
+  
+  if (!is.null(fill_labels)) {
+    p <- p + scale_fill_brewer(palette = palette, labels = fill_labels)
+  } else {
+    p <- p + scale_fill_brewer(palette = palette)
+  }
+  
+  # Themes
+  p <- p +
+    theme(
+      axis.title.y = element_blank(),
+      axis.text.y = element_text(face = "bold")
+    )
+  
+  # Legend order
+  if (reverse_legend) {
+    p <- p + guides(fill = guide_legend(reverse = TRUE))
+  }
+  
+  return(p)
+}
+```
+
+:::{.panel-tabset}
+
+#### Age
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+# Label for dataset sample sizes
+dataset_labels <- c(
+  "Overall (n = 375)",
+  "ds001486 (n = 116)",
+  "ds001894 (n = 129)", 
+  "ds002236 (n = 66)", 
+  "ds006239 (n = 64)"
+)
+
+# Ridge plot for age
+fig_ridge_age <- participants_df |> 
+  plot_ridge(
+    x = "age", 
+    y = "dataset", 
+    fill = "dataset",
+    xlim = c(6, 18),
+    xbreaks = seq(6, 18, 1),
+    fill_labels = dataset_labels
+  ) +  
+  labs(
+    x = "Age", 
+    fill = "Dataset"
+  )
+
+print(fig_ridge_age)
+```
+
+#### Reading Skill
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+# Ridge plot for reading skill
+fig_ridge_rs <- participants_df |> 
+  plot_ridge(
+    x = "rs", 
+    y = "dataset", 
+    fill = "dataset",
+    vlines = c(70, 100, 130),
+    xlim = c(55, 145),
+    xbreaks = seq(55, 145, 15),
+    fill_labels = dataset_labels
+  ) +  
+  labs(
+    x = "Reading Skill", 
+    fill = "Dataset"
+  )
+
+print(fig_ridge_rs)
+```
+
+#### Phonological Awareness
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+# Ridge plot for phonological awareness
+fig_ridge_pa <- participants_df |> 
+  plot_ridge(
+    x = "pa", 
+    y = "dataset", 
+    fill = "dataset",
+    vlines = c(4, 10, 16),
+    xlim = c(2, 18),
+    xbreaks = seq(3, 18, 1),
+    fill_labels = dataset_labels
+  ) +  
+  labs(
+    x = "Phonological Awareness", 
+    fill = "Dataset"
+  )
+
+print(fig_ridge_pa)
+```
+
+#### Fluid Intelligence
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+# Ridge plot for fluid intelligence
+fig_ridge_fi <- participants_df |> 
+  plot_ridge(
+    x = "fi", 
+    y = "dataset", 
+    fill = "dataset",
+    vlines = c(70, 100, 130),
+    xlim = c(55, 145),
+    xbreaks = seq(55, 145, 15),
+    fill_labels = dataset_labels
+  ) +  
+  labs(
+    x = "Fluid Intelligence", 
+    fill = "Dataset"
+  )
+
+print(fig_ridge_fi)
+```
+
+#### Neural Basis of Lexical Processing
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+# Ridge plot for IFG
+fig_ridge_IFG <- participants_df |> 
+  plot_ridge(
+    x = "postC_IFG", 
+    y = "dataset", 
+    fill = "dataset",
+    xlim = c(0, 9),
+    xbreaks = seq(0, 9, 1),
+    fill_labels = dataset_labels
+  ) +  
+  labs(
+    x = "IFG (ComBat Harmonized)", 
+    fill = "Dataset"
+  )
+
+print(fig_ridge_IFG)
+```
+
+#### Neural Basis of Phonological Processing
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+# Ridge plot for TP
+fig_ridge_TP <- participants_df |> 
+  plot_ridge(
+    x = "postC_TP", 
+    y = "dataset", 
+    fill = "dataset",
+    xlim = c(0, 5),
+    xbreaks = seq(0, 5, 1),
+    fill_labels = dataset_labels
+  ) +  
+  labs(
+    x = "TP (ComBat Harmonized)", 
+    fill = "Dataset"
+  )
+
+print(fig_ridge_TP)
+```
+
+#### Neural Basis of Orthographic Processing
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+# Ridge plot for vOT
+fig_ridge_vOT <- participants_df |> 
+  plot_ridge(
+    x = "postC_vOT", 
+    y = "dataset", 
+    fill = "dataset",
+    xlim = c(0, 12),
+    xbreaks = seq(0, 12, 1),
+    fill_labels = dataset_labels
+  ) +  
+  labs(
+    x = "vOT (ComBat Harmonized)", 
+    fill = "Dataset"
+  )
+
+print(fig_ridge_vOT)
+```
+
+#### Combined
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+# Demographics & Standardized Testing
+fig_ridge_st <- fig_ridge_age + fig_ridge_rs + fig_ridge_pa + fig_ridge_fi +
+  plot_annotation(tag_levels = 'A') + 
+  plot_layout(ncol = 2, nrow = 2, guides = "collect")
+
+print(fig_ridge_st)
+
+# Brain activation
+fig_ridge_ba <- fig_ridge_IFG + fig_ridge_TP + fig_ridge_vOT +
+  plot_annotation(tag_levels = 'A') + 
+  plot_layout(ncol = 3, nrow = 1, guides = "collect")
+
+print(fig_ridge_ba)
+```
+
+:::
+
+### Bivariate plots
+
+:::{.panel-tabset}
+
+#### Scatterplot matrix
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+# Set scatterplot specifications
+lower_plot <- function(data, mapping, ...) {
+  ggplot(data = data, mapping = mapping) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red")
+}
+
+# Set heatmap specifications
+# Source: https://stackoverflow.com/questions/45873483/ggpairs-plot-with-heatmap-of-correlation-values
+upper_plot <- function(
+    data, 
+    mapping, 
+    method = "pearson", 
+    use = "pairwise", 
+    ndp = 2, #number of decimal points
+    stars = TRUE, 
+    ...
+  ){
+  
+  # Get data
+  x <- eval_data_col(data, mapping$x)
+  y <- eval_data_col(data, mapping$y)
+  
+  # Calculate correlation: for significance stars
+  corr <- cor.test(x, y, method = method)
+  est <- corr$estimate
+
+  # Get significance stars
+  if(stars){
+    stars <- c("***", "**", "*", "")[findInterval(corr$p.value, c(0, 0.001, 0.01, 0.05, 1))]
+    lbl <- sprintf("%.2f%s", est, stars)
+  }else{
+    lbl <- sprintf("%.2f", est)
+  }
+
+  # Calculate correlation: for colored tiles
+  corr <- cor(x, y, method = method, use = use)
+  
+  # Calculate color based on correlation value
+  # corr = -1 => blue, 
+  # corr =  0 => white, 
+  # corr = +1 => red, 
+  colFn <- colorRampPalette(c("#3B9AB2", "#EEEEEE", "#F21A00"), interpolate = 'spline')
+  fill <- colFn(100)[findInterval(corr, seq(-1, 1, length = 100))]
+  
+  # Plot heatmap
+  ggplot(data = data, mapping = mapping, ...) + 
+    theme_void() +
+    annotate(
+      "text",
+      x = mean(x, na.rm = TRUE),
+      y = mean(y, na.rm = TRUE),
+      label = lbl,
+      ...
+    ) +
+    theme(
+      panel.background = element_rect(fill = fill, color = NA),
+      panel.grid.major = element_blank()
+    )
+}
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+# Create scatterplot matrix + heatmap
+fig_matrix <- participants_df |>
+  select(age, rs, pa, fi, postC_IFG, postC_TP, postC_vOT) |> 
+  ggpairs(
+    columnLabels = c("Age", "RS", "PA", "FI", "IFG", "TP", "vOT"),
+    lower = list(continuous = lower_plot),
+    upper = list(continuous = upper_plot)
+  )
+
+print(fig_matrix)
+```
+
+:::

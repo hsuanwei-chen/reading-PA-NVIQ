@@ -1,0 +1,565 @@
+---
+title: "Preregistration - Main Analysis"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+author: "Isaac Chen"
+
+format: 
+    html:
+      toc: true
+      embed-resources: true
+---
+
+## Set up
+
+```{r}
+#| warning: false
+#| message: false
+
+library(here)
+library(tidyverse)
+library(interactions)
+library(effects)
+
+# Clear all variables from environment
+rm(list = ls())
+
+# Set input files
+merg_dir  <- here("data", "phenotype", "merged")
+participants_rds <- here(merg_dir, "preregistration_participants.rds")
+  
+# Read in data
+participants_df <- readRDS(participants_rds)
+```
+
+## Staistical Models
+
+### Three-way interactions
+
+:::{.panel-tabset}
+
+#### Model 1: TP ~ RS + FI + Age + (RS * FI) + (RS * Age) + (FI * Age) + (RS * FI * Age)
+
+```{r}
+# Model summary
+lm1 <- lm(postC_TP ~ rs * fi * age, data = participants_df)
+
+summary(lm1)
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+# Interaction effect plot
+lm1_effect <- interact_plot(
+  model = lm1, 
+  pred = rs, 
+  modx = fi, 
+  modx.values = c(70, 85, 100, 115, 130),
+  mod2 = age, 
+  mod2.values = c(10, 13.6),
+  mod2.labels = c(
+    "7.8 - 11.5 year olds", 
+    "11.5 - 16.7 year olds"
+  ),
+  main.title = "Model 1: TP ~ RS * FI * Age",
+  legend.main = "Fluid Intelligence",
+  plot.points = T,
+  colors = c("#d7191c", "#fdae61", "#fee08b", "#a6d96a", "#1a9641"),
+  point.alpha = 0.8
+)
+
+fig_lm1_effect <- lm1_effect +
+  scale_linetype_manual(
+    name = "Fluid Intelligence",
+    values = c("solid", "solid", "solid", "solid", "solid")
+  ) + 
+  scale_x_continuous(limits = c(55, 145), breaks = seq(55, 145, 10)) +
+  scale_y_continuous(limits = c(0, 5), breaks = seq(0, 5, 1)) + 
+  labs(
+    x = "Reading Skill", 
+    y = "Neural Basis of Phonological Processing (TP)",
+  ) +
+  theme_bw()
+
+print(fig_lm1_effect)
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+# See below for how the data is split and plotted across panels
+#'   Otherwise, a more ad hoc procedure is used to split the data. Quantiles
+#'   are found for each `mod2.values` or `modx.values` value. These are not the
+#'   quantiles used to split the data, however, since we want the plotted lines
+#'   to represent the slope at a typical value in the group. The next step,
+#'   then, is to take the mean of each pair of neighboring quantiles and use
+#'   these as the cut points.
+#'
+#'   For example, if the `mod2.values` are at the 25th, 50th, and 75th
+#'   percentiles
+#'   of the distribution of the moderator, the data will be split at the
+#'   37.5th and and 62.5th percentiles. When the variable is
+#'   normally distributed, this will correspond fairly closely to using
+#'   terciles.
+
+mod2vals2 <- c(10, 13.6)
+mod_val_qs <- ecdf(participants_df$age)(sort(mod2vals2))
+cut_points2 <- c()
+cut_points2 <- c()
+for (i in 1:(length(mod2vals2) - 1)) {
+  cut_points2 <- c(cut_points2, mean(mod_val_qs[i:(i + 1)]))
+}
+cut_points2 <- c(-Inf, quantile(participants_df$age, cut_points2, na.rm = TRUE), Inf)
+
+gb <- ggplot_build(lm1_effect)
+check <- gb$data[[2]] |> 
+  rename(postC_TP = y)
+
+check_df <- left_join(check, participants_df, by = "postC_TP") |> 
+  relocate(age, .before = PANEL)
+```
+
+#### Model 2: vOT ~ PA + FI + Age + (PA * FI) + (PA * Age) + (FI * Age) + (PA * FI * Age)
+
+```{r}
+# Model summary
+lm2 <- lm(postC_vOT ~ pa * fi * age, data = participants_df)
+
+summary(lm2)
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+# Interaction effect plot
+lm2_effect <- interact_plot(
+  model = lm2, 
+  pred = pa, 
+  modx = fi, 
+  modx.values = c(70, 85, 100, 115, 130),
+  mod2 = age, 
+  mod2.values = c(10, 13.6),
+  mod2.labels = c(
+    "7.8 - 11.5 year olds", 
+    "11.5 - 16.7 year olds"
+  ),
+  main.title = "Model 2: vOT ~ PA * FI * Age",
+  legend.main = "Fluid Intelligence",
+  plot.points = T,
+  colors = c("#d7191c", "#fdae61", "#fee08b", "#a6d96a", "#1a9641"),
+  point.alpha = 0.8
+)
+
+fig_lm2_effect <- lm2_effect +
+  scale_linetype_manual(
+    name = "Fluid Intelligence",
+    values = c("solid", "solid", "solid", "solid", "solid")
+  ) + 
+  scale_x_continuous(limits = c(2, 19), breaks = seq(2, 19, 2)) + 
+  scale_y_continuous(limits = c(0, 12), breaks = seq(0, 12, 2)) + 
+  labs(
+    x = "Phonological Awareness", 
+    y = "Neural Basis of Orthographical Processing (vOT)",
+  ) +
+  theme_bw()
+
+print(fig_lm2_effect)
+```
+
+#### Model 3: IFG ~ RS + FI + Age + (RS * FI) + (RS * Age) + (FI * Age) + (RS * FI * Age)
+
+```{r}
+# Model summary
+lm3 <- lm(postC_IFG ~ rs * fi * age, data = participants_df)
+
+summary(lm3)
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+# Interaction effect plot
+lm3_effect <- interact_plot(
+  model = lm3, 
+  pred = rs, 
+  modx = fi, 
+  modx.values = c(70, 85, 100, 115, 130),
+  mod2 = age, 
+  mod2.values = c(10, 13.6),
+  mod2.labels = c(
+    "7.8 - 11.5 year olds", 
+    "11.5 - 16.7 year olds"
+  ),
+  main.title = "Model 3: IFG ~ RS * FI * Age",
+  legend.main = "Fluid Intelligence",
+  plot.points = T,
+  colors = c("#d7191c", "#fdae61", "#fee08b", "#a6d96a", "#1a9641"),
+  point.alpha = 0.8
+)
+
+fig_lm3_effect <- lm3_effect +
+  scale_linetype_manual(
+    name = "Fluid Intelligence",
+    values = c("solid", "solid", "solid", "solid", "solid")
+  ) + 
+  scale_x_continuous(limits = c(55, 145), breaks = seq(55, 145, 10)) +
+  scale_y_continuous(limits = c(0, 8.5), breaks = seq(0, 8, 2)) + 
+  labs(
+    x = "Reading Skill", 
+    y = "Neural Basis of Lexical Processing (IFG)",
+  ) +
+  theme_bw()
+
+print(fig_lm3_effect)
+```
+
+#### Model 4: IFG ~ PA + FI + Age + (PA * FI) + (PA * Age) + (FI * Age) + (PA * FI * Age)
+
+```{r}
+# Model summary
+lm4 <- lm(postC_IFG ~ pa * fi * age, data = participants_df)
+
+summary(lm4)
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+# Interaction effect plot
+lm4_effect <- interact_plot(
+  model = lm4, 
+  pred = pa, 
+  modx = fi, 
+  modx.values = c(70, 85, 100, 115, 130),
+  mod2 = age, 
+  mod2.values = c(10, 13.6),
+  mod2.labels = c(
+    "7.8 - 11.5 year olds", 
+    "11.5 - 16.7 year olds"
+  ),
+  main.title = "Model 4: IFG ~ PA * FI * Age",
+  legend.main = "Fluid Intelligence",
+  plot.points = T,
+  colors = c("#d7191c", "#fdae61", "#fee08b", "#a6d96a", "#1a9641"),
+  point.alpha = 0.8
+)
+
+fig_lm4_effect <- lm4_effect +
+  scale_linetype_manual(
+    name = "Fluid Intelligence",
+    values = c("solid", "solid", "solid", "solid", "solid")
+  ) + 
+  scale_x_continuous(limits = c(2, 19), breaks = seq(2, 19, 2)) + 
+  scale_y_continuous(limits = c(0, 8.5), breaks = seq(0, 8, 2)) + 
+  labs(
+    x = "Phonological Awareness", 
+    y = "Neural Basis of Lexical Processing (IFG)",
+  ) +
+  theme_bw()
+
+print(fig_lm4_effect)
+```
+
+:::
+
+### Two-way interactions
+
+:::{.panel-tabset}
+
+#### Model 5: TP ~ RS + FI + Age + (RS * FI)
+
+```{r}
+# Model summary
+lm5 <- lm(postC_TP ~ rs * fi + age, data = participants_df)
+
+summary(lm5)
+```
+
+```{r}
+# Interaction effect plot
+lm5_effect <- interact_plot(
+  model = lm5, 
+  pred = rs, 
+  modx = fi, 
+  modx.values = c(70, 85, 100, 115, 130),
+  main.title = "Model 5: TP ~ RS + FI + Age + (RS * FI)",
+  legend.main = "Fluid Intelligence",
+  plot.points = T,
+  colors = c("#d7191c", "#fdae61", "#fee08b", "#a6d96a", "#1a9641"),
+  point.alpha = 0.8
+)
+
+fig_lm5_effect <- lm5_effect +
+  scale_linetype_manual(
+    name = "Fluid Intelligence",
+    values = c("solid", "solid", "solid", "solid", "solid")
+  ) + 
+  scale_x_continuous(limits = c(55, 145), breaks = seq(55, 145, 10)) + 
+  scale_y_continuous(limits = c(0, 5), breaks = seq(0, 5, 1)) + 
+  labs(
+    x = "Reading Skill", 
+    y = "Neural Basis of Phonological Processing (TP)",
+  ) + 
+  theme_bw()
+
+print(fig_lm5_effect)
+```
+
+#### Model 6: vOT ~ PA + FI + Age + (PA * FI)
+
+```{r}
+# Model summary
+lm6 <- lm(postC_vOT ~ pa * fi + age, data = participants_df)
+
+summary(lm6)
+```
+
+```{r}
+# Interaction effect plot
+lm6_effect <- interact_plot(
+  model = lm6, 
+  pred = pa, 
+  modx = fi, 
+  modx.values = c(70, 85, 100, 115, 130),
+  main.title = "Model 6: vOT ~ PA + FI + Age + (PA * FI)",
+  legend.main = "Fluid Intelligence",
+  plot.points = T,
+  colors = c("#d7191c", "#fdae61", "#fee08b", "#a6d96a", "#1a9641"),
+  point.alpha = 0.8
+)
+
+fig_lm6_effect <- lm6_effect +
+  scale_linetype_manual(
+    name = "Fluid Intelligence",
+    values = c("solid", "solid", "solid", "solid", "solid")
+  ) + 
+  scale_x_continuous(limits = c(2, 19), breaks = seq(2, 19, 2)) + 
+  scale_y_continuous(limits = c(0, 12), breaks = seq(0, 12, 2)) +
+  labs(
+    x = "Phonological Awareness", 
+    y = "Neural Basis of Orthographical Processing (vOT)",
+  ) + 
+  theme_bw()
+
+print(fig_lm6_effect)
+```
+
+#### Model 7: IFG ~ RS + FI + Age + (RS * FI)
+
+```{r}
+# Model summary
+lm7 <- lm(postC_IFG ~ rs * fi + age, data = participants_df)
+
+summary(lm7)
+```
+
+```{r}
+# Interaction effect plot
+lm7_effect <- interact_plot(
+  model = lm7, 
+  pred = rs, 
+  modx = fi, 
+  modx.values = c(70, 85, 100, 115, 130),
+  main.title = "Model 7: IFG ~ RS + FI + Age + (RS * FI)",
+  legend.main = "Fluid Intelligence",
+  plot.points = T,
+  colors = c("#d7191c", "#fdae61", "#fee08b", "#a6d96a", "#1a9641"),
+  point.alpha = 0.8
+)
+
+fig_lm7_effect <- lm7_effect +
+  scale_linetype_manual(
+    name = "Fluid Intelligence",
+    values = c("solid", "solid", "solid", "solid", "solid")
+  ) + 
+  scale_x_continuous(limits = c(55, 145), breaks = seq(55, 145, 10)) +
+  scale_y_continuous(limits = c(0, 8.5), breaks = seq(0, 8, 2)) +
+  labs(
+    x = "Reading Skill", 
+    y = "Neural Basis of Lexical Processing (IFG)",
+  ) + 
+  theme_bw()
+
+print(fig_lm7_effect)
+```
+
+#### Model 8: IFG ~ PA + FI + Age + (PA * FI)
+
+```{r}
+# Model summary
+lm8 <- lm(postC_IFG ~ pa * fi + age, data = participants_df)
+
+summary(lm8)
+```
+
+```{r}
+# Interaction effect plot
+lm8_effect <- interact_plot(
+  model = lm8, 
+  pred = pa, 
+  modx = fi, 
+  modx.values = c(70, 85, 100, 115, 130),
+  main.title = "Model 8: IFG ~ PA + FI + Age + (PA * FI)",
+  legend.main = "Fluid Intelligence",
+  plot.points = T,
+  colors = c("#d7191c", "#fdae61", "#fee08b", "#a6d96a", "#1a9641"),
+  point.alpha = 0.8
+)
+
+fig_lm8_effect <- lm8_effect +
+  scale_linetype_manual(
+    name = "Fluid Intelligence",
+    values = c("solid", "solid", "solid", "solid", "solid")
+  ) + 
+  scale_x_continuous(limits = c(2, 19), breaks = seq(2, 19, 2)) + 
+  scale_y_continuous(limits = c(0, 8.5), breaks = seq(0, 8, 2)) + 
+  labs(
+    x = "Phonological Awareness", 
+    y = "Neural Basis of Lexical Processing (IFG)",
+  ) + 
+  theme_bw()
+
+print(fig_lm8_effect)
+```
+
+:::
+
+### Main effects
+
+:::{.panel-tabset}
+
+#### Model 9: TP ~ RS + FI + Age
+
+```{r}
+# Model summary
+lm9 <- lm(postC_TP ~ rs + fi + age, data = participants_df)
+
+summary(lm9)
+```
+
+```{r}
+# Scatter plot
+fig_lm9_scatter <- participants_df |> 
+  ggplot(aes(x = rs, y = postC_TP)) +
+  geom_point(aes(color = fi)) +
+  geom_smooth(method = lm, formula = y ~ x, se = FALSE, color = "steelblue") +
+  scale_color_gradientn(
+    colors = c("#d7191c", "#fdae61", "#fee08b", "#a6d96a", "#1a9641")
+  ) + 
+  scale_x_continuous(limits = c(55, 145), breaks = seq(55, 145, 10)) + 
+  scale_y_continuous(limits = c(0, 5), breaks = seq(0, 5, 1)) + 
+  labs(
+    title = "Model 9: TP ~ RS + FI + Age",
+    x = "Reading Skill",
+    y = "Neural Basis of Phonological Processing (TP)",
+    color = "Fluid Intelligence"
+  ) +
+  theme_bw()
+
+print(fig_lm9_scatter)
+```
+
+#### Model 10: vOT ~ PA + FI + Age
+
+```{r}
+# Model summary
+lm10 <- lm(postC_vOT ~ pa + fi + age, data = participants_df)
+
+summary(lm10)
+```
+
+```{r}
+# Scatter plot
+fig_lm10_scatter <- participants_df |> 
+  ggplot(aes(x = pa, y = postC_vOT)) +
+  geom_point(aes(color = fi)) +
+  geom_smooth(method = lm, formula = y ~ x, se = FALSE, color = "steelblue") +
+  scale_color_gradientn(
+    colors = c("#d7191c", "#fdae61", "#fee08b", "#a6d96a", "#1a9641")
+  ) +
+  scale_x_continuous(limits = c(2, 19), breaks = seq(2, 19, 2)) + 
+  scale_y_continuous(limits = c(0, 12), breaks = seq(0, 12, 2)) +
+  labs(
+    title = "Model 10: vOT ~ PA + FI + Age",
+    x = "Phonological Awareness",
+    y = "Neural Basis of Orthographical Processing (vOT)",
+    color = "Fluid Intelligence"
+  ) +
+  theme_bw()
+
+print(fig_lm10_scatter)
+```
+
+#### Model 11: IFG ~ RS + FI + Age
+
+```{r}
+# Model summary
+lm11 <- lm(postC_IFG ~ rs + fi + age, data = participants_df)
+
+summary(lm11)
+```
+
+```{r}
+# Scatter plot
+fig_lm11_scatter <- participants_df |> 
+  ggplot(aes(x = rs, y = postC_IFG)) +
+  geom_point(aes(color = fi)) +
+  geom_smooth(method = lm, formula = y ~ x, se = FALSE, color = "steelblue") +
+  scale_color_gradientn(
+    colors = c("#d7191c", "#fdae61", "#fee08b", "#a6d96a", "#1a9641")
+  ) +
+  scale_x_continuous(limits = c(55, 145), breaks = seq(55, 145, 10)) +
+  scale_y_continuous(limits = c(0, 8.5), breaks = seq(0, 8, 2)) +
+  labs(
+    title = "Model 11: IFG ~ RS + FI + Age",
+    x = "Reading Skill",
+    y = "Neural Basis of Lexical Processing (IFG)",
+    color = "Fluid Intelligence"
+  ) +
+  theme_bw()
+
+print(fig_lm11_scatter)
+```
+
+#### Model 12: IFG ~ PA + FI + Age
+
+```{r}
+# Model summary
+lm12 <- lm(postC_IFG ~ pa + fi + age, data = participants_df)
+
+summary(lm12)
+```
+
+```{r}
+# Scatter plot
+fig_lm12_scatter <- participants_df |> 
+  ggplot(aes(x = pa, y = postC_IFG)) +
+  geom_point(aes(color = fi)) +
+  geom_smooth(method = lm, formula = y ~ x, se = FALSE, color = "steelblue") +
+  scale_color_gradientn(
+    colors = c("#d7191c", "#fdae61", "#fee08b", "#a6d96a", "#1a9641")
+  ) +
+  scale_x_continuous(limits = c(2, 19), breaks = seq(2, 19, 2)) + 
+  scale_y_continuous(limits = c(0, 8.5), breaks = seq(0, 8, 2)) +
+  labs(
+    title = "Model 12: IFG ~ PA + FI + Age",
+    x = "Phonological Awareness",
+    y = "Neural Basis of Lexical Processing (IFG)",
+    color = "Fluid Intelligence"
+  ) +
+  theme_bw()
+
+print(fig_lm12_scatter)
+```
+
+:::

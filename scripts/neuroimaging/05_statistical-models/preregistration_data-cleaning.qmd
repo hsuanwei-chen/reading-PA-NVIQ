@@ -1,0 +1,115 @@
+---
+title: "Preregistration - Data Cleaning"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+author: "Isaac Chen"
+
+format: 
+    html:
+      toc: true
+      embed-resources: true
+---
+
+## Set up
+
+```{r}
+#| warning: false
+#| message: false
+
+library(here)
+library(tidyverse)
+ 
+# Clear all variables from environment
+rm(list = ls())
+
+preC_topBeta_files = list(
+  "pre-ComBat_top100-betas_con-NCFix_leftIFG.csv",
+  "pre-ComBat_top100-betas_con-NCFix_leftTP.csv",
+  "pre-ComBat_top100-betas_con-NCFix_leftvOT.csv"
+)
+
+postC_topBeta_files = list(
+  "post-ComBat_top100-betas_con-NCFix_leftIFG.csv",
+  "post-ComBat_top100-betas_con-NCFix_leftTP.csv",
+  "post-ComBat_top100-betas_con-NCFix_leftvOT.csv"
+)
+
+# Set input files
+merged_dir  <- here("data", "phenotype", "merged")
+stats_dir <- here("results", "statistical-models")
+
+participants_rds          <- here(merged_dir, "merged_participants_motionQC-coverage.rds")
+
+leftIFG_preC_topBeta_csv  <- here(stats_dir, preC_topBeta_files[1])
+leftIFG_postC_topBeta_csv <- here(stats_dir, postC_topBeta_files[1])
+
+leftTP_preC_topBeta_csv   <- here(stats_dir, preC_topBeta_files[2])
+leftTP_postC_topBeta_csv  <- here(stats_dir, postC_topBeta_files[2])
+
+leftvOT_preC_topBeta_csv  <- here(stats_dir, preC_topBeta_files[3])
+leftvOT_postC_topBeta_csv <- here(stats_dir, postC_topBeta_files[3])
+  
+# Set output files
+output_participants_rds <- here(merged_dir, "preregistration_participants.rds")
+output_participants_csv <- here(merged_dir, "preregistration_participants.csv")
+
+# Read in data
+participants_df          <- readRDS(participants_rds)
+
+leftIFG_preC_topBeta_df <- read_csv(leftIFG_preC_topBeta_csv)
+leftIFG_postC_topBeta_df <- read_csv(leftIFG_postC_topBeta_csv)
+
+leftTP_preC_topBeta_df  <- read_csv(leftTP_preC_topBeta_csv)
+leftTP_postC_topBeta_df  <- read_csv(leftTP_postC_topBeta_csv)
+
+leftvOT_preC_topBeta_df <- read_csv(leftvOT_preC_topBeta_csv)
+leftvOT_postC_topBeta_df <- read_csv(leftvOT_postC_topBeta_csv)
+```
+
+## Data Cleaning
+
+```{r}
+# Calculate mean for each functional ROI
+preC_IFG  <- leftIFG_preC_topBeta_df  |> group_by(unique_id) |> summarize(preC_IFG = mean(beta))
+postC_IFG <- leftIFG_postC_topBeta_df |> group_by(unique_id) |> summarize(postC_IFG = mean(beta))
+
+preC_TP  <- leftTP_preC_topBeta_df  |> group_by(unique_id) |> summarize(preC_TP = mean(beta))
+postC_TP <- leftTP_postC_topBeta_df |> group_by(unique_id) |> summarize(postC_TP = mean(beta))
+
+preC_vOT  <- leftvOT_preC_topBeta_df  |> group_by(unique_id) |> summarize(preC_vOT = mean(beta))
+postC_vOT <- leftvOT_postC_topBeta_df |> group_by(unique_id) |> summarize(postC_vOT = mean(beta))
+
+# Create factors for dataset and sex
+# Add mean activation for each functional ROI pre- and post-ComBat haromonization
+participants_df <- participants_df |>
+  filter(is.na(exclude)) |>
+  rename(
+    rs = wordid_sts,
+    pa = el_scs,
+    fi = mr_sts
+  ) |> 
+  mutate(
+    dataset = factor(
+      dataset, levels = c("ds001486", "ds001894", "ds002236", "ds006239")
+    ),
+    sex = case_when(
+      sex == "female" ~ "Female",
+      sex == "male"   ~ "Male"
+    ),
+    sex = factor(sex)
+  ) |>
+  left_join(preC_IFG,  by = "unique_id") |> 
+  left_join(preC_TP,   by = "unique_id") |>
+  left_join(preC_vOT,  by = "unique_id") |>
+  left_join(postC_IFG, by = "unique_id") |>
+  left_join(postC_TP,  by = "unique_id") |>
+  left_join(postC_vOT, by = "unique_id")
+```
+
+## Save results
+
+```{r}
+# Save results
+saveRDS(participants_df, file = output_participants_rds)
+write_csv(participants_df, file = output_participants_csv)
+```
+
