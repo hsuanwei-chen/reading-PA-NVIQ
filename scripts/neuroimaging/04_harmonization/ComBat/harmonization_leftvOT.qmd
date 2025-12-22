@@ -25,8 +25,12 @@ library(patchwork)
 
 ```{r}
 # Set the working directory to the location of your script and CSV files
-data <- here("data", "phenotype", "merged", "merged_participants_motionQC.csv")
-img <- here("results", "harmonization", "top1000", "betas_con-NCFix_leftvOT_top1000_union-mask.csv")
+pre_combat  <- "pre-ComBat_betas_con-NCFix_leftvOT_top1000_union-mask.csv"
+post_combat <- "post-ComBat_betas_con-NCFix_leftvOT_top1000_union-mask.csv"
+
+data     <- here("data", "phenotype", "merged", "merged_participants_motionQC-coverage.csv")
+img      <- here("results", "harmonization", "top1000", pre_combat)
+post_img <- here("results", "harmonization", "top1000", post_combat)
 
 # Read the CSV files
 data <- read_csv(data)
@@ -59,7 +63,7 @@ demographics |>
 
 ```{r}
 # Matrix into include other covariates of interest
-mod <- model.matrix(~ age + factor(sex) + wordid_sts + el_scs + mr_sts, data = demographics)
+mod <- model.matrix(~ age + wordid_sts + el_scs + mr_sts, data = demographics)
 
 # Run ComBat
 harmonized <- neuroCombat(dat = img, batch = demographics$dataset, mod = mod)
@@ -97,6 +101,9 @@ harmonized_img_long <- harmonized_img |>
   ) |> 
   mutate(dataset = str_sub(voxel, 1, 8)) |> 
   mutate(voxel = factor(voxel))
+
+# Save outputs of harmonization
+write_csv(harmonized_img, post_img)
 ```
 
 ## ROI Analyses Pre- vs Post-ComBat
