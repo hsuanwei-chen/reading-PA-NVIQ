@@ -1,0 +1,156 @@
+---
+title: "Extract Top 100 Harmonized Betas"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+author: "Isaac Chen"
+
+format: 
+    html:
+      embed-resources: true
+---
+
+```{r}
+#| warning: false
+#| message: false
+#| 
+# Clear all variables from environment
+rm(list = ls())
+
+library(here)
+library(tidyverse)
+```
+
+```{r}
+# Function to extract top_n voxels
+extract_topVoxel <- function(df, top_n){
+  
+  # Convert input df into long format, then extract the top_n voxels
+  top_df <- df |> 
+    pivot_longer(
+     cols = starts_with("ds"),
+     cols_vary = "slowest",
+     names_to = "unique_id",
+     values_to = "beta"
+    ) |> 
+    group_by(unique_id) |> 
+    mutate(voxel_num = row_number()) |>
+    slice_max(order_by = beta, n = top_n, with_ties = FALSE)
+  
+  # Return outputs
+  return(top_df)
+}
+```
+
+## ROIs
+
+```{r}
+# List files with pre-ComBat betas
+preC_beta_files = list(
+  "pre-ComBat_betas_con-NCFix_leftIFG_top1000_union-mask.csv",
+  "pre-ComBat_betas_con-NCFix_leftTP_top1000_union-mask.csv",
+  "pre-ComBat_betas_con-NCFix_leftvOT_top1000_union-mask.csv"
+)
+
+preC_topBeta_files = list(
+  "pre-ComBat_top100-betas_con-NCFix_leftIFG.csv",
+  "pre-ComBat_top100-betas_con-NCFix_leftTP.csv",
+  "pre-ComBat_top100-betas_con-NCFix_leftvOT.csv"
+)
+
+# List files with post-ComBat betas
+postC_beta_files = list(
+  "post-ComBat_betas_con-NCFix_leftIFG_top1000_union-mask.csv",
+  "post-ComBat_betas_con-NCFix_leftTP_top1000_union-mask.csv",
+  "post-ComBat_betas_con-NCFix_leftvOT_top1000_union-mask.csv"
+)
+
+postC_topBeta_files = list(
+  "post-ComBat_top100-betas_con-NCFix_leftIFG.csv",
+  "post-ComBat_top100-betas_con-NCFix_leftTP.csv",
+  "post-ComBat_top100-betas_con-NCFix_leftvOT.csv"
+)
+```
+
+:::{.panel-tabset}
+
+## Left IFG 
+
+```{r}
+#| warning: false
+
+# Set input parameters
+preC_beta_csv      <- here("results", "harmonization", "top1000", preC_beta_files[1])
+postC_beta_csv     <- here("results", "harmonization", "top1000", postC_beta_files[1])
+
+# Set output file names
+preC_topBeta_csv  <- here("results", "statistical-models", preC_topBeta_files[1])
+postC_topBeta_csv <- here("results", "statistical-models", postC_topBeta_files[1])
+
+# Read in data
+preC_beta  <- read_csv(preC_beta_csv) |> select(4:last_col())
+postC_beta <- read_csv(postC_beta_csv) 
+
+# Extract top betas
+top_n = 100
+preC_topBeta  <- extract_topVoxel(preC_beta, top_n)
+postC_topBeta <- extract_topVoxel(postC_beta, top_n)
+
+# Save results
+write_csv(preC_topBeta, preC_topBeta_csv)
+write_csv(postC_topBeta, postC_topBeta_csv)
+```
+
+## Left TP
+
+```{r}
+#| warning: false
+
+# Set input parameters
+preC_beta_csv      <- here("results", "harmonization", "top1000", preC_beta_files[2])
+postC_beta_csv     <- here("results", "harmonization", "top1000", postC_beta_files[2])
+
+# Set output file names
+preC_topBeta_csv  <- here("results", "statistical-models", preC_topBeta_files[2])
+postC_topBeta_csv <- here("results", "statistical-models", postC_topBeta_files[2])
+
+# Read in data
+preC_beta  <- read_csv(preC_beta_csv) |> select(4:last_col())
+postC_beta <- read_csv(postC_beta_csv) 
+
+# Extract top betas
+top_n = 100
+preC_topBeta  <- extract_topVoxel(preC_beta, top_n)
+postC_topBeta <- extract_topVoxel(postC_beta, top_n)
+
+# Save results
+write_csv(preC_topBeta, preC_topBeta_csv)
+write_csv(postC_topBeta, postC_topBeta_csv)
+```
+
+## Left vOT
+
+```{r}
+#| warning: false
+
+# Set input parameters
+preC_beta_csv      <- here("results", "harmonization", "top1000", preC_beta_files[3])
+postC_beta_csv     <- here("results", "harmonization", "top1000", postC_beta_files[3])
+
+# Set output file names
+preC_topBeta_csv  <- here("results", "statistical-models", preC_topBeta_files[3])
+postC_topBeta_csv <- here("results", "statistical-models", postC_topBeta_files[3])
+
+# Read in data
+preC_beta  <- read_csv(preC_beta_csv) |> select(4:last_col())
+postC_beta <- read_csv(postC_beta_csv) 
+
+# Extract top betas
+top_n = 100
+preC_topBeta  <- extract_topVoxel(preC_beta, top_n)
+postC_topBeta <- extract_topVoxel(postC_beta, top_n)
+
+# Save results
+write_csv(preC_topBeta, preC_topBeta_csv)
+write_csv(postC_topBeta, postC_topBeta_csv)
+```
+
+:::
