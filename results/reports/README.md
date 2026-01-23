@@ -1,3 +1,3 @@
 # Scripts used to generate these files
 Filepath:
-- scripts/neuroimaging/02_preprocessing/motion_QC
+- scripts/phenotype/02_preprocessing
