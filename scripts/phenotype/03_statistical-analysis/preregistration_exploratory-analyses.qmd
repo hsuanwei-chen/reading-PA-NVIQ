@@ -1,0 +1,536 @@
+---
+title: "Preregistration - Exploratory Analysis"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+author: "Isaac Chen"
+
+format: 
+    html:
+      toc: true
+      embed-resources: true
+---
+
+## Set up
+
+```{r}
+#| warning: false
+#| message: false
+
+library(here)
+library(tidyverse)
+library(interactions)
+library(effects)
+
+# Clear all variables from environment
+rm(list = ls())
+
+# Set input files
+merg_dir  <- here("data", "phenotype", "merged")
+participants_rds <- here(merg_dir, "preregistration-amendment_participants.rds")
+  
+# Read in data
+participants_df <- readRDS(participants_rds)
+```
+
+## Staistical Models
+
+### Three-way interactions
+
+:::{.panel-tabset}
+
+#### Model 1: RS ~ PA + FI + Age + Dataset + (PA * FI) + (PA * Age) + (FI * Age) + (PA * FI * Age)
+
+```{r}
+# Model summary
+lm1 <- lm(rs ~ pa * fi * age + dataset, data = participants_df)
+
+summary(lm1)
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+# Interaction effect plot
+lm1_effect <- interact_plot(
+  model = lm1, 
+  pred = pa, 
+  modx = fi, 
+  modx.values = c(70, 85, 100, 115, 130),
+  mod2 = age, 
+  mod2.values = c(10, 13.6),
+  mod2.labels = c(
+    "7.8 - 11.5 year olds", 
+    "11.5 - 16.7 year olds"
+  ),
+  main.title = "Model 1: RS ~ PA * FI * Age + Dataset",
+  legend.main = "Fluid Intelligence",
+  plot.points = T,
+  colors = c("#d7191c", "#fdae61", "#fee08b", "#a6d96a", "#1a9641"),
+  point.alpha = 0.8
+)
+
+fig_lm1_effect <- lm1_effect +
+  scale_linetype_manual(
+    name = "Fluid Intelligence",
+    values = c("solid", "solid", "solid", "solid", "solid")
+  ) + 
+  scale_x_continuous(limits = c(2, 19), breaks = seq(2, 19, 2)) + 
+  scale_y_continuous(limits = c(55, 145), breaks = seq(55, 145, 10)) +
+  labs(
+    x = "Phonological Awareness", 
+    y = "Reading Skill",
+  ) +
+  theme_bw()
+
+print(fig_lm1_effect)
+```
+
+#### Model 2: PA ~ RS + FI + Age + Dataset + (RS * FI) + (RS * Age) + (FI * Age) + (RS * FI * Age)
+
+```{r}
+# Model summary
+lm2 <- lm(pa ~ rs * fi * age + dataset, data = participants_df)
+
+summary(lm2)
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+# Interaction effect plot
+lm2_effect <- interact_plot(
+  model = lm2, 
+  pred = rs, 
+  modx = fi, 
+  modx.values = c(70, 85, 100, 115, 130),
+  mod2 = age, 
+  mod2.values = c(10, 13.6),
+  mod2.labels = c(
+    "7.8 - 11.5 year olds", 
+    "11.5 - 16.7 year olds"
+  ),
+  main.title = "Model 2: PA ~ RS * FI * Age + Dataset",
+  legend.main = "Fluid Intelligence",
+  plot.points = T,
+  colors = c("#d7191c", "#fdae61", "#fee08b", "#a6d96a", "#1a9641"),
+  point.alpha = 0.8
+)
+
+fig_lm2_effect <- lm2_effect +
+  scale_linetype_manual(
+    name = "Fluid Intelligence",
+    values = c("solid", "solid", "solid", "solid", "solid")
+  ) +
+  scale_x_continuous(limits = c(55, 145), breaks = seq(55, 145, 10)) +
+  scale_y_continuous(limits = c(2, 19), breaks = seq(2, 19, 2)) + 
+  labs(
+    x = "Reading Skill", 
+    y = "Phonological Awareness",
+  ) +
+  theme_bw()
+
+print(fig_lm2_effect)
+```
+
+#### Model 3: ACC ~ PA + FI + Age + Dataset + (PA * FI) + (PA * Age) + (FI * Age) + (PA * FI * Age)
+
+```{r}
+# Model summary
+lm3 <- lm(nci_acc ~ pa * fi * age + dataset, data = participants_df)
+
+summary(lm3)
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+# Interaction effect plot
+lm3_effect <- interact_plot(
+  model = lm3, 
+  pred = pa, 
+  modx = fi, 
+  modx.values = c(70, 85, 100, 115, 130),
+  mod2 = age, 
+  mod2.values = c(10, 13.6),
+  mod2.labels = c(
+    "7.8 - 11.5 year olds", 
+    "11.5 - 16.7 year olds"
+  ),
+  main.title = "Model 3: ACC ~ PA * FI * Age + Dataset",
+  legend.main = "Fluid Intelligence",
+  plot.points = T,
+  colors = c("#d7191c", "#fdae61", "#fee08b", "#a6d96a", "#1a9641"),
+  point.alpha = 0.8
+)
+
+fig_lm3_effect <- lm3_effect +
+  scale_linetype_manual(
+    name = "Fluid Intelligence",
+    values = c("solid", "solid", "solid", "solid", "solid")
+  ) +
+  scale_x_continuous(limits = c(2, 19), breaks = seq(2, 19, 2)) + 
+  scale_y_continuous(limits = c(0.5, 1), breaks = seq(0.5, 1, 0.1)) + 
+  labs(
+    x = "Phonological Awareness", 
+    y = "Accuracy on NCIs",
+  ) +
+  theme_bw()
+
+print(fig_lm3_effect)
+```
+
+#### Model 4: ACC ~ RS + FI + Age + Dataset + (RS * FI) + (RS * Age) + (FI * Age) + (RS * FI * Age)
+
+```{r}
+# Model summary
+lm4 <- lm(nci_acc ~ rs * fi * age + dataset, data = participants_df)
+
+summary(lm4)
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+# Interaction effect plot
+lm4_effect <- interact_plot(
+  model = lm4, 
+  pred = rs, 
+  modx = fi, 
+  modx.values = c(70, 85, 100, 115, 130),
+  mod2 = age, 
+  mod2.values = c(10, 13.6),
+  mod2.labels = c(
+    "7.8 - 11.5 year olds", 
+    "11.5 - 16.7 year olds"
+  ),
+  main.title = "Model 4: ACC ~ RS * FI * Age + Dataset",
+  legend.main = "Fluid Intelligence",
+  plot.points = T,
+  colors = c("#d7191c", "#fdae61", "#fee08b", "#a6d96a", "#1a9641"),
+  point.alpha = 0.8
+)
+
+fig_lm4_effect <- lm4_effect +
+  scale_linetype_manual(
+    name = "Fluid Intelligence",
+    values = c("solid", "solid", "solid", "solid", "solid")
+  ) +
+  scale_x_continuous(limits = c(55, 145), breaks = seq(55, 145, 10)) +
+  scale_y_continuous(limits = c(0.5, 1), breaks = seq(0.5, 1, 0.1)) + 
+  labs(
+    x = "Reading Skill", 
+    y = "Accuracy on NCIs",
+  ) +
+  theme_bw()
+
+print(fig_lm4_effect)
+```
+
+:::
+
+### Two-way interactions
+
+:::{.panel-tabset}
+
+#### Model 5: RS ~ PA + FI + Age + Dataset + (PA * FI)
+
+```{r}
+# Model summary
+lm5 <- lm(rs ~ pa * fi + age + dataset, data = participants_df)
+
+summary(lm5)
+```
+
+```{r}
+# Interaction effect plot
+lm5_effect <- interact_plot(
+  model = lm5, 
+  pred = pa, 
+  modx = fi, 
+  modx.values = c(70, 85, 100, 115, 130),
+  main.title = "Model 5: RS ~ PA + FI + Age + Dataset + (PA * FI)",
+  legend.main = "Fluid Intelligence",
+  plot.points = T,
+  colors = c("#d7191c", "#fdae61", "#fee08b", "#a6d96a", "#1a9641"),
+  point.alpha = 0.8
+)
+
+fig_lm5_effect <- lm5_effect +
+  scale_linetype_manual(
+    name = "Fluid Intelligence",
+    values = c("solid", "solid", "solid", "solid", "solid")
+  ) + 
+  scale_x_continuous(limits = c(2, 19), breaks = seq(2, 19, 2)) + 
+  scale_y_continuous(limits = c(55, 145), breaks = seq(55, 145, 10)) +
+  labs(
+    x = "Phonological Awareness", 
+    y = "Reading Skill",
+  ) + 
+  theme_bw()
+
+print(fig_lm5_effect)
+```
+
+#### Model 6: PA ~ RS + FI + Age + Dataset + (RS * FI)
+
+```{r}
+# Model summary
+lm6 <- lm(pa ~ rs * fi + age + dataset, data = participants_df)
+
+summary(lm6)
+```
+
+```{r}
+# Interaction effect plot
+lm6_effect <- interact_plot(
+  model = lm6, 
+  pred = rs, 
+  modx = fi, 
+  modx.values = c(70, 85, 100, 115, 130),
+  main.title = "Model 6: PA ~ RS + FI + Age + Dataset + (RS * FI)",
+  legend.main = "Fluid Intelligence",
+  plot.points = T,
+  colors = c("#d7191c", "#fdae61", "#fee08b", "#a6d96a", "#1a9641"),
+  point.alpha = 0.8
+)
+
+fig_lm6_effect <- lm6_effect +
+  scale_linetype_manual(
+    name = "Fluid Intelligence",
+    values = c("solid", "solid", "solid", "solid", "solid")
+  ) + 
+  scale_x_continuous(limits = c(55, 145), breaks = seq(55, 145, 10)) +
+  scale_y_continuous(limits = c(2, 19), breaks = seq(2, 19, 2)) + 
+  labs(
+    x = "Reading Skill", 
+    y = "Phonological Awareness",
+  ) + 
+  theme_bw()
+
+print(fig_lm6_effect)
+```
+
+#### Model 7: ACC ~ PA + FI + Age + Dataset + (PA * FI)
+
+```{r}
+# Model summary
+lm7 <- lm(nci_acc ~ pa * fi + age + dataset, data = participants_df)
+
+summary(lm7)
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+# Interaction effect plot
+lm7_effect <- interact_plot(
+  model = lm7, 
+  pred = pa, 
+  modx = fi, 
+  modx.values = c(70, 85, 100, 115, 130),
+  main.title = "Model 7: ACC ~ PA + FI + Age + Dataset + (PA * FI)",
+  legend.main = "Fluid Intelligence",
+  plot.points = T,
+  colors = c("#d7191c", "#fdae61", "#fee08b", "#a6d96a", "#1a9641"),
+  point.alpha = 0.8
+)
+
+fig_lm7_effect <- lm7_effect +
+  scale_linetype_manual(
+    name = "Fluid Intelligence",
+    values = c("solid", "solid", "solid", "solid", "solid")
+  ) +
+  scale_x_continuous(limits = c(2, 19), breaks = seq(2, 19, 2)) + 
+  scale_y_continuous(limits = c(0.5, 1.0), breaks = seq(0.5, 1, 0.1)) + 
+  labs(
+    x = "Phonological Awareness", 
+    y = "Accuracy on NCIs",
+  ) +
+  theme_bw()
+
+print(fig_lm7_effect)
+```
+
+#### Model 8: ACC ~ RS + FI + Age + Dataset + (RS * FI)
+
+```{r}
+# Model summary
+lm8 <- lm(nci_acc ~ rs * fi + age + dataset, data = participants_df)
+
+summary(lm8)
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+# Interaction effect plot
+lm8_effect <- interact_plot(
+  model = lm8, 
+  pred = rs, 
+  modx = fi, 
+  modx.values = c(70, 85, 100, 115, 130),
+  main.title = "Model 8: ACC ~ RS + FI + Age + Dataset + (RS * FI)",
+  legend.main = "Fluid Intelligence",
+  plot.points = T,
+  colors = c("#d7191c", "#fdae61", "#fee08b", "#a6d96a", "#1a9641"),
+  point.alpha = 0.8
+)
+
+fig_lm8_effect <- lm8_effect +
+  scale_linetype_manual(
+    name = "Fluid Intelligence",
+    values = c("solid", "solid", "solid", "solid", "solid")
+  ) +
+  scale_x_continuous(limits = c(55, 145), breaks = seq(55, 145, 10)) +
+  scale_y_continuous(limits = c(0.5, 1), breaks = seq(0.5, 1, 0.1)) + 
+  labs(
+    x = "Reading Skill", 
+    y = "Accuracy on NCIs",
+  ) +
+  theme_bw()
+
+print(fig_lm8_effect)
+```
+
+:::
+
+### Main Effects
+
+:::{.panel-tabset}
+
+#### Model 9: RS ~ PA + FI + Age + Dataset
+
+```{r}
+# Model summary
+lm9 <- lm(rs ~ pa + fi + age + dataset, data = participants_df)
+
+summary(lm9)
+```
+
+```{r}
+# Scatter plot
+fig_lm9_scatter <- participants_df |> 
+  ggplot(aes(x = pa, y = rs)) +
+  geom_point(aes(color = fi)) +
+  geom_smooth(method = lm, formula = y ~ x, se = FALSE, color = "steelblue") +
+  scale_color_gradientn(
+    colors = c("#d7191c", "#fdae61", "#fee08b", "#a6d96a", "#1a9641")
+  ) +
+  scale_x_continuous(limits = c(2, 19), breaks = seq(2, 19, 2)) + 
+  scale_y_continuous(limits = c(55, 145), breaks = seq(55, 145, 10)) +
+  labs(
+    title = "Model 9: RS ~ PA + FI + Age + Dataset",
+    x = "Phonological Awareness",
+    y = "Reading Skill",
+    color = "Fluid Intelligence"
+  ) +
+  theme_bw()
+
+print(fig_lm9_scatter)
+```
+
+#### Model 10: PA ~ RS + FI + Age + Dataset
+
+```{r}
+# Model summary
+lm10 <- lm(pa ~ rs + fi + age + dataset, data = participants_df)
+
+summary(lm10)
+```
+
+```{r}
+# Scatter plot
+fig_lm10_scatter <- participants_df |> 
+  ggplot(aes(x = rs, y = pa)) +
+  geom_point(aes(color = fi)) +
+  geom_smooth(method = lm, formula = y ~ x, se = FALSE, color = "steelblue") +
+  scale_color_gradientn(
+    colors = c("#d7191c", "#fdae61", "#fee08b", "#a6d96a", "#1a9641")
+  ) + 
+  scale_x_continuous(limits = c(55, 145), breaks = seq(55, 145, 10)) +
+  scale_y_continuous(limits = c(2, 19), breaks = seq(2, 19, 2)) + 
+  labs(
+    title = "Model 10: PA ~ RS + FI + Age + Dataset",
+    x = "Reading Skill",
+    y = "Phonological Awareness",
+    color = "Fluid Intelligence"
+  ) +
+  theme_bw()
+
+print(fig_lm10_scatter)
+```
+
+#### Model 11: ACC ~ PA + FI + Age + Dataset
+
+```{r}
+# Model summary
+lm11 <- lm(nci_acc ~ pa + fi + age + dataset, data = participants_df)
+
+summary(lm11)
+```
+
+```{r}
+# Scatter plot
+fig_lm11_scatter <- participants_df |> 
+  ggplot(aes(x = pa, y = nci_acc)) +
+  geom_point(aes(color = fi)) +
+  geom_smooth(method = lm, formula = y ~ x, se = FALSE, color = "steelblue") +
+  scale_color_gradientn(
+    colors = c("#d7191c", "#fdae61", "#fee08b", "#a6d96a", "#1a9641")
+  ) +
+  scale_x_continuous(limits = c(2, 19), breaks = seq(2, 19, 2)) + 
+  scale_y_continuous(limits = c(0.5, 1.0), breaks = seq(0.5, 1, 0.1)) + 
+  labs(
+    title = "Model 11: ACC ~ PA + FI + Age + Dataset",
+    x = "Phonological Awareness",
+    y = "Accuracy on NCIs",
+    color = "Fluid Intelligence"
+  ) +
+  theme_bw()
+
+print(fig_lm11_scatter)
+```
+
+#### Model 12: ACC ~ RS + FI + Age + Dataset
+
+```{r}
+# Model summary
+lm12 <- lm(nci_acc ~ rs + fi + age + dataset, data = participants_df)
+
+summary(lm12)
+```
+
+```{r}
+# Scatter plot
+fig_lm12_scatter <- participants_df |> 
+  ggplot(aes(x = rs, y = nci_acc)) +
+  geom_point(aes(color = fi)) +
+  geom_smooth(method = lm, formula = y ~ x, se = FALSE, color = "steelblue") +
+  scale_color_gradientn(
+    colors = c("#d7191c", "#fdae61", "#fee08b", "#a6d96a", "#1a9641")
+  ) +
+  scale_x_continuous(limits = c(55, 145), breaks = seq(55, 145, 10)) +
+  scale_y_continuous(limits = c(0.5, 1), breaks = seq(0.5, 1, 0.1)) + 
+  labs(
+    title = "Model 12: ACC ~ RS + FI + Age + Dataset",
+    x = "Reading Skill",
+    y = "Accuracy on NCIs",
+    color = "Fluid Intelligence"
+  ) +
+  theme_bw()
+
+print(fig_lm12_scatter)
+```
+
+:::
