@@ -19,13 +19,14 @@ library(here)
 library(tidyverse)
 library(interactions)
 library(effects)
+library(broom)
 
 # Clear all variables from environment
 rm(list = ls())
 
 # Set input files
 merg_dir  <- here("data", "phenotype", "merged")
-participants_rds <- here(merg_dir, "preregistration_participants.rds")
+participants_rds <- here(merg_dir, "preregistration-amendment_participants.rds")
   
 # Read in data
 participants_df <- readRDS(participants_rds)
@@ -88,6 +89,7 @@ print(fig_lm1_effect)
 
 ```{r}
 #| echo: false
+#| eval: false
 #| warning: false
 #| message: false
 
@@ -270,29 +272,34 @@ fig_lm4_effect <- lm4_effect +
 print(fig_lm4_effect)
 ```
 
-:::
+#### Model 5: vOT ~ RS + FI + Age + (RS * FI) + (RS * Age) + (FI * Age) + (RS * FI * Age)
 
-### Two-way interactions
-
-:::{.panel-tabset}
-
-#### Model 5: TP ~ RS + FI + Age + (RS * FI)
 
 ```{r}
 # Model summary
-lm5 <- lm(postC_TP ~ rs * fi + age, data = participants_df)
+lm5 <- lm(postC_vOT ~ rs * fi * age, data = participants_df)
 
 summary(lm5)
 ```
 
 ```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
 # Interaction effect plot
 lm5_effect <- interact_plot(
   model = lm5, 
   pred = rs, 
   modx = fi, 
   modx.values = c(70, 85, 100, 115, 130),
-  main.title = "Model 5: TP ~ RS + FI + Age + (RS * FI)",
+  mod2 = age, 
+  mod2.values = c(10, 13.6),
+  mod2.labels = c(
+    "7.8 - 11.5 year olds", 
+    "11.5 - 16.7 year olds"
+  ),
+  main.title = "Model 5: vOT ~ RS * FI * Age",
   legend.main = "Fluid Intelligence",
   plot.points = T,
   colors = c("#d7191c", "#fdae61", "#fee08b", "#a6d96a", "#1a9641"),
@@ -304,34 +311,44 @@ fig_lm5_effect <- lm5_effect +
     name = "Fluid Intelligence",
     values = c("solid", "solid", "solid", "solid", "solid")
   ) + 
-  scale_x_continuous(limits = c(55, 145), breaks = seq(55, 145, 10)) + 
-  scale_y_continuous(limits = c(0, 5), breaks = seq(0, 5, 1)) + 
+  scale_x_continuous(limits = c(55, 145), breaks = seq(55, 145, 10)) +
+  scale_y_continuous(limits = c(0, 12), breaks = seq(0, 12, 2)) + 
   labs(
     x = "Reading Skill", 
-    y = "Neural Basis of Phonological Processing (TP)",
-  ) + 
+    y = "Neural Basis of Orthographic Processing (vOT)",
+  ) +
   theme_bw()
 
 print(fig_lm5_effect)
 ```
 
-#### Model 6: vOT ~ PA + FI + Age + (PA * FI)
+#### Model 6: TP ~ PA + FI + Age + (PA * FI) + (PA * Age) + (FI * Age) + (PA * FI * Age)
 
 ```{r}
 # Model summary
-lm6 <- lm(postC_vOT ~ pa * fi + age, data = participants_df)
+lm6 <- lm(postC_TP ~ pa * fi * age, data = participants_df)
 
 summary(lm6)
 ```
 
 ```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
 # Interaction effect plot
 lm6_effect <- interact_plot(
   model = lm6, 
   pred = pa, 
   modx = fi, 
   modx.values = c(70, 85, 100, 115, 130),
-  main.title = "Model 6: vOT ~ PA + FI + Age + (PA * FI)",
+  mod2 = age, 
+  mod2.values = c(10, 13.6),
+  mod2.labels = c(
+    "7.8 - 11.5 year olds", 
+    "11.5 - 16.7 year olds"
+  ),
+  main.title = "Model 6: TP ~ PA * FI * Age",
   legend.main = "Fluid Intelligence",
   plot.points = T,
   colors = c("#d7191c", "#fdae61", "#fee08b", "#a6d96a", "#1a9641"),
@@ -344,21 +361,27 @@ fig_lm6_effect <- lm6_effect +
     values = c("solid", "solid", "solid", "solid", "solid")
   ) + 
   scale_x_continuous(limits = c(2, 19), breaks = seq(2, 19, 2)) + 
-  scale_y_continuous(limits = c(0, 12), breaks = seq(0, 12, 2)) +
+  scale_y_continuous(limits = c(0, 5), breaks = seq(0, 5, 1)) + 
   labs(
     x = "Phonological Awareness", 
-    y = "Neural Basis of Orthographical Processing (vOT)",
-  ) + 
+    y = "Neural Basis of Phonological Processing (TP)",
+  ) +
   theme_bw()
 
 print(fig_lm6_effect)
 ```
 
-#### Model 7: IFG ~ RS + FI + Age + (RS * FI)
+:::
+
+### Two-way interactions
+
+:::{.panel-tabset}
+
+#### Model 7: TP ~ RS + FI + Age + (RS * FI)
 
 ```{r}
 # Model summary
-lm7 <- lm(postC_IFG ~ rs * fi + age, data = participants_df)
+lm7 <- lm(postC_TP ~ rs * fi + age, data = participants_df)
 
 summary(lm7)
 ```
@@ -370,7 +393,7 @@ lm7_effect <- interact_plot(
   pred = rs, 
   modx = fi, 
   modx.values = c(70, 85, 100, 115, 130),
-  main.title = "Model 7: IFG ~ RS + FI + Age + (RS * FI)",
+  main.title = "Model 7: TP ~ RS + FI + Age + (RS * FI)",
   legend.main = "Fluid Intelligence",
   plot.points = T,
   colors = c("#d7191c", "#fdae61", "#fee08b", "#a6d96a", "#1a9641"),
@@ -382,22 +405,22 @@ fig_lm7_effect <- lm7_effect +
     name = "Fluid Intelligence",
     values = c("solid", "solid", "solid", "solid", "solid")
   ) + 
-  scale_x_continuous(limits = c(55, 145), breaks = seq(55, 145, 10)) +
-  scale_y_continuous(limits = c(0, 8.5), breaks = seq(0, 8, 2)) +
+  scale_x_continuous(limits = c(55, 145), breaks = seq(55, 145, 10)) + 
+  scale_y_continuous(limits = c(0, 5), breaks = seq(0, 5, 1)) + 
   labs(
     x = "Reading Skill", 
-    y = "Neural Basis of Lexical Processing (IFG)",
+    y = "Neural Basis of Phonological Processing (TP)",
   ) + 
   theme_bw()
 
 print(fig_lm7_effect)
 ```
 
-#### Model 8: IFG ~ PA + FI + Age + (PA * FI)
+#### Model 8: vOT ~ PA + FI + Age + (PA * FI)
 
 ```{r}
 # Model summary
-lm8 <- lm(postC_IFG ~ pa * fi + age, data = participants_df)
+lm8 <- lm(postC_vOT ~ pa * fi + age, data = participants_df)
 
 summary(lm8)
 ```
@@ -409,7 +432,7 @@ lm8_effect <- interact_plot(
   pred = pa, 
   modx = fi, 
   modx.values = c(70, 85, 100, 115, 130),
-  main.title = "Model 8: IFG ~ PA + FI + Age + (PA * FI)",
+  main.title = "Model 8: vOT ~ PA + FI + Age + (PA * FI)",
   legend.main = "Fluid Intelligence",
   plot.points = T,
   colors = c("#d7191c", "#fdae61", "#fee08b", "#a6d96a", "#1a9641"),
@@ -422,6 +445,84 @@ fig_lm8_effect <- lm8_effect +
     values = c("solid", "solid", "solid", "solid", "solid")
   ) + 
   scale_x_continuous(limits = c(2, 19), breaks = seq(2, 19, 2)) + 
+  scale_y_continuous(limits = c(0, 12), breaks = seq(0, 12, 2)) +
+  labs(
+    x = "Phonological Awareness", 
+    y = "Neural Basis of Orthographical Processing (vOT)",
+  ) + 
+  theme_bw()
+
+print(fig_lm8_effect)
+```
+
+#### Model 9: IFG ~ RS + FI + Age + (RS * FI)
+
+```{r}
+# Model summary
+lm9 <- lm(postC_IFG ~ rs * fi + age, data = participants_df)
+
+summary(lm9)
+```
+
+```{r}
+# Interaction effect plot
+lm9_effect <- interact_plot(
+  model = lm9, 
+  pred = rs, 
+  modx = fi, 
+  modx.values = c(70, 85, 100, 115, 130),
+  main.title = "Model 9: IFG ~ RS + FI + Age + (RS * FI)",
+  legend.main = "Fluid Intelligence",
+  plot.points = T,
+  colors = c("#d7191c", "#fdae61", "#fee08b", "#a6d96a", "#1a9641"),
+  point.alpha = 0.8
+)
+
+fig_lm9_effect <- lm9_effect +
+  scale_linetype_manual(
+    name = "Fluid Intelligence",
+    values = c("solid", "solid", "solid", "solid", "solid")
+  ) + 
+  scale_x_continuous(limits = c(55, 145), breaks = seq(55, 145, 10)) +
+  scale_y_continuous(limits = c(0, 8.5), breaks = seq(0, 8, 2)) +
+  labs(
+    x = "Reading Skill", 
+    y = "Neural Basis of Lexical Processing (IFG)",
+  ) + 
+  theme_bw()
+
+print(fig_lm9_effect)
+```
+
+#### Model 10: IFG ~ PA + FI + Age + (PA * FI)
+
+```{r}
+# Model summary
+lm10 <- lm(postC_IFG ~ pa * fi + age, data = participants_df)
+
+summary(lm10)
+```
+
+```{r}
+# Interaction effect plot
+lm10_effect <- interact_plot(
+  model = lm10, 
+  pred = pa, 
+  modx = fi, 
+  modx.values = c(70, 85, 100, 115, 130),
+  main.title = "Model 10: IFG ~ PA + FI + Age + (PA * FI)",
+  legend.main = "Fluid Intelligence",
+  plot.points = T,
+  colors = c("#d7191c", "#fdae61", "#fee08b", "#a6d96a", "#1a9641"),
+  point.alpha = 0.8
+)
+
+fig_lm10_effect <- lm10_effect +
+  scale_linetype_manual(
+    name = "Fluid Intelligence",
+    values = c("solid", "solid", "solid", "solid", "solid")
+  ) + 
+  scale_x_continuous(limits = c(2, 19), breaks = seq(2, 19, 2)) + 
   scale_y_continuous(limits = c(0, 8.5), breaks = seq(0, 8, 2)) + 
   labs(
     x = "Phonological Awareness", 
@@ -429,7 +530,85 @@ fig_lm8_effect <- lm8_effect +
   ) + 
   theme_bw()
 
-print(fig_lm8_effect)
+print(fig_lm10_effect)
+```
+
+#### Model 11: vOT ~ RS + FI + Age + (RS * FI)
+
+```{r}
+# Model summary
+lm11 <- lm(postC_vOT ~ rs * fi + age, data = participants_df)
+
+summary(lm11)
+```
+
+```{r}
+# Interaction effect plot
+lm11_effect <- interact_plot(
+  model = lm11, 
+  pred = rs, 
+  modx = fi, 
+  modx.values = c(70, 85, 100, 115, 130),
+  main.title = "Model 11: vOT ~ RS + FI + Age + (RS * FI)",
+  legend.main = "Fluid Intelligence",
+  plot.points = T,
+  colors = c("#d7191c", "#fdae61", "#fee08b", "#a6d96a", "#1a9641"),
+  point.alpha = 0.8
+)
+
+fig_lm11_effect <- lm11_effect +
+  scale_linetype_manual(
+    name = "Fluid Intelligence",
+    values = c("solid", "solid", "solid", "solid", "solid")
+  ) + 
+  scale_x_continuous(limits = c(55, 145), breaks = seq(55, 145, 10)) +
+  scale_y_continuous(limits = c(0, 12), breaks = seq(0, 12, 2)) +
+  labs(
+    x = "Reading Skill", 
+    y = "Neural Basis of Orthographical Processing (vOT)",
+  ) + 
+  theme_bw()
+
+print(fig_lm11_effect)
+```
+
+#### Model 12: TP ~ PA + FI + Age + (PA * FI)
+
+```{r}
+# Model summary
+lm12 <- lm(postC_TP ~ pa * fi + age, data = participants_df)
+
+summary(lm12)
+```
+
+```{r}
+# Interaction effect plot
+lm12_effect <- interact_plot(
+  model = lm12, 
+  pred = pa, 
+  modx = fi, 
+  modx.values = c(70, 85, 100, 115, 130),
+  main.title = "Model 12: TP ~ PA + FI + Age + (PA * FI)",
+  legend.main = "Fluid Intelligence",
+  plot.points = T,
+  colors = c("#d7191c", "#fdae61", "#fee08b", "#a6d96a", "#1a9641"),
+  point.alpha = 0.8
+)
+
+fig_lm12_effect <- lm12_effect +
+  scale_linetype_manual(
+    name = "Fluid Intelligence",
+    values = c("solid", "solid", "solid", "solid", "solid")
+  ) + 
+  scale_x_continuous(limits = c(2, 19), breaks = seq(2, 19, 2)) + 
+  scale_y_continuous(limits = c(0, 5), breaks = seq(0, 5, 1)) + 
+  labs(
+    x = "Phonological Awareness", 
+    y = "Neural Basis of Phonological Processing (TP)",
+  ) + 
+  theme_bw()
+
+print(fig_lm12_effect)
 ```
 
 :::
@@ -438,18 +617,18 @@ print(fig_lm8_effect)
 
 :::{.panel-tabset}
 
-#### Model 9: TP ~ RS + FI + Age
+#### Model 13: TP ~ RS + FI + Age
 
 ```{r}
 # Model summary
-lm9 <- lm(postC_TP ~ rs + fi + age, data = participants_df)
+lm13 <- lm(postC_TP ~ rs + fi + age, data = participants_df)
 
-summary(lm9)
+summary(lm13)
 ```
 
 ```{r}
 # Scatter plot
-fig_lm9_scatter <- participants_df |> 
+fig_lm13_scatter <- participants_df |> 
   ggplot(aes(x = rs, y = postC_TP)) +
   geom_point(aes(color = fi)) +
   geom_smooth(method = lm, formula = y ~ x, se = FALSE, color = "steelblue") +
@@ -459,28 +638,28 @@ fig_lm9_scatter <- participants_df |>
   scale_x_continuous(limits = c(55, 145), breaks = seq(55, 145, 10)) + 
   scale_y_continuous(limits = c(0, 5), breaks = seq(0, 5, 1)) + 
   labs(
-    title = "Model 9: TP ~ RS + FI + Age",
+    title = "Model 13: TP ~ RS + FI + Age",
     x = "Reading Skill",
     y = "Neural Basis of Phonological Processing (TP)",
     color = "Fluid Intelligence"
   ) +
   theme_bw()
 
-print(fig_lm9_scatter)
+print(fig_lm13_scatter)
 ```
 
-#### Model 10: vOT ~ PA + FI + Age
+#### Model 14: vOT ~ PA + FI + Age
 
 ```{r}
 # Model summary
-lm10 <- lm(postC_vOT ~ pa + fi + age, data = participants_df)
+lm14 <- lm(postC_vOT ~ pa + fi + age, data = participants_df)
 
-summary(lm10)
+summary(lm14)
 ```
 
 ```{r}
 # Scatter plot
-fig_lm10_scatter <- participants_df |> 
+fig_lm14_scatter <- participants_df |> 
   ggplot(aes(x = pa, y = postC_vOT)) +
   geom_point(aes(color = fi)) +
   geom_smooth(method = lm, formula = y ~ x, se = FALSE, color = "steelblue") +
@@ -490,28 +669,28 @@ fig_lm10_scatter <- participants_df |>
   scale_x_continuous(limits = c(2, 19), breaks = seq(2, 19, 2)) + 
   scale_y_continuous(limits = c(0, 12), breaks = seq(0, 12, 2)) +
   labs(
-    title = "Model 10: vOT ~ PA + FI + Age",
+    title = "Model 14: vOT ~ PA + FI + Age",
     x = "Phonological Awareness",
     y = "Neural Basis of Orthographical Processing (vOT)",
     color = "Fluid Intelligence"
   ) +
   theme_bw()
 
-print(fig_lm10_scatter)
+print(fig_lm14_scatter)
 ```
 
-#### Model 11: IFG ~ RS + FI + Age
+#### Model 15: IFG ~ RS + FI + Age
 
 ```{r}
 # Model summary
-lm11 <- lm(postC_IFG ~ rs + fi + age, data = participants_df)
+lm15 <- lm(postC_IFG ~ rs + fi + age, data = participants_df)
 
-summary(lm11)
+summary(lm15)
 ```
 
 ```{r}
 # Scatter plot
-fig_lm11_scatter <- participants_df |> 
+fig_lm15_scatter <- participants_df |> 
   ggplot(aes(x = rs, y = postC_IFG)) +
   geom_point(aes(color = fi)) +
   geom_smooth(method = lm, formula = y ~ x, se = FALSE, color = "steelblue") +
@@ -521,28 +700,28 @@ fig_lm11_scatter <- participants_df |>
   scale_x_continuous(limits = c(55, 145), breaks = seq(55, 145, 10)) +
   scale_y_continuous(limits = c(0, 8.5), breaks = seq(0, 8, 2)) +
   labs(
-    title = "Model 11: IFG ~ RS + FI + Age",
+    title = "Model 15: IFG ~ RS + FI + Age",
     x = "Reading Skill",
     y = "Neural Basis of Lexical Processing (IFG)",
     color = "Fluid Intelligence"
   ) +
   theme_bw()
 
-print(fig_lm11_scatter)
+print(fig_lm15_scatter)
 ```
 
-#### Model 12: IFG ~ PA + FI + Age
+#### Model 16: IFG ~ PA + FI + Age
 
 ```{r}
 # Model summary
-lm12 <- lm(postC_IFG ~ pa + fi + age, data = participants_df)
+lm16 <- lm(postC_IFG ~ pa + fi + age, data = participants_df)
 
-summary(lm12)
+summary(lm16)
 ```
 
 ```{r}
 # Scatter plot
-fig_lm12_scatter <- participants_df |> 
+fig_lm16_scatter <- participants_df |> 
   ggplot(aes(x = pa, y = postC_IFG)) +
   geom_point(aes(color = fi)) +
   geom_smooth(method = lm, formula = y ~ x, se = FALSE, color = "steelblue") +
@@ -552,14 +731,92 @@ fig_lm12_scatter <- participants_df |>
   scale_x_continuous(limits = c(2, 19), breaks = seq(2, 19, 2)) + 
   scale_y_continuous(limits = c(0, 8.5), breaks = seq(0, 8, 2)) +
   labs(
-    title = "Model 12: IFG ~ PA + FI + Age",
+    title = "Model 16: IFG ~ PA + FI + Age",
     x = "Phonological Awareness",
     y = "Neural Basis of Lexical Processing (IFG)",
     color = "Fluid Intelligence"
   ) +
   theme_bw()
 
-print(fig_lm12_scatter)
+print(fig_lm16_scatter)
+```
+
+#### Model 17: vOT ~ RS + FI + Age
+
+```{r}
+# Model summary
+lm17 <- lm(postC_vOT ~ rs + fi + age, data = participants_df)
+
+summary(lm17)
+```
+
+```{r}
+# Scatter plot
+fig_lm17_scatter <- participants_df |> 
+  ggplot(aes(x = rs, y = postC_vOT)) +
+  geom_point(aes(color = fi)) +
+  geom_smooth(method = lm, formula = y ~ x, se = FALSE, color = "steelblue") +
+  scale_color_gradientn(
+    colors = c("#d7191c", "#fdae61", "#fee08b", "#a6d96a", "#1a9641")
+  ) +
+  scale_x_continuous(limits = c(55, 145), breaks = seq(55, 145, 10)) +
+  scale_y_continuous(limits = c(0, 12), breaks = seq(0, 12, 2)) +
+  labs(
+    title = "Model 17: vOT ~ RS + FI + Age",
+    x = "Reading Skill",
+    y = "Neural Basis of Orthographical Processing (vOT)",
+    color = "Fluid Intelligence"
+  ) +
+  theme_bw()
+
+print(fig_lm17_scatter)
+```
+
+#### Model 18: TP ~ PA + FI + Age
+
+```{r}
+# Model summary
+lm18 <- lm(postC_TP ~ pa + fi + age, data = participants_df)
+
+summary(lm18)
+```
+
+```{r}
+# Scatter plot
+fig_lm18_scatter <- participants_df |> 
+  ggplot(aes(x = pa, y = postC_TP)) +
+  geom_point(aes(color = fi)) +
+  geom_smooth(method = lm, formula = y ~ x, se = FALSE, color = "steelblue") +
+  scale_color_gradientn(
+    colors = c("#d7191c", "#fdae61", "#fee08b", "#a6d96a", "#1a9641")
+  ) + 
+  scale_x_continuous(limits = c(2, 19), breaks = seq(2, 19, 2)) + 
+  scale_y_continuous(limits = c(0, 5), breaks = seq(0, 5, 1)) + 
+  labs(
+    title = "Model 18: TP ~ PA + FI + Age",
+    x = "Phonological Awareness",
+    y = "Neural Basis of Phonological Processing (TP)",
+    color = "Fluid Intelligence"
+  ) +
+  theme_bw()
+
+print(fig_lm18_scatter)
+```
+
+#### FDR correction
+
+```{r}
+lm13_pval <- tidy(lm13) |> filter(term == "rs") |> pull(p.value)
+lm14_pval <- tidy(lm14) |> filter(term == "pa") |> pull(p.value)
+lm15_pval <- tidy(lm15) |> filter(term == "rs") |> pull(p.value)
+lm16_pval <- tidy(lm16) |> filter(term == "pa") |> pull(p.value)
+lm17_pval <- tidy(lm17) |> filter(term == "rs") |> pull(p.value)
+lm18_pval <- tidy(lm18) |> filter(term == "pa") |> pull(p.value)
+
+pvals <- c(lm13_pval, lm14_pval, lm15_pval, lm16_pval, lm17_pval, lm18_pval)
+
+pvals_fdr <- p.adjust(pvals, method = "fdr")
+print(pvals_fdr)
 ```
 
 :::

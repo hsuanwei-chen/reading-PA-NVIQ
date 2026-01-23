@@ -1,0 +1,181 @@
+---
+title: "Check vOT coverage (slice-by-slice) for each participant"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+author: "Isaac Chen"
+
+format: 
+    html:
+      embed-resources: true
+---
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+# Clear all variables from environment
+rm(list = ls())
+
+# Load library
+library(here)
+library(glue)
+library(tidyverse)
+library(knitr)
+
+# Set input files
+data_dir      <- here("results", "check_secondLevelCoverage")
+coverage_csv  <- here(data_dir, "vOT_coverage_groupSummary.csv")
+
+# Read in CSV file
+coverage_df <- read_csv(coverage_csv)
+```
+
+```{r}
+# Transform data from wide to long format
+coverage_long <- coverage_df |> 
+  pivot_longer(
+    cols = starts_with("ds"),
+    names_to = "unique_id",
+    values_to = "valid_voxels"
+  ) |>
+  mutate(
+    perc_valid = round(valid_voxels / GroupCount * 100, 2)
+  )
+
+# Save results
+output_csv <- here(data_dir, "vOT_coverage_groupSummaryLong.csv")
+write_csv(coverage_long, output_csv)
+```
+
+```{r}
+# Line plot of coverage
+fig1 <- coverage_long |> 
+  ggplot(aes(x = MNI_Z, y = perc_valid, group = unique_id)) +
+  geom_line() + 
+  geom_hline(yintercept = 95, color = "red", linetype = "dashed") + 
+  labs(title = "Percent Coverage of voT by Z-axis", y = "% Coverage") +
+  scale_x_continuous(limits = c(-26, -4), breaks = seq(-26, -4, 2)) +
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 5)) +
+  theme(text = element_text(size = 14))
+
+print(fig1)
+```
+
+
+### Coverage at one specific slice
+
+```{r}
+fig2 <- coverage_long |> 
+  filter(MNI_Z == -24) |> 
+  ggplot(aes(x = perc_valid)) +
+  geom_histogram(
+    binwidth = 5,
+    boundary = 0,
+    fill="#69b3a2", 
+    color="#e9ecef", 
+    alpha = 0.9
+  ) +  
+  geom_text(
+    stat = "bin",
+    binwidth = 5,
+    boundary = 0,
+    aes(label = after_stat(count)),
+    vjust = -0.5
+  ) +
+  scale_x_continuous(breaks = seq(25, 100, 5)) +
+  scale_y_continuous(limits = c(0, 180), breaks = seq(0, 180, 20)) +
+  labs(
+    title = "Histogram of Percent Coverage at Slice Z = -24 (n = 375)",
+    x = "% Coverage",
+    y = "Number of Participants"
+  ) +
+  theme(text = element_text(size = 14))
+
+print(fig2)
+```
+
+### Coverage across a range of slices
+
+```{r}
+# Function to number of participants with valid coverage across different thresholds
+count_goodCoverage <- function(df, Z_low, Z_high){
+  
+  include_df <- df |> 
+    filter(between(MNI_Z, Z_low, Z_high)) |> 
+    group_by(unique_id) |> 
+    summarise(
+      include95 = sum(perc_valid > 95),
+      include90 = sum(perc_valid > 90),
+      include85 = sum(perc_valid > 85),
+      include80 = sum(perc_valid > 80),
+      include75 = sum(perc_valid > 75),
+      include70 = sum(perc_valid > 70),
+      include65 = sum(perc_valid > 65),
+      include60 = sum(perc_valid > 60)
+    )
+  
+  # Count number of slices between lower an high boundaries
+  num_slice = length(seq(Z_low, Z_high, by = 2)) 
+  
+  total_df <- include_df |>
+    summarise(
+      total95 = sum(include95 == num_slice),
+      total90 = sum(include90 == num_slice),
+      total85 = sum(include85 == num_slice),
+      total80 = sum(include80 == num_slice),
+      total75 = sum(include75 == num_slice),
+      total70 = sum(include70 == num_slice),
+      total65 = sum(include65 == num_slice),
+      total60 = sum(include60 == num_slice)
+    )
+  
+  # Return outputs
+  return(total_df)
+}
+```
+
+```{r}
+# Include across slices
+include_df <- coverage_long |> 
+  filter(between(MNI_Z, -24, -14)) |> 
+  group_by(unique_id) |> 
+  summarise(
+    include95 = sum(perc_valid > 95),
+    include90 = sum(perc_valid > 90),
+    include85 = sum(perc_valid > 85),
+    include80 = sum(perc_valid > 80),
+    include75 = sum(perc_valid > 75),
+    include70 = sum(perc_valid > 70),
+    include65 = sum(perc_valid > 65),
+    include60 = sum(perc_valid > 60)
+  )
+
+# Save results
+include_csv <- here(data_dir, "vOT_coverage_include.csv")
+write_csv(include_df, include_csv)
+```
+
+```{r}
+# Slices -24 to -14
+include2414 <- count_goodCoverage(coverage_long, -24, -14)
+
+# Slices -24 to -16
+include2416 <- count_goodCoverage(coverage_long, -24, -16)
+
+# Slices -24 to -18
+include2418 <- count_goodCoverage(coverage_long, -24, -18)
+
+# Slices -24 to -20
+include2420 <- count_goodCoverage(coverage_long, -24, -20)
+
+# Slices -24 to -22
+include2422 <- count_goodCoverage(coverage_long, -24, -22)
+
+# Create summary table
+summary <-include2414 |> 
+  bind_rows(include2416) |> 
+  bind_rows(include2418) |> 
+  bind_rows(include2420) |> 
+  bind_rows(include2422)
+```
+

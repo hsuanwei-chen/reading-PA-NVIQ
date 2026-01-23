@@ -1,5 +1,5 @@
 ---
-title: "Preregistration - Data Visualization"
+title: "Preregistration - Main Data Visualization"
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 author: "Isaac Chen"
 
@@ -27,7 +27,7 @@ rm(list = ls())
 
 # Set input files
 merg_dir  <- here("data", "phenotype", "merged")
-participants_rds <- here(merg_dir, "preregistration_participants.rds")
+participants_rds <- here(merg_dir, "preregistration-amendment_participants.rds")
   
 # Read in data
 participants_df <- readRDS(participants_rds)
@@ -158,10 +158,10 @@ plot_ridge <- function(
 
 # Label for dataset sample sizes
 dataset_labels <- c(
-  "Overall (n = 375)",
-  "ds001486 (n = 116)",
-  "ds001894 (n = 129)", 
-  "ds002236 (n = 66)", 
+  "Overall (n = 364)",
+  "ds001486 (n = 113)",
+  "ds001894 (n = 125)", 
+  "ds002236 (n = 62)", 
   "ds006239 (n = 64)"
 )
 

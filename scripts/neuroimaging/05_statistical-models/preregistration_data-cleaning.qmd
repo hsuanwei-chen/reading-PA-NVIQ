@@ -22,22 +22,22 @@ library(tidyverse)
 rm(list = ls())
 
 preC_topBeta_files = list(
-  "pre-ComBat_top100-betas_con-NCFix_leftIFG.csv",
-  "pre-ComBat_top100-betas_con-NCFix_leftTP.csv",
-  "pre-ComBat_top100-betas_con-NCFix_leftvOT.csv"
+  "pre-ComBat_n364_top100-betas_con-NCFix_leftIFG.csv",
+  "pre-ComBat_n364_top100-betas_con-NCFix_leftTP.csv",
+  "pre-ComBat_n364_top100-betas_con-NCFix_leftvOT.csv"
 )
 
 postC_topBeta_files = list(
-  "post-ComBat_top100-betas_con-NCFix_leftIFG.csv",
-  "post-ComBat_top100-betas_con-NCFix_leftTP.csv",
-  "post-ComBat_top100-betas_con-NCFix_leftvOT.csv"
+  "post-ComBat_n364_top100-betas_con-NCFix_leftIFG.csv",
+  "post-ComBat_n364_top100-betas_con-NCFix_leftTP.csv",
+  "post-ComBat_n364_top100-betas_con-NCFix_leftvOT.csv"
 )
 
 # Set input files
-merged_dir  <- here("data", "phenotype", "merged")
-stats_dir <- here("results", "statistical-models")
+merged_dir <- here("data", "phenotype", "merged")
+stats_dir  <- here("results", "statistical-models")
 
-participants_rds          <- here(merged_dir, "merged_participants_motionQC-coverage.rds")
+participants_rds          <- here(merged_dir, "merged_participants_motionQC-coverage-acc-vOT.rds")
 
 leftIFG_preC_topBeta_csv  <- here(stats_dir, preC_topBeta_files[1])
 leftIFG_postC_topBeta_csv <- here(stats_dir, postC_topBeta_files[1])
@@ -49,19 +49,19 @@ leftvOT_preC_topBeta_csv  <- here(stats_dir, preC_topBeta_files[3])
 leftvOT_postC_topBeta_csv <- here(stats_dir, postC_topBeta_files[3])
   
 # Set output files
-output_participants_rds <- here(merged_dir, "preregistration_participants.rds")
-output_participants_csv <- here(merged_dir, "preregistration_participants.csv")
+output_participants_rds <- here(merged_dir, "preregistration-amendment_participants.rds")
+output_participants_csv <- here(merged_dir, "preregistration-amendment_participants.csv")
 
 # Read in data
 participants_df          <- readRDS(participants_rds)
 
-leftIFG_preC_topBeta_df <- read_csv(leftIFG_preC_topBeta_csv)
+leftIFG_preC_topBeta_df  <- read_csv(leftIFG_preC_topBeta_csv)
 leftIFG_postC_topBeta_df <- read_csv(leftIFG_postC_topBeta_csv)
 
-leftTP_preC_topBeta_df  <- read_csv(leftTP_preC_topBeta_csv)
+leftTP_preC_topBeta_df   <- read_csv(leftTP_preC_topBeta_csv)
 leftTP_postC_topBeta_df  <- read_csv(leftTP_postC_topBeta_csv)
 
-leftvOT_preC_topBeta_df <- read_csv(leftvOT_preC_topBeta_csv)
+leftvOT_preC_topBeta_df  <- read_csv(leftvOT_preC_topBeta_csv)
 leftvOT_postC_topBeta_df <- read_csv(leftvOT_postC_topBeta_csv)
 ```
 
@@ -82,10 +82,11 @@ postC_vOT <- leftvOT_postC_topBeta_df |> group_by(unique_id) |> summarize(postC_
 # Add mean activation for each functional ROI pre- and post-ComBat haromonization
 participants_df <- participants_df |>
   filter(is.na(exclude)) |>
-  rename(
+  dplyr::rename(
     rs = wordid_sts,
     pa = el_scs,
-    fi = mr_sts
+    fi = mr_sts,
+    nci_acc = mean_acc_nci
   ) |> 
   mutate(
     dataset = factor(

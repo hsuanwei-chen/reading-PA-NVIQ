@@ -1,0 +1,197 @@
+---
+title: "Check Missing Coverage of the vOT for second level analyses"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+author: "Isaac Chen"
+
+format: 
+    html:
+      embed-resources: true
+---
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+# Clear all variables from environment
+rm(list = ls())
+
+# Load library
+library(here)
+library(glue)
+library(tidyverse)
+library(knitr)
+
+# Set input files
+data_dir      <- here("results", "check_secondLevelCoverage")
+coverage_csv  <- here(data_dir, "vOT_second-level-coverage.csv")
+coverage2_csv <- here(data_dir, "vOT_second-level-coverage_voxel423826.csv")
+coverage3_csv <- here(data_dir, "vOT_second-level-coverage_voxel525226.csv")
+
+# Read in CSV file
+coverage_df <- read_csv(coverage_csv)
+coverage2_df <- read_csv(coverage2_csv)
+coverage3_df <- read_csv(coverage3_csv)
+```
+
+```{r}
+#| warning: false
+
+# Summary of coverage by z-axis
+coverage_z <- coverage_df |> 
+  group_by(MNI_Z) |> 
+  summarize(
+    n_overlap = sum(Overlap),
+    n_missing = sum(Missing),
+    n_total   = n(),
+    perc_missing = round(n_missing / n_total * 100, 2) 
+  )
+
+# Summary of coverage by z-axis
+coverage2_z <- coverage2_df |> 
+  group_by(MNI_Z) |> 
+  summarize(
+    n_overlap = sum(Overlap),
+    n_missing = sum(Missing),
+    n_total   = n(),
+    perc_missing = round(n_missing / n_total * 100, 2) 
+  )
+
+# Summary of coverage by z-axis
+coverage3_z <- coverage3_df |> 
+  group_by(MNI_Z) |> 
+  summarize(
+    n_overlap = sum(Overlap),
+    n_missing = sum(Missing),
+    n_total   = n(),
+    perc_missing = round(n_missing / n_total * 100, 2) 
+  )
+
+coverage_z26 <- coverage_df |> 
+  filter(MNI_Z == -26, Missing == 1)
+```
+
+```{r}
+#| warning: false
+
+# Histogram of number of participants with data by z-axis
+fig_hist_z26 <- coverage_df |> 
+  filter(MNI_Z == -26, Missing == 1) |> 
+  ggplot(aes(x = Num_participants)) +
+  geom_histogram(
+    binwidth = 5,
+    boundary = 0,
+    fill="#69b3a2", 
+    color="#e9ecef", 
+    alpha = 0.9
+  ) +  
+  geom_text(
+    stat = "bin",
+    binwidth = 5,
+    boundary = 0,
+    aes(label = after_stat(count)),
+    vjust = -0.5
+  ) +
+  scale_x_continuous(breaks = seq(175, 375, 5)) +
+  scale_y_continuous(limits = c(0, 32), breaks = seq(0, 30, 5)) +
+  labs(
+    x = "Number of Particiapant with Data in a Voxel",
+    y = "Number of Voxels"
+  )
+
+print(fig_hist_z26)
+```
+
+```{r}
+#| warning: false
+
+# Histogram of number of participants with data by z-axis
+fig_hist_z24 <- coverage_df |> 
+  filter(MNI_Z == -24, Missing == 1) |> 
+  ggplot(aes(x = Num_participants)) +
+  geom_histogram(
+    binwidth = 5,
+    boundary = 0,
+    fill="#69b3a2", 
+    color="#e9ecef", 
+    alpha = 0.9
+  ) +  
+  geom_text(
+    stat = "bin",
+    binwidth = 5,
+    boundary = 0,
+    aes(label = after_stat(count)),
+    vjust = -0.5
+  ) +
+  scale_x_continuous(breaks = seq(175, 375, 5)) +
+  #scale_y_continuous(limits = c(0, 50), breaks = seq(0, 30, 5)) +
+  labs(
+    x = "Number of Particiapant with Data in a Voxel",
+    y = "Number of Voxels"
+  )
+
+print(fig_hist_z24)
+```
+
+
+```{r}
+#| warning: false
+
+# Histogram of number of participants with data by z-axis
+fig_hist_z22 <- coverage_df |> 
+  filter(MNI_Z == -22, Missing == 1) |> 
+  ggplot(aes(x = Num_participants)) +
+  geom_histogram(
+    binwidth = 5,
+    boundary = 0,
+    fill="#69b3a2", 
+    color="#e9ecef", 
+    alpha = 0.9
+  ) +  
+  geom_text(
+    stat = "bin",
+    binwidth = 5,
+    boundary = 0,
+    aes(label = after_stat(count)),
+    vjust = -0.5
+  ) +
+  #scale_x_continuous(breaks = seq(175, 375, 5)) +
+  #scale_y_continuous(limits = c(0, 50), breaks = seq(0, 30, 5)) +
+  labs(
+    x = "Number of Particiapant with Data in a Voxel",
+    y = "Number of Voxels"
+  )
+
+print(fig_hist_z22)
+```
+
+```{r}
+#| warning: false
+
+# Histogram of number of participants with data by z-axis
+fig_hist_z10 <- coverage_df |> 
+  filter(MNI_Z == -24, Missing == 1) |> 
+  ggplot(aes(x = Num_participants)) +
+  geom_histogram(
+    binwidth = 5,
+    boundary = 0,
+    fill="#69b3a2", 
+    color="#e9ecef", 
+    alpha = 0.9
+  ) +  
+  geom_text(
+    stat = "bin",
+    binwidth = 5,
+    boundary = 0,
+    aes(label = after_stat(count)),
+    vjust = -0.5
+  ) +
+  #scale_x_continuous(breaks = seq(175, 375, 5)) +
+  #scale_y_continuous(limits = c(0, 50), breaks = seq(0, 30, 5)) +
+  labs(
+    x = "Number of Particiapant with Data in a Voxel",
+    y = "Number of Voxels"
+  )
+
+print(fig_hist_z10)
+```

@@ -25,10 +25,11 @@ library(patchwork)
 
 ```{r}
 # Set the working directory to the location of your script and CSV files
-pre_combat  <- "pre-ComBat_betas_con-NCFix_leftTP_top1000_union-mask.csv"
-post_combat <- "post-ComBat_betas_con-NCFix_leftTP_top1000_union-mask.csv"
+pre_combat  <- "pre-ComBat_betas_con-NCFix_leftTP_n364_top1000_union-mask.csv"
+post_combat <- "post-ComBat_betas_con-NCFix_leftTP_n364_top1000_union-mask.csv"
 
-data     <- here("data", "phenotype", "merged", "merged_participants_motionQC-coverage.csv")
+merg_dir <- here("data", "phenotype", "merged")
+data     <- here(merg_dir, "merged_participants_motionQC-coverage-acc-vOT.csv")
 img      <- here("results", "harmonization", "top1000", pre_combat)
 post_img <- here("results", "harmonization", "top1000", post_combat)
 

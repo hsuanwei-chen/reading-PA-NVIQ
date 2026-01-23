@@ -45,28 +45,28 @@ extract_topVoxel <- function(df, top_n){
 ```{r}
 # List files with pre-ComBat betas
 preC_beta_files = list(
-  "pre-ComBat_betas_con-NCFix_leftIFG_top1000_union-mask.csv",
-  "pre-ComBat_betas_con-NCFix_leftTP_top1000_union-mask.csv",
-  "pre-ComBat_betas_con-NCFix_leftvOT_top1000_union-mask.csv"
+  "pre-ComBat_betas_con-NCFix_leftIFG_n364_top1000_union-mask.csv",
+  "pre-ComBat_betas_con-NCFix_leftTP_n364_top1000_union-mask.csv",
+  "pre-ComBat_betas_con-NCFix_leftvOT_n364_top1000_union-mask.csv"
 )
 
 preC_topBeta_files = list(
-  "pre-ComBat_top100-betas_con-NCFix_leftIFG.csv",
-  "pre-ComBat_top100-betas_con-NCFix_leftTP.csv",
-  "pre-ComBat_top100-betas_con-NCFix_leftvOT.csv"
+  "pre-ComBat_n364_top100-betas_con-NCFix_leftIFG.csv",
+  "pre-ComBat_n364_top100-betas_con-NCFix_leftTP.csv",
+  "pre-ComBat_n364_top100-betas_con-NCFix_leftvOT.csv"
 )
 
 # List files with post-ComBat betas
 postC_beta_files = list(
-  "post-ComBat_betas_con-NCFix_leftIFG_top1000_union-mask.csv",
-  "post-ComBat_betas_con-NCFix_leftTP_top1000_union-mask.csv",
-  "post-ComBat_betas_con-NCFix_leftvOT_top1000_union-mask.csv"
+  "post-ComBat_betas_con-NCFix_leftIFG_n364_top1000_union-mask.csv",
+  "post-ComBat_betas_con-NCFix_leftTP_n364_top1000_union-mask.csv",
+  "post-ComBat_betas_con-NCFix_leftvOT_n364_top1000_union-mask.csv"
 )
 
 postC_topBeta_files = list(
-  "post-ComBat_top100-betas_con-NCFix_leftIFG.csv",
-  "post-ComBat_top100-betas_con-NCFix_leftTP.csv",
-  "post-ComBat_top100-betas_con-NCFix_leftvOT.csv"
+  "post-ComBat_n364_top100-betas_con-NCFix_leftIFG.csv",
+  "post-ComBat_n364_top100-betas_con-NCFix_leftTP.csv",
+  "post-ComBat_n364_top100-betas_con-NCFix_leftvOT.csv"
 )
 ```
 
