@@ -1,5 +1,5 @@
 ---
-title: "Update Merged Dataset After MotionQC "
+title: "Update 4: Remove participants based on vOT coverage"
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 author: "Isaac Chen"
 
@@ -17,49 +17,40 @@ format:
 
 library(here)
 library(tidyverse)
-library(readxl)
 library(knitr)
  
 # Clear all variables from environment
 rm(list = ls())
 
 # Set input files
-data_dir            <- here("data", "phenotype")
-merged_dir          <- here("data", "phenotype", "merged")
-results_dir         <- here("results", "fMRI_count_repaired")
-participants_rds    <- here(data_dir, "merged", "merged_participants.rds")
-count_repaired_xlsx <- here(results_dir, "merged_count_repaired.xlsx")
+data_dir         <- here("data", "phenotype")
+merged_dir       <- here("data", "phenotype", "merged")
+results_dir      <- here("results", "check_secondLevelCoverage")
+participants_rds <- here(data_dir, "merged", "merged_participants_motionQC-coverage-acc.rds")
+coverage_exclude <- here(results_dir, "vOT_coverage_groupSummaryLong.csv")
 
 # Set output files
-output_participants_rds <- here(merged_dir, "merged_participants_motionQC.rds")
-output_participants_csv <- here(merged_dir, "merged_participants_motionQC.csv")
+output_participants_rds <- here(merged_dir, "merged_participants_motionQC-coverage-acc-vOT.rds")
+output_participants_csv <- here(merged_dir, "merged_participants_motionQC-coverage-acc-vOT.csv")
 
 # Read in data
 merged_participants_df <- readRDS(participants_rds) 
-merged_scan_df         <- read_excel(count_repaired_xlsx)
+coverage_exclude       <- read_csv(coverage_exclude)
 ```
 
 ## Update Sample Size
 
 ```{r}
-# Extract participants excluded for motion
-# Added ds001894_sub-0033 because later found their events file was corrupted 
-# when running first-level analyses
-motion_excluded <- merged_scan_df |> 
-  select(unique_id, exclude) |> 
-  filter(!is.na(exclude)) |> 
-  distinct(unique_id, exclude) |> 
-  rename(exclude_add = exclude) |> 
-  bind_rows(
-    tibble(
-      unique_id = "ds001894_sub-0033",
-      exclude_add = "corrupt events file for run-01 (i.e. onsets are NAs)"
-    )
-  )
+# Extract participants < 60% coverage of the vOT at slice Z = -24
+coverage_exclude <- coverage_exclude |>
+  filter(MNI_Z == -24, perc_valid < 60) |> 
+  select(unique_id) |> 
+  mutate(exclude = "contains <60% coverage of vOT at slicee Z = -24") |> 
+  rename(exclude_add = exclude)
 
-# Updated participants csv with those excluded for motion
+# Updated participants csv with those excluded for excess missing coverage
 merged_participants_df <- merged_participants_df |> 
-  left_join(motion_excluded, by = "unique_id") |>
+  left_join(coverage_exclude, by = "unique_id") |>
   mutate(exclude = ifelse(is.na(exclude), exclude_add, exclude)) |> 
   select(-exclude_add)
 ```
@@ -110,4 +101,3 @@ exclude_table <- merged_participants_df |>
 
 kable(exclude_table)
 ```
-

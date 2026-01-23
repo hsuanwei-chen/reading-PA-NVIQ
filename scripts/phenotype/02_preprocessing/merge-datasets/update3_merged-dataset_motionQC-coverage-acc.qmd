@@ -1,0 +1,106 @@
+---
+title: "Update Merged Dataset After MotionQC and Coverage Check, Add In-scanner Task Accuracy"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+author: "Isaac Chen"
+
+format: 
+    html:
+      toc: true
+      embed-resources: true
+---
+
+### Set up
+
+```{r}
+#| warning: false
+#| message: false
+
+library(here)
+library(tidyverse)
+library(readxl)
+ 
+# Clear all variables from environment
+rm(list = ls())
+
+# List of files
+input_filename = list(
+  "merged_participants_motionQC-coverage.rds",
+  "ds001486_task-VisualWordRhyming_accuracy.csv",
+  "ds001894_task-VisualWordRhyming_accuracy.csv",
+  "ds002236_task-VisualWordRhyming_accuracy.csv",
+  "ds006239_task-VisualWordRhyming_accuracy.csv",
+  "ds006239_multiple-run_accuracy.xlsx"
+)
+
+output_filename = list(
+  "merged_participants_motionQC-coverage-acc.rds",
+  "merged_participants_motionQC-coverage-acc.csv"
+)
+
+# Set input files
+data_dir          <- here("data", "phenotype")
+merged_dir        <- here(data_dir, "merged")
+preproc_dir       <- here(data_dir, "preprocessed")
+participants_rds  <- here(merged_dir, input_filename[1])
+ds001486_accuracy <- here(preproc_dir, "ds001486", input_filename[2])
+ds001894_accuracy <- here(preproc_dir, "ds001894", input_filename[3])
+ds002236_accuracy <- here(preproc_dir, "ds002236", input_filename[4])
+ds006239_accuracy <- here(preproc_dir, "ds006239", input_filename[5]) 
+ds006239_multiple <- here(preproc_dir, "ds006239", input_filename[6]) 
+
+# Set output files
+output_participants_rds <- here(merged_dir, output_filename[1])
+output_participants_csv <- here(merged_dir, output_filename[2])
+
+# Read in data
+merged_participants_df <- readRDS(participants_rds) 
+ds001486_accuracy_df   <- read_csv(ds001486_accuracy) |> select(-exclude)
+ds001894_accuracy_df   <- read_csv(ds001894_accuracy) |> select(-exclude)
+ds002236_accuracy_df   <- read_csv(ds002236_accuracy) |> select(-exclude)
+ds006239_accuracy_df   <- read_csv(ds006239_accuracy) |> select(-exclude)
+ds006239_multiple_df   <- read_excel(ds006239_multiple)
+```
+
+```{r}
+# Calculate mean accuracy and response bias for nci
+ds006239_multiple_df <- ds006239_multiple_df |>
+  group_by(unique_id) |>
+  summarise(
+    `n_correct_O+P+` = sum(`n_correct_O+P+`),
+    `n_correct_O-P-` = sum(`n_correct_O-P-`),
+    `n_trial_O+P+`   = sum(`n_trial_O+P+`),
+    `n_trial_O-P-`   = sum(`n_trial_O-P-`)
+  ) |> 
+  mutate(
+    n_correct_nci   = `n_correct_O+P+` + `n_correct_O-P-`,
+    n_trial_nci     = `n_trial_O+P+` + `n_trial_O-P-`,
+    `mean_acc_O+P+` = round(`n_correct_O+P+` / `n_trial_O+P+`, 3),
+    `mean_acc_O-P-` = round(`n_correct_O-P-` / `n_trial_O-P-`, 3),
+    mean_acc_nci    = round(n_correct_nci / n_trial_nci, 3),
+    response_bias = abs(`mean_acc_O+P+` - `mean_acc_O-P-` ),
+    exclude = case_when(
+      mean_acc_nci  <  0.5 ~ "accuracy < 0.5 for O+P+ & O-P- across runs",
+      response_bias >= 0.5 ~ "response bias between O+P+ & O-P-"
+    )
+  )
+```
+
+```{r}
+# Combine accuracy into one df
+merged_accuracy_df <- ds001486_accuracy_df |> 
+  bind_rows(ds001894_accuracy_df) |> 
+  bind_rows(ds002236_accuracy_df) |> 
+  bind_rows(ds006239_accuracy_df) |> 
+  bind_rows(ds006239_multiple_df) |> 
+  select(-exclude)
+
+# Merge accuracy df with participants df
+merged_participants_accuracy_df <- merged_participants_df |> 
+  left_join(merged_accuracy_df, by = "unique_id") |> 
+  select(unique_id:mr_sts, mean_acc_nci, response_bias, exclude)
+
+# Save results as csv file
+saveRDS(merged_participants_accuracy_df, file = output_participants_rds)
+write_csv(merged_participants_accuracy_df, file = output_participants_csv)
+```
+
