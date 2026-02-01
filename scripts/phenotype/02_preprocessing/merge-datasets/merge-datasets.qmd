@@ -75,7 +75,6 @@ merg_dir <- here("data", "phenotype", "merged")
 # Set output files
 output_participants_rds <- here(merg_dir, "merged_participants.rds")
 output_participants_csv <- here(merg_dir, "merged_participants.csv")
-output_rhyming_events   <- here(merg_dir, "merged_task-VisualWordRhyming_events.csv")
 ```
 
 ## Apply Exlusionary Criteria
@@ -194,7 +193,6 @@ mean_acc_nci <- ds001486_events_df |>
 
 # Exclude based on in-scanner task
 ds001486_accuracy_df <- mean_acc_condition |>
-  filter(!unique_id %in% ds001486_exclude$unique_id) |> 
   inner_join(mean_acc_nci, by = "unique_id") |> 
   select(
     unique_id, starts_with("n_correct"), 
@@ -219,6 +217,12 @@ ds001486_exclude <- ds001486_accuracy_df |>
 
 glimpse(ds001486_exclude)
 kable(ds001486_exclude)
+```
+
+```{r}
+# Set output file
+ds001486_accuracy_csv <- here(proc_dir, "ds001486", "ds001486_task-VisualWordRhyming_accuracy.csv") 
+write_csv(ds001486_accuracy_df, ds001486_accuracy_csv)
 ```
 
 ### ds001894
@@ -268,7 +272,7 @@ ds001894_exclude <- ds001894_participants_df |>
 
 # Exclude if missing standardized testing data
 ds001894_exclude <- ds001894_participants_df |> 
-  filter(!unique_id %in% ds001486_exclude$unique_id) |> 
+  filter(!unique_id %in% ds001894_exclude$unique_id) |> 
   mutate(
     exclude = case_when(
       is.na(wordid_sts)    ~ "missing Word ID",
@@ -282,7 +286,7 @@ ds001894_exclude <- ds001894_participants_df |>
 
 # Exclude if missing events file across both runs
 ds001894_exclude <- ds001894_participants_df |> 
-  filter(!unique_id %in% ds001486_exclude$unique_id) |> 
+  filter(!unique_id %in% ds001894_exclude$unique_id) |> 
   anti_join(ds001894_events_df, by = "unique_id") |>
   select(unique_id) |>
   mutate(exclude = "missing events file for both runs") |> 
@@ -298,7 +302,6 @@ ds001894_exclude <- ds001894_events_df |>
   select(unique_id) |> 
   mutate(exclude = "missing events file for one run") |> 
   bind_rows(ds001894_exclude)
-
 ```
 
 ```{r}
@@ -345,7 +348,6 @@ mean_acc_nci <- ds001894_events_df |>
 
 # Exclude based on in-scanner task
 ds001894_accuracy_df <- mean_acc_condition |>
-  filter(!unique_id %in% ds001894_exclude$unique_id) |> 
   inner_join(mean_acc_nci, by = "unique_id") |> 
   select(
     unique_id, starts_with("n_correct"), 
@@ -370,6 +372,12 @@ ds001894_exclude <- ds001894_accuracy_df |>
 
 glimpse(ds001894_exclude)
 kable(ds001894_exclude)
+```
+
+```{r}
+# Set output file
+ds001894_accuracy_csv <- here(proc_dir, "ds001894", "ds001894_task-VisualWordRhyming_accuracy.csv") 
+write_csv(ds001894_accuracy_df, ds001894_accuracy_csv)
 ```
 
 ### ds002236
@@ -491,7 +499,6 @@ mean_acc_nci <- ds002236_events_df |>
 
 # Exclude based on in-scanner task
 ds002236_accuracy_df <- mean_acc_condition |>
-  filter(!unique_id %in% ds002236_exclude$unique_id) |> 
   inner_join(mean_acc_nci, by = "unique_id") |> 
   select(
     unique_id, starts_with("n_correct"), 
@@ -516,6 +523,12 @@ ds002236_exclude <- ds002236_accuracy_df |>
 
 glimpse(ds002236_exclude)
 kable(ds002236_exclude)
+```
+
+```{r}
+# Set output file
+ds002236_accuracy_csv <- here(proc_dir, "ds002236", "ds002236_task-VisualWordRhyming_accuracy.csv") 
+write_csv(ds002236_accuracy_df, ds002236_accuracy_csv)
 ```
 
 ### ds006239
@@ -641,7 +654,7 @@ ds006239_multiple <- ds006239_events_df |>
     n_correct = sum(accuracy),
     n_trial = n(),
     mean_acc = round(mean(accuracy), 3)
-  ) |> 
+  ) |>
   pivot_wider(
     names_from = condition, 
     values_from = c(n_correct, n_trial, mean_acc)
@@ -709,6 +722,14 @@ ds006239_exclude <- ds006239_accuracy_df |>
 
 glimpse(ds006239_exclude)
 kable(ds006239_exclude)
+```
+
+```{r}
+# Set output file
+ds006239_multiple_csv <- here(proc_dir, "ds006239", "ds006239_multiple-run_accuracy.csv")
+ds006239_accuracy_csv <- here(proc_dir, "ds006239", "ds006239_task-VisualWordRhyming_accuracy.csv")
+write_csv(ds006239_multiple, ds006239_multiple_csv)
+write_csv(ds006239_accuracy_df, ds006239_accuracy_csv)
 ```
 
 :::
